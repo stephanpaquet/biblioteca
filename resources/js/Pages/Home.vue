@@ -16,7 +16,7 @@ import { Head } from '@inertiajs/inertia-vue3';
       ]"
     />
     <div class="container mx-auto p-8">
-      <h1 class="bg-green-100 p-4 text-4xl font-bold mb-4 text-center">Welcome to Your Inertia.js + Vue 3 Homepage!</h1>
+      <h1 class="bg-green-100 p-4 text-4xl font-bold mb-4 text-center">Bonjour</h1>
       <p class="text-lg text-center">This page is rendered using Inertia.js and Vue 3.</p>
     </div>
   </Layout>
