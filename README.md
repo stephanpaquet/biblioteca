@@ -34,3 +34,28 @@
    php artisan serve
    npm run dev
    ```
+
+# API Documentation
+
+This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically generate API documentation.
+
+## To generate or update the API docs:
+
+1. Install Scribe (if not already installed):
+   ```sh
+   composer require --dev knuckleswtf/scribe
+   ```
+2. Publish Scribe's config and views (only needed once):
+   ```sh
+   php artisan vendor:publish --provider="Knuckles\\Scribe\\ScribeServiceProvider"
+   ```
+3. Generate the documentation:
+   ```sh
+   php artisan scribe:generate
+   ```
+4. Visit your documentation at:
+   ```
+   http://localhost:8000/docs
+   ```
+
+Add PHPDoc comments to your controllers and routes to improve the generated docs.
