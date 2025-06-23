@@ -33,7 +33,6 @@ class GoogleBooksService
 
         $response = Http::get($this->baseUrl, $params);
 
-        dump($response->body());
         if ($response->successful()) {
             return $response->json();
         }
