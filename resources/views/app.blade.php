@@ -12,6 +12,11 @@
     @vite(['resources/js/app.js', 'resources/css/app.css'])
 </head>
 <body class="antialiased">
+    <header class="p-4">
+        <a href="{{ url('/') }}" class="text-3xl font-bold no-underline text-inherit">
+            {{ config('app.name', 'Biblioteca') }}
+        </a>
+    </header>
     @inertia
 </body>
 </html>
