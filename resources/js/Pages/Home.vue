@@ -1,7 +1,7 @@
 <script setup>
 import Layout from './Layout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
-import { ref } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 const query = ref('');
 const results = ref([]);
@@ -23,6 +23,27 @@ const searchBooks = async () => {
     loading.value = false;
   }
 };
+
+// Update the query string param 'q' when the input changes
+watch(query, (newVal) => {
+  const url = new URL(window.location.href);
+  if (newVal) {
+    url.searchParams.set('q', newVal);
+  } else {
+    url.searchParams.delete('q');
+  }
+  window.history.replaceState({}, '', url);
+});
+
+// On component mount, initialize the query from the 'q' query string parameter and call searchBooks if present
+onMounted(() => {
+  const url = new URL(window.location.href);
+  const qParam = url.searchParams.get('q');
+  if (qParam) {
+    query.value = qParam;
+    searchBooks();
+  }
+});
 </script>
 
 <template>
@@ -42,7 +63,10 @@ const searchBooks = async () => {
       <p class="text-lg text-center mb-8">This page is rendered using Inertia.js and Vue 3.</p>
       <form @submit.prevent="searchBooks" class="flex flex-col items-center mb-8">
         <input v-model="query" type="text" placeholder="Search for a book..." class="border rounded p-2 w-full max-w-md mb-2" />
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" :disabled="loading">
+        <button type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
+          :disabled="loading || !query"
+        >
           <span v-if="loading">Searching...</span>
           <span v-else>Search</span>
         </button>
