@@ -7,6 +7,9 @@ use App\Http\Controllers\ContactController;
 
 Route::get('/', HomeController::class);
 Route::get('/contact', ContactController::class);
+Route::get('/books/{id}', function ($id) {
+    return Inertia::render('Book', ['id' => $id]);
+})->name('book-detail');
 
 // Route::get('/books/search', function (\Illuminate\Http\Request $request) {
 //     $query = $request->input('q', 'caroline soucy pol polaire');

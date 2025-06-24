@@ -2,10 +2,12 @@
 import Layout from './Layout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { usePage } from '@inertiajs/inertia-vue3';
+import { route } from 'ziggy-js';
 
-const route = useRoute();
-const bookId = route.params.id;
+const page = usePage();
+const bookId = page.props.value.id;
+const apiUrl = route('api.books.show', { id: bookId });
 const book = ref(null);
 const loading = ref(true);
 const error = ref(null);
@@ -14,7 +16,7 @@ const fetchBook = async () => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await fetch(`/api/books/${encodeURIComponent(bookId)}`);
+    const response = await fetch(apiUrl);
     if (!response.ok) throw new Error('API error');
     const data = await response.json();
     book.value = data.data || null;
@@ -25,6 +27,10 @@ const fetchBook = async () => {
   }
 };
 
+const goBack = () => {
+  window.history.back();
+};
+
 onMounted(fetchBook);
 </script>
 
@@ -32,7 +38,7 @@ onMounted(fetchBook);
   <Layout>
     <Head title="Book Details" />
     <div class="container mx-auto p-8">
-      <button @click="$router.back()" class="mb-4 text-blue-600 hover:underline">&larr; Back to search</button>
+      <button @click="goBack" class="mb-4 text-blue-600 hover:underline">&larr; Back to search</button>
       <div v-if="loading" class="text-center">Loading...</div>
       <div v-else-if="error" class="text-red-600 text-center">{{ error }}</div>
       <div v-else-if="book" class="max-w-2xl mx-auto bg-white rounded shadow p-6">
@@ -45,7 +51,7 @@ onMounted(fetchBook);
             <a v-if="book.previewLink" :href="book.previewLink" target="_blank" class="text-blue-600 hover:underline text-sm">Preview on Google Books</a>
           </div>
         </div>
-        <div class="text-gray-800 mb-4">{{ book.description }}</div>
+        <div class="text-gray-800 mb-4" v-html="book.description"></div>
         <div v-if="book.categories?.length" class="mb-2">
           <span class="font-semibold">Categories:</span> {{ book.categories.join(', ') }}
         </div>
