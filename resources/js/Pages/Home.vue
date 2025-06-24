@@ -62,6 +62,9 @@ const gotoBookDetails = (id) => {
   Inertia.visit(route('book-detail', { id }));
 };
 
+const authorSearchQuery = author => `inauthor:"${author}"`;
+const authorSearchHref = author => `?q=${encodeURIComponent(authorSearchQuery(author))}&page=1`;
+
 </script>
 
 <template>
@@ -76,10 +79,7 @@ const gotoBookDetails = (id) => {
         { property: 'og:locale', content: 'en_US' }
       ]"
     />
-    <div class="container mx-auto p-8">
-      <h1 class="p-4 text-4xl font-bold mb-4 text-center">
-        Biblioteca
-      </h1>
+    <div class="container mx-auto pb-8">
       <Paginator
         v-model="page"
         :total="totalItems"
@@ -109,7 +109,17 @@ const gotoBookDetails = (id) => {
               <img v-if="book.thumbnail" :src="book.thumbnail" alt="Cover" class="w-20 h-32 object-cover rounded-md shadow" />
               <div class="flex-1">
                 <h2 class="text-xl font-bold mb-1">{{ book.title }}</h2>
-                <div class="text-gray-600 text-sm mb-1">{{ book.authors?.join(', ') }}</div>
+                <div class="text-gray-600 text-sm mb-1">
+                  <template v-if="book.authors?.length">
+                    <span v-for="(author, idx) in book.authors" :key="author">
+                      <a
+                        :href="authorSearchHref(author)"
+                        class="text-blue-700 hover:underline"
+                        @click.prevent="query.value = authorSearchQuery(author); page.value = 1; searchBooks();"
+                      >{{ author }}</a><span v-if="idx < book.authors.length - 1">, </span>
+                    </span>
+                  </template>
+                </div>
                 <div class="text-gray-400 text-xs mb-2">Published: {{ book.publishedDate }}</div>
               </div>
             </div>
@@ -122,9 +132,9 @@ const gotoBookDetails = (id) => {
                   target="_blank"
                   class="text-blue-600 hover:underline text-xs font-medium z-10 group-hover:underline"
                   @click.stop
-                >Preview</a>
+                >Preview on Google Books</a>
                 <button
-                  class="text-white bg-green-600 hover:bg-green-700 text-xs font-semibold px-3 py-1 rounded transition-colors z-10"
+                  class="text-white bg-green-600 hover:bg-green-700 text-xs font-semibold px-3 py-1 rounded transition-colors z-10 cursor-pointer"
                   @click.stop="gotoBookDetails(book.id)"
                 >Details</button>
               </div>
