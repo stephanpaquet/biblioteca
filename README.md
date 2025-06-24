@@ -9,7 +9,7 @@ Biblioteca is built with a modern, full-stack approach using the following techn
 - **Google Books API**: External API for searching and retrieving book data.
 - **Pest**: Elegant PHP testing framework for unit and feature tests.
 - **Scribe**: API documentation is automatically generated from Laravel routes and annotations.
-- **Docker & Laravel Sail**: Containerized local development environment.
+- **Docker & Laravel Sail**: Containerized local development environment (with MariaDB, Redis, Meilisearch, etc.).
 - **Meilisearch**: Fast, open-source search engine (optional, for advanced search features).
 - **Ziggy**: Exposes Laravel named routes to JavaScript for robust client-side navigation.
 
@@ -115,3 +115,5 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically genera
 - **Ziggy**: 1.x
 
 ---
+
+**Note:** The default database is now MariaDB (not MySQL). If you have existing MySQL data, you may need to migrate it or reset your database volume. See `docker-compose.yml` for details.
