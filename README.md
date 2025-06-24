@@ -35,12 +35,11 @@
    ```
 9. Start the development servers (inside Sail):
    ```sh
-   ./vendor/bin/sail artisan serve
    ./vendor/bin/sail npm run dev
    ```
-10. Access web site
+10. Access the website:
 
-http://localhost
+    http://localhost
 
 # API Documentation
 
@@ -61,8 +60,16 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically genera
    ./vendor/bin/sail artisan scribe:generate
    ```
 4. Visit your documentation at:
-   ```
-   http://localhost/docs
-   ```
 
-Add PHPDoc comments to your controllers and routes to improve the generated docs.
+   http://localhost/docs
+
+**Tip:** Add PHPDoc comments to your controllers and routes to improve the generated docs.
+
+# Recommendations
+
+- **Validation:** Use Laravel's request validation in your controllers to ensure required parameters are present and valid.
+- **Error Handling:** Return structured error responses for failed API calls (not just `null`).
+- **Remove Unused Services:** Redis has been removed from Docker; ensure `.env` and config files do not reference it.
+- **API Versioning:** For public APIs, consider versioning your API routes (e.g., `/api/v1/books/search`).
+- **Consistent Environment:** Ensure `.env.example` matches your Docker/Sail setup (MySQL, Meilisearch, etc.).
+- **Security:** Add authentication (e.g., Laravel Sanctum) for protected endpoints if needed.
