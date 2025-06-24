@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class GoogleBooksService
 {
@@ -23,21 +24,24 @@ class GoogleBooksService
      */
     public function searchBooks(string $query, int $maxResults = 10): ?array
     {
-        $params = [
-            'q' => $query,
-            'maxResults' => $maxResults,
-        ];
-        if ($this->apiKey) {
-            $params['key'] = $this->apiKey;
-        }
+        $cacheKey = 'google_books_search_' . md5($query . '_' . $maxResults);
+        return Cache::remember($cacheKey, 60, function () use ($query, $maxResults) {
+            $params = [
+                'q' => $query,
+                'maxResults' => $maxResults,
+            ];
+            if ($this->apiKey) {
+                $params['key'] = $this->apiKey;
+            }
 
-        $response = Http::get($this->baseUrl, $params);
+            $response = Http::get($this->baseUrl, $params);
 
-        if ($response->successful()) {
-            return $response->json();
-        }
+            if ($response->successful()) {
+                return $response->json();
+            }
 
-        return null;
+            return null;
+        });
     }
 
     /**
@@ -48,15 +52,18 @@ class GoogleBooksService
      */
     public function getBook(string $id): ?array
     {
-        $url = $this->baseUrl . '/' . urlencode($id);
-        $params = [];
-        if ($this->apiKey) {
-            $params['key'] = $this->apiKey;
-        }
-        $response = \Illuminate\Support\Facades\Http::get($url, $params);
-        if ($response->successful()) {
-            return $response->json();
-        }
-        return null;
+        $cacheKey = 'google_books_book_' . $id;
+        return Cache::remember($cacheKey, 60, function () use ($id) {
+            $url = $this->baseUrl . '/' . urlencode($id);
+            $params = [];
+            if ($this->apiKey) {
+                $params['key'] = $this->apiKey;
+            }
+            $response = \Illuminate\Support\Facades\Http::get($url, $params);
+            if ($response->successful()) {
+                return $response->json();
+            }
+            return null;
+        });
     }
 }

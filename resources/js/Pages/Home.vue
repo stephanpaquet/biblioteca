@@ -57,7 +57,7 @@ const searchBooks = async () => {
               <div class="text-gray-600 text-sm">{{ book.authors?.join(', ') }}</div>
             </div>
           </div>
-          <div class="text-gray-700 text-sm mb-2">{{ book.description?.slice(0, 120) }}<span v-if="book.description?.length > 120">...</span></div>
+          <div class="text-gray-700 text-sm mb-2">{{ book.description }}</div>
           <a v-if="book.previewLink" :href="book.previewLink" target="_blank" class="text-blue-600 hover:underline text-sm">Preview</a>
         </div>
       </div>
