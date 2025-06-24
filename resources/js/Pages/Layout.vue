@@ -15,4 +15,8 @@ import { Link } from '@inertiajs/inertia-vue3';
     </div>
   </nav>
   <slot />
+  <footer class="bg-gray-100 text-gray-500 text-xs py-4 mt-12 border-t">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-2 px-4">
+    </div>
+  </footer>
 </template>

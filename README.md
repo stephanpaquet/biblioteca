@@ -2,7 +2,7 @@
 
 Biblioteca is built with a modern, full-stack approach using the following technologies:
 
-- **Laravel**: PHP web framework for backend API, routing, and service integration.
+- **Laravel**: PHP web framework for backend API, routing, service integration, and caching.
 - **Vue 3**: Progressive JavaScript framework for building reactive, component-based UIs.
 - **Inertia.js**: Bridges Laravel and Vue for seamless single-page app (SPA) experience without a separate API.
 - **Tailwind CSS**: Utility-first CSS framework for rapid, responsive, and modern UI design.
@@ -97,3 +97,21 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically genera
 - **API Versioning:** For public APIs, consider versioning your API routes (e.g., `/api/v1/books/search`).
 - **Consistent Environment:** Ensure `.env.example` matches your Docker/Sail setup (MySQL, Meilisearch, etc.).
 - **Security:** Add authentication (e.g., Laravel Sanctum) for protected endpoints if needed.
+
+---
+
+## Tech Info
+
+- **Laravel**: 12.19.3
+- **PHP**: 8.2+
+- **Node.js**: 18+
+- **Vue.js**: 3.x
+- **Inertia.js**: 1.x
+- **Tailwind CSS**: 3.x
+- **Pest**: 2.x
+- **Scribe**: 4.x
+- **Docker/Sail**: Latest
+- **Meilisearch**: 1.x (optional)
+- **Ziggy**: 1.x
+
+---
