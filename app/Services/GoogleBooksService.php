@@ -39,4 +39,24 @@ class GoogleBooksService
 
         return null;
     }
+
+    /**
+     * Get a single book by its Google Books volume ID.
+     *
+     * @param string $id
+     * @return array|null
+     */
+    public function getBook(string $id): ?array
+    {
+        $url = $this->baseUrl . '/' . urlencode($id);
+        $params = [];
+        if ($this->apiKey) {
+            $params['key'] = $this->apiKey;
+        }
+        $response = \Illuminate\Support\Facades\Http::get($url, $params);
+        if ($response->successful()) {
+            return $response->json();
+        }
+        return null;
+    }
 }
