@@ -38,6 +38,9 @@
    ./vendor/bin/sail artisan serve
    ./vendor/bin/sail npm run dev
    ```
+10. Access web site
+
+http://localhost
 
 # API Documentation
 
