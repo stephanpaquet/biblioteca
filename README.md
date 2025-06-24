@@ -2,7 +2,7 @@
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/your-username/biblioteca.git
+   git clone git@github.com:stephanpaquet/biblioteca.git
    cd biblioteca
    ```
 2. Install PHP dependencies:
