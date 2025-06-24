@@ -8,7 +8,7 @@ Biblioteca is built with a modern, full-stack approach using the following techn
 - **Tailwind CSS**: Utility-first CSS framework for rapid, responsive, and modern UI design.
 - **Google Books API**: External API for searching and retrieving book data.
 - **Pest**: Elegant PHP testing framework for unit and feature tests.
-- **Scribe**: Generates API documentation from Laravel routes and annotations.
+- **Scribe**: API documentation is automatically generated from Laravel routes and annotations.
 - **Docker & Laravel Sail**: Containerized local development environment.
 - **Meilisearch**: Fast, open-source search engine (optional, for advanced search features).
 - **Ziggy**: Exposes Laravel named routes to JavaScript for robust client-side navigation.
