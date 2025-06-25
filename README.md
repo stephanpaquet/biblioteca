@@ -117,3 +117,56 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically genera
 ---
 
 **Note:** The default database is now MariaDB (not MySQL). If you have existing MySQL data, you may need to migrate it or reset your database volume. See `docker-compose.yml` for details.
+
+## Future Enhancements
+- User Authentication and Profiles:
+   - Allow users to create accounts, log in, and save their favorite books.
+   - Add user profiles with reading history and personalized recommendations.
+- Advanced Search Filters:
+   - Add filters for genre, publication year, language, and ratings.
+   - Implement sorting options (e.g., by relevance, popularity, or publication date).
+- Book Reviews and Ratings:
+   - Enable users to leave reviews and rate books.
+   - Display average ratings and top reviews for each book.
+- Wishlist and Reading List:
+   - Allow users to create and manage wishlists or reading lists.
+   - Add functionality to mark books as "read" or "currently reading."
+- Social Sharing:
+   - Add buttons to share book details on social media platforms.
+   - Enable users to recommend books to friends via email or messaging.
+- Offline Mode:
+   - Cache search results and book details for offline access.
+   - Allow users to download book information for later use.
+- Integration with External APIs:
+   - Integrate with Goodreads or other book-related APIs for additional data.
+   - Add functionality to sync user data with external platforms.
+- Dark Mode and Accessibility Features:
+   - Implement a dark mode toggle for better usability.
+   - Add accessibility features like text-to-speech for book descriptions.
+- Book Recommendations:
+   - Use machine learning or rule-based algorithms to recommend books based on user preferences.
+   - Display "Similar Books" or "Books You May Like" sections.
+- Admin Dashboard:
+   - Create an admin panel to manage books, users, and reviews.
+   - Add analytics to track user engagement and popular books.
+- Multilingual Support:
+   - Add support for multiple languages in the UI.
+   - Allow users to search for books in different languages.
+- Event and Community Features:
+   - Add a section for book-related events like author signings or book clubs.
+   - Enable users to join or create virtual book clubs.
+- Mobile App Integration:
+   - Develop a companion mobile app for the platform.
+   - Sync data between the web app and mobile app.
+- Gamification:
+   - Add achievements or badges for reading milestones.
+   - Create leaderboards for most active users or reviewers.
+- Customizable Layouts:
+   - Allow users to customize the layout of the book search results.
+   - Add options for grid or list views.
+- Performance Optimization:
+   - Implement caching strategies for frequently accessed data.
+   - Optimize search queries and indexing for faster results. 
+
+
+   
