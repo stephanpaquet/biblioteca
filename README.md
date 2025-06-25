@@ -1,172 +1,179 @@
-# Technology Stack
+# Biblioteca
 
-Biblioteca is built with a modern, full-stack approach using the following technologies:
-
-- **Laravel**: PHP web framework for backend API, routing, service integration, and caching.
-- **Vue 3**: Progressive JavaScript framework for building reactive, component-based UIs.
-- **Inertia.js**: Bridges Laravel and Vue for seamless single-page app (SPA) experience without a separate API.
-- **Tailwind CSS**: Utility-first CSS framework for rapid, responsive, and modern UI design.
-- **Google Books API**: External API for searching and retrieving book data.
-- **Pest**: Elegant PHP testing framework for unit and feature tests.
-- **Scribe**: API documentation is automatically generated from Laravel routes and annotations.
-- **Docker & Laravel Sail**: Containerized local development environment (with MariaDB, Redis, Meilisearch, etc.).
-- **Meilisearch**: Fast, open-source search engine (optional, for advanced search features).
-- **Ziggy**: Exposes Laravel named routes to JavaScript for robust client-side navigation.
+A modern book search and discovery platform built with Laravel and Vue.js. Biblioteca leverages the Google Books API to provide users with comprehensive book search capabilities, detailed book information, and an intuitive browsing experience.
 
 ## Key Features
-- Book search and detail via Google Books API
-- Author search with clickable author links
-- Paginated, card-based results with modern UI
-- Book detail and preview links
-- API documentation (Scribe)
-- Docker/Sail support for easy setup
-- All navigation and state handled via Inertia.js (no vue-router)
 
-# Installation
+- **Book Search**: Search books by title, author, or keywords using Google Books API
+- **Author Discovery**: Clickable author links for exploring author-specific collections
+- **Modern UI**: Responsive, card-based design with pagination
+- **Book Details**: Comprehensive book information with preview links
+- **API Documentation**: Auto-generated documentation with Scribe
+- **SPA Experience**: Seamless navigation powered by Inertia.js
+- **Docker Ready**: Easy development setup with Laravel Sail
 
-1. Clone the repository:
-   ```sh
+## Installation
+
+1. **Clone the repository:**
+   ```bash
    git clone https://github.com/stephanpaquet/biblioteca.git
    cd biblioteca
    ```
-2. Copy the example environment file and set your environment variables:
-   ```sh
+
+2. **Set up environment:**
+   ```bash
    cp .env.example .env
    ```
-3. Start Laravel Sail (Docker):
-   ```sh
+
+3. **Start Laravel Sail (Docker):**
+   ```bash
    ./vendor/bin/sail up -d
    ```
-4. Install PHP dependencies (inside Sail):
-   ```sh
+
+4. **Install dependencies:**
+   ```bash
+   # PHP dependencies
    ./vendor/bin/sail composer install
-   ```
-5. Install JavaScript dependencies (inside Sail):
-   ```sh
+   
+   # JavaScript dependencies
    ./vendor/bin/sail npm install
    ```
-6. Generate the application key (inside Sail):
-   ```sh
+
+5. **Configure application:**
+   ```bash
+   # Generate application key
    ./vendor/bin/sail artisan key:generate
-   ```
-7. (Optional) Set your Google Books API key in the `.env` file:
-   ```sh
-   GOOGLE_BOOKS_API_KEY=your_api_key_here
-   ```
-8. Run database migrations (inside Sail):
-   ```sh
+   
+   # Run database migrations
    ./vendor/bin/sail artisan migrate
    ```
-9. Start the development servers (inside Sail):
-   ```sh
+
+6. **Set up Google Books API (Optional):**
+   
+   Get your API key from [Google Cloud Console](https://console.cloud.google.com/) and add it to your `.env` file:
+   ```bash
+   GOOGLE_BOOKS_API_KEY=your_api_key_here
+   ```
+
+7. **Start development server:**
+   ```bash
    ./vendor/bin/sail npm run dev
    ```
-10. Access the website:
 
-    http://localhost
+8. **Access the application:**
+   
+   Open your browser to: http://localhost
 
-# API Documentation
+## Technology Stack
 
-This project uses [Scribe](https://scribe.knuckles.wtf/) to automatically generate API documentation.
+**Backend:**
+- **Laravel** - PHP web framework for backend API and routing
+- **Google Books API** - External API for book data retrieval
+- **Meilisearch** - Fast search engine (optional)
 
-## To generate or update the API docs:
+**Frontend:**
+- **Vue 3** - Progressive JavaScript framework
+- **Inertia.js** - Laravel-Vue bridge for SPA experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **Ziggy** - Laravel routes in JavaScript
 
-1. Install Scribe (if not already installed):
-   ```sh
+**Development & Testing:**
+- **Docker & Laravel Sail** - Containerized development environment
+- **Pest** - PHP testing framework
+- **Scribe** - API documentation generator
+
+## API Documentation
+
+This project uses [Scribe](https://scribe.knuckles.wtf/) for automatic API documentation generation.
+
+### Generate Documentation
+
+1. **Install Scribe (if needed):**
+   ```bash
    ./vendor/bin/sail composer require --dev knuckleswtf/scribe
    ```
-2. Publish Scribe's config and views (only needed once):
-   ```sh
+
+2. **Publish configuration (one-time setup):**
+   ```bash
    ./vendor/bin/sail artisan vendor:publish --provider="Knuckles\\Scribe\\ScribeServiceProvider"
    ```
-3. Generate the documentation:
-   ```sh
+
+3. **Generate documentation:**
+   ```bash
    ./vendor/bin/sail artisan scribe:generate
    ```
-4. Visit your documentation at:
 
-   http://localhost/docs
+4. **View documentation:**
+   
+   Visit: http://localhost/docs
 
-**Tip:** Add PHPDoc comments to your controllers and routes to improve the generated docs.
+> **Tip:** Add PHPDoc comments to your controllers for better documentation quality.
 
-# Recommendations
+## System Requirements
 
-- **Validation:** Use Laravel's request validation in your controllers to ensure required parameters are present and valid.
-- **Error Handling:** Return structured error responses for failed API calls (not just `null`).
-- **Remove Unused Services:** Redis has been removed from Docker; ensure `.env` and config files do not reference it.
-- **API Versioning:** For public APIs, consider versioning your API routes (e.g., `/api/v1/books/search`).
-- **Consistent Environment:** Ensure `.env.example` matches your Docker/Sail setup (MySQL, Meilisearch, etc.).
-- **Security:** Add authentication (e.g., Laravel Sanctum) for protected endpoints if needed.
-
----
-
-## Tech Info
-
-- **Laravel**: 12.19.3
 - **PHP**: 8.2+
 - **Node.js**: 18+
-- **Vue.js**: 3.x
-- **Inertia.js**: 1.x
-- **Tailwind CSS**: 3.x
-- **Pest**: 2.x
-- **Scribe**: 4.x
-- **Docker/Sail**: Latest
-- **Meilisearch**: 1.x (optional)
-- **Ziggy**: 1.x
+- **Docker**: Latest version with Docker Compose
+
+## Version Information
+
+| Technology | Version |
+|------------|---------|
+| Laravel | 12.19.3 |
+| Vue.js | 3.x |
+| Inertia.js | 1.x |
+| Tailwind CSS | 3.x |
+| Pest | 2.x |
+| Scribe | 4.x |
+| Meilisearch | 1.x |
+| Ziggy | 1.x |
+
+## Development Notes
+
+- **Database**: Uses MariaDB by default (not MySQL)
+- **Redis**: Removed from Docker setup
+- **Navigation**: Handled entirely by Inertia.js (no vue-router)
+- **Environment**: Ensure `.env.example` matches Docker/Sail configuration
+
+## Best Practices & Recommendations
+
+- **Validation**: Use Laravel request validation for all API endpoints
+- **Error Handling**: Return structured JSON error responses
+- **API Versioning**: Consider versioning for public APIs (e.g., `/api/v1/`)
+- **Security**: Implement Laravel Sanctum for protected endpoints
+- **Testing**: Write comprehensive tests using Pest
+
+## Future Enhancements
+
+### User Experience
+- **User Authentication**: Account creation, login, and user profiles
+- **Personal Lists**: Wishlists, reading lists, and reading history
+- **Book Reviews**: User ratings and review system
+- **Social Features**: Book sharing and friend recommendations
+
+### Search & Discovery
+- **Advanced Filters**: Genre, publication year, language, ratings
+- **Smart Recommendations**: ML-based book suggestions
+- **Enhanced Search**: Sort by relevance, popularity, date
+
+### Platform Features
+- **Dark Mode**: Theme toggle and accessibility improvements
+- **Offline Support**: Cache results for offline access
+- **Mobile App**: Companion mobile application
+- **Admin Dashboard**: Content and user management panel
+
+### Integrations
+- **External APIs**: Goodreads and other book platforms
+- **Social Media**: Sharing capabilities
+- **Multi-language**: Internationalization support
+
+### Community
+- **Book Clubs**: Virtual book club features
+- **Events**: Author signings and literary events
+- **Gamification**: Reading achievements and leaderboards
 
 ---
 
-**Note:** The default database is now MariaDB (not MySQL). If you have existing MySQL data, you may need to migrate it or reset your database volume. See `docker-compose.yml` for details.
-
-## Future Enhancements
-- User Authentication and Profiles:
-   - Allow users to create accounts, log in, and save their favorite books.
-   - Add user profiles with reading history and personalized recommendations.
-- Advanced Search Filters:
-   - Add filters for genre, publication year, language, and ratings.
-   - Implement sorting options (e.g., by relevance, popularity, or publication date).
-- Book Reviews and Ratings:
-   - Enable users to leave reviews and rate books.
-   - Display average ratings and top reviews for each book.
-- Wishlist and Reading List:
-   - Allow users to create and manage wishlists or reading lists.
-   - Add functionality to mark books as "read" or "currently reading."
-- Social Sharing:
-   - Add buttons to share book details on social media platforms.
-   - Enable users to recommend books to friends via email or messaging.
-- Offline Mode:
-   - Cache search results and book details for offline access.
-   - Allow users to download book information for later use.
-- Integration with External APIs:
-   - Integrate with Goodreads or other book-related APIs for additional data.
-   - Add functionality to sync user data with external platforms.
-- Dark Mode and Accessibility Features:
-   - Implement a dark mode toggle for better usability.
-   - Add accessibility features like text-to-speech for book descriptions.
-- Book Recommendations:
-   - Use machine learning or rule-based algorithms to recommend books based on user preferences.
-   - Display "Similar Books" or "Books You May Like" sections.
-- Admin Dashboard:
-   - Create an admin panel to manage books, users, and reviews.
-   - Add analytics to track user engagement and popular books.
-- Multilingual Support:
-   - Add support for multiple languages in the UI.
-   - Allow users to search for books in different languages.
-- Event and Community Features:
-   - Add a section for book-related events like author signings or book clubs.
-   - Enable users to join or create virtual book clubs.
-- Mobile App Integration:
-   - Develop a companion mobile app for the platform.
-   - Sync data between the web app and mobile app.
-- Gamification:
-   - Add achievements or badges for reading milestones.
-   - Create leaderboards for most active users or reviewers.
-- Customizable Layouts:
-   - Allow users to customize the layout of the book search results.
-   - Add options for grid or list views.
-- Performance Optimization:
-   - Implement caching strategies for frequently accessed data.
-   - Optimize search queries and indexing for faster results. 
+**Note**: If migrating from an existing MySQL setup, you may need to reset your database volume due to the MariaDB change. Check `docker-compose.yml` for configuration details.
 
 
-   
