@@ -42,7 +42,7 @@ function logout() {
       </Link>
       <div class="space-x-4 flex items-center">
         <Link href="/" class="text-gray-300 hover:text-white" :class="{ 'font-bold underline': $page.url === '/' }" :aria-current="$page.url === '/' ? 'page' : null">Home</Link>
-        <Link href="/contact" class="text-gray-300 hover:text-white" :class="{ 'font-bold underline': $page.url === '/contact' }" :aria-current="$page.url === '/contact' ? 'page' : null">Contact</Link>
+        <Link href="/dashboard" class="text-gray-300 hover:text-white" :class="{ 'font-bold underline': $page.url === '/dashboard' }" :aria-current="$page.url === '/contact' ? 'page' : null">Dashboard</Link>
         <template v-if="user">
           <span class="text-gray-300">Hi, {{ user.name }}</span>
           <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">Logout</button>

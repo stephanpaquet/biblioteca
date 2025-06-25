@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
-class ContactController extends Controller
+class DashboardController extends Controller
 {
     public function __invoke()
     {
-        return Inertia::render('Contact');
+        return Inertia::render('Dashboard');
     }
 }
