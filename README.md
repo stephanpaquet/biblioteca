@@ -1,13 +1,17 @@
 # Biblioteca
 
-A modern book search and discovery platform built with Laravel and Vue.js. Biblioteca leverages the Google Books API to provide users with comprehensive book search capabilities, detailed book information, and an intuitive browsing experience.
+A modern book search and discovery platform built with Laravel and Vue.js. Biblioteca leverages the Google Books API to provide users with comprehensive book search capabilities, detailed book information, and an intuitive browsing experience with personal library management.
 
 ## Key Features
 
 - **Book Search**: Search books by title, author, or keywords using Google Books API
+- **Personal Library**: Add books to your personal library with reading status tracking
+- **Reading Status Management**: Organize books as "Want to Read", "Reading", or "Read"
 - **Author Discovery**: Clickable author links for exploring author-specific collections
 - **Modern UI**: Responsive, card-based design with pagination
 - **Book Details**: Comprehensive book information with preview links
+- **Multilingual Support**: Available in English, French, Spanish, and German
+- **State Management**: Centralized state management with Pinia
 - **API Documentation**: Auto-generated documentation with Scribe
 - **SPA Experience**: Seamless navigation powered by Inertia.js
 - **Docker Ready**: Easy development setup with Laravel Sail
@@ -64,15 +68,40 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
    
    Open your browser to: http://localhost
 
+## New Features
+
+### 📚 Personal Library Management
+- **Add to Library**: One-click book addition from search results
+- **Reading Status**: Track books as "Want to Read", "Reading", or "Read"
+- **Library Dashboard**: View and manage your personal book collection
+- **Status Updates**: Change reading status directly from the library view
+- **Duplicate Prevention**: Automatic detection of books already in library
+
+### 🌍 Multilingual Support
+- **4 Languages**: English, French, Spanish, and German
+- **Language Switcher**: Easy language switching in the navigation
+- **Persistent Preferences**: Language choice remembered across sessions
+- **Localized Content**: All UI text properly translated
+- **Extensible**: Easy to add more languages
+
+### ⚡ State Management with Pinia
+- **Centralized State**: Consistent data across all components
+- **Library Store**: Manage user's book collection and reading status
+- **Search Store**: Handle search queries and results caching
+- **Auth Store**: User authentication state management
+- **Real-time Updates**: Reactive state updates across components
+
 ## Technology Stack
 
 **Backend:**
-- **Laravel** - PHP web framework for backend API and routing
+- **Laravel 12.19.3** - PHP web framework for backend API and routing
 - **Google Books API** - External API for book data retrieval
 - **Meilisearch** - Fast search engine (optional)
+- **SQLite/MariaDB** - Database for user data and library management
 
 **Frontend:**
 - **Vue 3** - Progressive JavaScript framework
+- **Pinia** - State management for Vue.js
 - **Inertia.js** - Laravel-Vue bridge for SPA experience
 - **Tailwind CSS** - Utility-first CSS framework
 - **Ziggy** - Laravel routes in JavaScript
@@ -81,6 +110,7 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
 - **Docker & Laravel Sail** - Containerized development environment
 - **Pest** - PHP testing framework
 - **Scribe** - API documentation generator
+- **Vite** - Fast build tool and development server
 
 ## API Documentation
 
@@ -107,7 +137,26 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) for automatic API docum
    
    Visit: http://localhost/docs
 
-> **Tip:** Add PHPDoc comments to your controllers for better documentation quality.
+## Testing
+
+Run the comprehensive test suite covering all major functionality:
+
+```bash
+# Run all tests
+./vendor/bin/sail artisan test
+
+# Run specific test files
+./vendor/bin/sail artisan test tests/Feature/LibraryControllerTest.php
+
+# Run with coverage
+./vendor/bin/sail artisan test --coverage
+```
+
+### Test Coverage
+- **Library Management**: Add, remove, update book status
+- **Authentication**: User registration, login, verification
+- **API Validation**: Request validation and error handling
+- **Database**: Migrations, relationships, and data integrity
 
 ## System Requirements
 
@@ -121,6 +170,7 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) for automatic API docum
 |------------|---------|
 | Laravel | 12.19.3 |
 | Vue.js | 3.x |
+| Pinia | 2.x |
 | Inertia.js | 1.x |
 | Tailwind CSS | 3.x |
 | Pest | 2.x |
@@ -134,6 +184,22 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) for automatic API docum
 - **Redis**: Removed from Docker setup
 - **Navigation**: Handled entirely by Inertia.js (no vue-router)
 - **Environment**: Ensure `.env.example` matches Docker/Sail configuration
+- **State**: Pinia stores provide centralized state management
+
+## API Endpoints
+
+### Library Management
+- `GET /library` - View user's library
+- `POST /api/library` - Add book to library
+- `DELETE /api/library/{book}` - Remove book from library
+- `PATCH /api/library/{book}/status` - Update reading status
+
+### Search
+- `GET /?q={query}` - Search books and display results
+- `GET /books/{id}` - View book details
+
+### Multilingual
+- `GET /?locale={locale}` - Switch language
 
 ## Best Practices & Recommendations
 
@@ -142,38 +208,56 @@ This project uses [Scribe](https://scribe.knuckles.wtf/) for automatic API docum
 - **API Versioning**: Consider versioning for public APIs (e.g., `/api/v1/`)
 - **Security**: Implement Laravel Sanctum for protected endpoints
 - **Testing**: Write comprehensive tests using Pest
+- **State Management**: Use Pinia stores for component communication
+- **Translations**: Extract all user-facing text into language files
 
 ## Future Enhancements
 
 ### User Experience
-- **User Authentication**: Account creation, login, and user profiles
-- **Personal Lists**: Wishlists, reading lists, and reading history
+- **Advanced Search Filters**: Genre, publication year, language, ratings
 - **Book Reviews**: User ratings and review system
-- **Social Features**: Book sharing and friend recommendations
+- **Reading Goals**: Set and track annual reading targets
+- **Book Recommendations**: ML-based suggestions
 
-### Search & Discovery
-- **Advanced Filters**: Genre, publication year, language, ratings
-- **Smart Recommendations**: ML-based book suggestions
-- **Enhanced Search**: Sort by relevance, popularity, date
+### Social Features
+- **Book Clubs**: Virtual book club functionality
+- **Social Sharing**: Share books on social media
+- **Friend Recommendations**: Book suggestions from friends
+- **Reading Challenges**: Community reading challenges
 
 ### Platform Features
 - **Dark Mode**: Theme toggle and accessibility improvements
 - **Offline Support**: Cache results for offline access
 - **Mobile App**: Companion mobile application
-- **Admin Dashboard**: Content and user management panel
+- **Export/Import**: Backup and restore library data
 
 ### Integrations
-- **External APIs**: Goodreads and other book platforms
-- **Social Media**: Sharing capabilities
-- **Multi-language**: Internationalization support
+- **Goodreads API**: Sync with Goodreads accounts
+- **Library Systems**: Integration with local library catalogs
+- **E-book Platforms**: Connect with Kindle, Apple Books
+- **Audio Books**: Audible integration
 
-### Community
-- **Book Clubs**: Virtual book club features
-- **Events**: Author signings and literary events
-- **Gamification**: Reading achievements and leaderboards
+### Advanced Features
+- **AI Summaries**: AI-generated book summaries
+- **Reading Analytics**: Detailed reading statistics
+- **Book Tracking**: Physical book location tracking
+- **Price Alerts**: Notify when books go on sale
 
 ---
 
 **Note**: If migrating from an existing MySQL setup, you may need to reset your database volume due to the MariaDB change. Check `docker-compose.yml` for configuration details.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## License
+
+This project is open-sourced software licensed under the [MIT license](LICENSE).
 
 
