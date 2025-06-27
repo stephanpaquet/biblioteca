@@ -1,6 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue';
+import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 
 const user = ref(null);
 
@@ -35,31 +36,59 @@ function logout() {
 </script>
 
 <template>
-  <nav class="bg-gray-800 p-4 mb-8">
-    <div class="container mx-auto flex justify-between items-center">
-      <Link href="/" class="text-white font-bold text-xl hover:underline" :class="{ 'underline': $page.url === '/' }">
-        Biblioteca
-      </Link>
-      <div class="space-x-4 flex items-center">
-        <Link href="/" class="text-gray-300 hover:text-white" :class="{ 'font-bold underline': $page.url === '/' }" :aria-current="$page.url === '/' ? 'page' : null">Home</Link>
-        <Link href="/dashboard" class="text-gray-300 hover:text-white" :class="{ 'font-bold underline': $page.url === '/dashboard' }" :aria-current="$page.url === '/contact' ? 'page' : null">Dashboard</Link>
-        <template v-if="user">
-          <span class="text-gray-300">Hi, {{ user.name }}</span>
-          <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">Logout</button>
-        </template>
-        <template v-else>
-          <Link href="/login" class="text-gray-300 hover:text-white">Login</Link>
-          <Link href="/register" class="text-gray-300 hover:text-white">Register</Link>
-        </template>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+      <div class="container mx-auto px-4">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo/Brand -->
+          <div class="flex items-center">
+            <a href="/" class="text-2xl font-bold text-blue-600">
+              Biblioteca
+            </a>
+          </div>
+
+          <!-- Navigation Links -->
+          <div class="hidden md:flex items-center space-x-6">
+            <Link href="/" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/' }" :aria-current="$page.url === '/' ? 'page' : null">Home</Link>
+            <Link href="/library" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/library' }" :aria-current="$page.url === '/library' ? 'page' : null">My Library</Link>
+            <Link href="/dashboard" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/dashboard' }" :aria-current="$page.url === '/contact' ? 'page' : null">Dashboard</Link>
+          </div>
+
+          <!-- Right side: Language Switcher & Auth -->
+          <div class="flex items-center space-x-4">
+            <LanguageSwitcher 
+              v-if="$page.props.locale"
+              :locale="$page.props.locale" 
+              :supported-locales="$page.props.supportedLocales || ['en']" 
+            />
+            
+            <!-- Auth buttons -->
+            <div class="flex items-center space-x-2">
+              <template v-if="user">
+                <span class="text-gray-300">Hi, {{ user.name }}</span>
+                <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">Logout</button>
+              </template>
+              <template v-else>
+                <Link href="/login" class="text-blue-600 hover:text-blue-800 px-3 py-1 rounded transition-colors">Login</Link>
+                <Link href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">Register</Link>
+              </template>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </nav>
-  <slot />
-  <footer class="bg-gray-100 text-gray-500 text-xs py-4 mt-12 border-t">
-    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-2 px-4">
-      <span>
-        Biblioteca &copy; {{ new Date().getFullYear() }}
-      </span>
-    </div>
-  </footer>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; 2024 Biblioteca. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
 </template>
