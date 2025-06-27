@@ -1,154 +1,95 @@
 <script setup>
 import Layout from './Layout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
-import { ref, watch, onMounted } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
-import Paginator from '../Components/Paginator.vue';
-import { route } from 'ziggy-js';
+import SearchForm from '../Components/SearchForm.vue';
+import BookGrid from '../Components/BookGrid.vue';
 
-const query = ref('');
-const results = ref([]);
-const loading = ref(false);
-const error = ref(null);
-const page = ref(1);
-const totalItems = ref(0);
-const itemsPerPage = 12; // Google Books API max is 40, but let's use 12 for UI
-
-const searchBooks = async () => {
-  loading.value = true;
-  error.value = null;
-  results.value = [];
-  try {
-    const startIndex = (page.value - 1) * itemsPerPage;
-    const response = await fetch(`/api/books/search?q=${encodeURIComponent(query.value)}&maxResults=${itemsPerPage}&startIndex=${startIndex}`);
-    if (!response.ok) throw new Error('API error');
-    const data = await response.json();
-    results.value = data.data || [];
-    totalItems.value = data.total || 0;
-  } catch (e) {
-    error.value = 'An error occurred while searching.';
-  } finally {
-    loading.value = false;
-  }
-};
-
-// Update the query string param 'q' when the input changes
-watch(query, (newVal) => {
-  const url = new URL(window.location.href);
-  if (newVal) {
-    url.searchParams.set('q', newVal);
-  } else {
-    url.searchParams.delete('q');
-  }
-  window.history.replaceState({}, '', url);
-});
-
-// On component mount, initialize the query from the 'q' query string parameter and call searchBooks if present
-onMounted(() => {
-  const url = new URL(window.location.href);
-  const qParam = url.searchParams.get('q');
-  if (qParam) {
-    query.value = qParam;
-    searchBooks();
+const props = defineProps({
+  books: {
+    type: Object,
+    default: null
+  },
+  query: {
+    type: String,
+    default: ''
+  },
+  userBooks: {
+    type: Array,
+    default: () => []
+  },
+  featured: {
+    type: Object,
+    default: null
   }
 });
-
-// Watch for page changes to trigger search
-watch(page, () => {
-  if (query.value) searchBooks();
-});
-
-const gotoBookDetails = (id) => {
-  Inertia.visit(route('book-detail', { id }));
-};
-
-const authorSearchQuery = author => `inauthor:"${author}"`;
-const authorSearchHref = author => `?q=${encodeURIComponent(authorSearchQuery(author))}&page=1`;
-
 </script>
 
 <template>
   <Layout>
-    <Head
-      title="Biblioteca | Modern Digital Library & Book Management"
-      meta="[
-        { name: 'description', content: 'Welcome to Biblioteca, your modern digital library and book management platform. Discover, manage, and connect with books easily online.' },
-        { property: 'og:title', content: 'Biblioteca | Modern Digital Library & Book Management' },
-        { property: 'og:description', content: 'Welcome to Biblioteca, your modern digital library and book management platform. Discover, manage, and connect with books easily online.' },
-        { property: 'og:type', content: 'website' },
-        { property: 'og:locale', content: 'en_US' }
-      ]"
-    />
-    <div class="container mx-auto pb-8">
-      <Paginator
-        v-model="page"
-        :total="totalItems"
-        :per-page="itemsPerPage"
-        :loading="loading"
-      />
-      <form @submit.prevent="searchBooks" class="flex flex-row items-center justify-center gap-2 mb-8 w-full max-w-md mx-auto">
-        <input v-model="query" type="text" placeholder="Search for a book..." class="border rounded p-2 flex-1 min-w-0" />
-        <button type="submit"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
-          :disabled="loading || !query"
-        >
-          <span v-if="loading">Searching...</span>
-          <span v-else>Search</span>
-        </button>
-      </form>
-      <div v-if="error" class="text-red-600 text-center mb-4">{{ error }}</div>
-      <div>
-        <div v-if="results.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            v-for="book in results"
-            :key="book.id"
-            class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transition-transform hover:scale-105 hover:shadow-2xl border border-gray-100 cursor-pointer group"
-            @click="gotoBookDetails(book.id)"
-          >
-            <div class="flex items-start p-4 gap-4 flex-shrink-0">
-              <img v-if="book.thumbnail" :src="book.thumbnail" alt="Cover" class="w-20 h-32 object-cover rounded-md shadow" />
-              <div class="flex-1">
-                <h2 class="text-xl font-bold mb-1">{{ book.title }}</h2>
-                <div class="text-gray-600 text-sm mb-1">
-                  <template v-if="book.authors?.length">
-                    <span v-for="(author, idx) in book.authors" :key="author">
-                      <a
-                        :href="authorSearchHref(author)"
-                        class="text-blue-700 hover:underline"
-                        @click.prevent="query.value = authorSearchQuery(author); page.value = 1; searchBooks();"
-                      >{{ author }}</a><span v-if="idx < book.authors.length - 1">, </span>
-                    </span>
-                  </template>
-                </div>
-                <div class="text-gray-400 text-xs mb-2">Published: {{ book.publishedDate }}</div>
-              </div>
-            </div>
-            <div class="flex flex-col flex-1 px-4 pb-4">
-              <div class="text-gray-700 text-sm mb-3 line-clamp-8">{{ book.description || 'No description.'}}</div>
-              <div class="flex gap-2 mt-auto justify-between items-end">
-                <a
-                  v-if="book.previewLink"
-                  :href="book.previewLink"
-                  target="_blank"
-                  class="text-blue-600 hover:underline text-xs font-medium z-10 group-hover:underline"
-                  @click.stop
-                >Preview on Google Books</a>
-                <button
-                  class="text-white bg-green-600 hover:bg-green-700 text-xs font-semibold px-3 py-1 rounded transition-colors z-10 cursor-pointer"
-                  @click.stop="gotoBookDetails(book.id)"
-                >Details</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else-if="!loading && query" class="text-center text-gray-500">No results found.</div>
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          Discover Your Next Great Read
+        </h1>
+        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          Search millions of books, build your personal library, and track your reading journey.
+        </p>
+        
+        <SearchForm :initial-query="query" />
       </div>
-      <Paginator
-        v-model="page"
-        :total="totalItems"
-        :per-page="itemsPerPage"
-        :loading="loading"
+    </div>
+
+    <!-- Search Results Section -->
+    <div v-if="query" class="container mx-auto px-4 py-12">
+      <BookGrid 
+        :books="books" 
+        :user-books="userBooks"
+        :title="`Search Results for '${query}'`"
+        :show-no-results="true"
       />
+    </div>
+
+    <!-- Featured Books Section -->
+    <div v-else class="container mx-auto px-4 py-12">
+      <BookGrid 
+        :books="featured" 
+        :user-books="userBooks"
+        title="Featured Books"
+      />
+      
+      <!-- Quick Actions -->
+      <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center p-6 bg-white rounded-lg shadow-md">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Search Books</h3>
+          <p class="text-gray-600">Find books by title, author, or topic from Google's vast collection.</p>
+        </div>
+        
+        <div class="text-center p-6 bg-white rounded-lg shadow-md">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Build Library</h3>
+          <p class="text-gray-600">Save books to your personal library and organize them by reading status.</p>
+        </div>
+        
+        <div class="text-center p-6 bg-white rounded-lg shadow-md">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Track Progress</h3>
+          <p class="text-gray-600">Monitor your reading progress and discover new favorites.</p>
+        </div>
+      </div>
     </div>
   </Layout>
 </template>
+          

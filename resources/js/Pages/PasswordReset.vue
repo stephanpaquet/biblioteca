@@ -5,10 +5,13 @@ import Layout from './Layout.vue';
 const email = ref('');
 const message = ref(null);
 const error = ref(null);
+const isLoading = ref(false);
 
 function requestReset() {
   error.value = null;
   message.value = null;
+  isLoading.value = true;
+  
   fetch('/api/password/email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -23,7 +26,44 @@ function requestReset() {
     })
     .catch(async err => {
       error.value = err?.message || 'Request failed.';
+    })
+    .finally(() => {
+      isLoading.value = false;
     });
+}
+
+async function addToLibrary(book, status = 'want_to_read') {
+  try {
+    const response = await fetch('/api/library', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        google_book_id: book.id,
+        title: book.volumeInfo.title,
+        authors: book.volumeInfo.authors,
+        description: book.volumeInfo.description,
+        thumbnail: book.volumeInfo.imageLinks?.thumbnail,
+        published_date: book.volumeInfo.publishedDate,
+        page_count: book.volumeInfo.pageCount,
+        language: book.volumeInfo.language,
+        preview_link: book.volumeInfo.previewLink,
+        status: status
+      })
+    });
+
+    if (response.ok) {
+      message.value = 'Book added to library!';
+    } else {
+      const errorData = await response.json();
+      error.value = errorData.message || 'Failed to add book to library';
+    }
+  } catch (err) {
+    error.value = 'Failed to add book to library';
+  }
 }
 </script>
 
@@ -38,8 +78,13 @@ function requestReset() {
         </div>
         <div v-if="error" class="text-red-600 mb-2">{{ error }}</div>
         <div v-if="message" class="text-green-600 mb-2">{{ message }}</div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Send Password
-          Reset Link</button>
+        <button 
+          type="submit" 
+          :disabled="isLoading"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full disabled:opacity-50"
+        >
+          {{ isLoading ? 'Sending...' : 'Send Password Reset Link' }}
+        </button>
       </form>
       <div class="mt-4 text-sm text-center">
         <a href="/login" class="text-blue-600 hover:underline">Back to Login</a>
