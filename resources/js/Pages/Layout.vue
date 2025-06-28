@@ -44,15 +44,21 @@ function logout() {
           <!-- Logo/Brand -->
           <div class="flex items-center">
             <a href="/" class="text-2xl font-bold text-blue-600">
-              Biblioteca
+              {{ $page.props.translations?.layout?.brand || 'Biblioteca' }}
             </a>
           </div>
 
           <!-- Navigation Links -->
           <div class="hidden md:flex items-center space-x-6">
-            <Link href="/" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/' }" :aria-current="$page.url === '/' ? 'page' : null">Home</Link>
-            <Link href="/library" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/library' }" :aria-current="$page.url === '/library' ? 'page' : null">My Library</Link>
-            <Link href="/dashboard" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/dashboard' }" :aria-current="$page.url === '/contact' ? 'page' : null">Dashboard</Link>
+            <Link href="/" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/' }" :aria-current="$page.url === '/' ? 'page' : null">
+              {{ $page.props.translations?.layout?.nav?.home || 'Home' }}
+            </Link>
+            <Link href="/library" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/library' }" :aria-current="$page.url === '/library' ? 'page' : null">
+              {{ $page.props.translations?.layout?.nav?.library || 'My Library' }}
+            </Link>
+            <Link href="/dashboard" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': $page.url === '/dashboard' }" :aria-current="$page.url === '/dashboard' ? 'page' : null">
+              {{ $page.props.translations?.layout?.nav?.dashboard || 'Dashboard' }}
+            </Link>
           </div>
 
           <!-- Right side: Language Switcher & Auth -->
@@ -66,12 +72,20 @@ function logout() {
             <!-- Auth buttons -->
             <div class="flex items-center space-x-2">
               <template v-if="user">
-                <span class="text-gray-300">Hi, {{ user.name }}</span>
-                <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">Logout</button>
+                <span class="text-gray-300">
+                  {{ ($page.props.translations?.layout?.auth?.hi || 'Hi, :name').replace(':name', user.name) }}
+                </span>
+                <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">
+                  {{ $page.props.translations?.layout?.auth?.logout || 'Logout' }}
+                </button>
               </template>
               <template v-else>
-                <Link href="/login" class="text-blue-600 hover:text-blue-800 px-3 py-1 rounded transition-colors">Login</Link>
-                <Link href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">Register</Link>
+                <Link href="/login" class="text-blue-600 hover:text-blue-800 px-3 py-1 rounded transition-colors">
+                  {{ $page.props.translations?.layout?.auth?.login || 'Login' }}
+                </Link>
+                <Link href="/register" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">
+                  {{ $page.props.translations?.layout?.auth?.register || 'Register' }}
+                </Link>
               </template>
             </div>
           </div>
@@ -87,7 +101,7 @@ function logout() {
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8 mt-16">
       <div class="container mx-auto px-4 text-center">
-        <p>&copy; 2024 Biblioteca. All rights reserved.</p>
+        <p>{{ $page.props.translations?.layout?.footer?.copyright || '© 2024 Biblioteca. All rights reserved.' }}</p>
       </div>
     </footer>
   </div>

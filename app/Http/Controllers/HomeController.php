@@ -48,6 +48,7 @@ class HomeController extends Controller
             'featured' => $this->googleBooksService->getFeaturedBooks(),
             'translations' => [
                 'home' => __('home'),
+                'layout' => __('layout'),
             ]
         ]);
     }

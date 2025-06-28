@@ -26,6 +26,11 @@ class AppServiceProvider extends ServiceProvider
             },
             'supportedLocales' => function () {
                 return config('app.supported_locales', ['en']);
+            },
+            'translations' => function () {
+                return [
+                    'layout' => __('layout')
+                ];
             }
         ]);
     }
