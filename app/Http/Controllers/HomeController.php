@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    private GoogleBooksService $googleBooksService;
+
+    public function __construct(GoogleBooksService $googleBooksService)
+    {
+        $this->googleBooksService = $googleBooksService;
+    }
+
     public function __invoke(Request $request)
     {
         // Handle locale switching
@@ -27,7 +34,7 @@ class HomeController extends Controller
         $userBooks = [];
 
         if ($query) {
-            $books = $this->searchBooks($query);
+            $books = $this->googleBooksService->searchByAuthor($query);
         }
 
         if (auth()->check()) {
@@ -38,40 +45,10 @@ class HomeController extends Controller
             'books' => $books,
             'query' => $query,
             'userBooks' => $userBooks,
-            'featured' => $this->getFeaturedBooks(),
+            'featured' => $this->googleBooksService->getFeaturedBooks(),
             'translations' => [
                 'home' => __('home'),
             ]
         ]);
-    }
-
-    private function searchBooks($query)
-    {
-        $apiKey = config('services.google_books.api_key');
-        $baseUrl = 'https://www.googleapis.com/books/v1/volumes';
-        
-        try {
-            $response = Http::get($baseUrl, [
-                'q' => $query,
-                'key' => $apiKey,
-                'maxResults' => 20,
-                'printType' => 'books'
-            ]);
-
-            if ($response->successful()) {
-                return $response->json();
-            }
-        } catch (\Exception $e) {
-            // Log error or handle gracefully
-        }
-
-        return ['items' => []];
-    }
-
-    private function getFeaturedBooks()
-    {
-        // Get some featured/popular books for the home page
-        $featuredQuery = 'bestsellers fiction 2024';
-        return $this->searchBooks($featuredQuery);
     }
 }

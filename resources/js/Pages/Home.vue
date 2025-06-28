@@ -50,12 +50,12 @@ function t(key) {
 <template>
   <Layout>
     <!-- Hero Section -->
-    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
       <div class="container mx-auto px-4 text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+        <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
           {{ t('title') }}
         </h1>
-        <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
           {{ t('subtitle') }}
         </p>
         

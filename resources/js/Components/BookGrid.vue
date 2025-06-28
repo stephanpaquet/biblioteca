@@ -4,11 +4,27 @@
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <div v-for="book in books.items" :key="book.id" class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-        <img 
-          :src="book.volumeInfo.imageLinks?.thumbnail || '/placeholder-book.png'" 
-          :alt="book.volumeInfo.title"
-          class="w-full h-48 object-cover rounded mb-4"
-        />
+        <div class="w-full h-48 mb-4 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
+          <img 
+            v-if="book.volumeInfo.imageLinks?.thumbnail"
+            :src="book.volumeInfo.imageLinks.thumbnail.replace('http://', 'https://')" 
+            :alt="book.volumeInfo.title"
+            class="w-full h-full object-cover"
+            @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
+          />
+          <div 
+            v-else
+            class="flex flex-col items-center justify-center text-gray-400 p-4 text-center"
+          >
+            <svg class="w-12 h-12 mb-2" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+            </svg>
+            <span class="text-xs font-medium">{{ truncateTitle(book.volumeInfo.title) }}</span>
+            <span v-if="book.volumeInfo.authors" class="text-xs mt-1 opacity-75">
+              {{ book.volumeInfo.authors[0] }}
+            </span>
+          </div>
+        </div>
         
         <h3 class="font-semibold text-lg mb-2 line-clamp-2">
           {{ book.volumeInfo.title }}
@@ -58,6 +74,7 @@
 
 <script setup>
 import AddToLibraryButton from './AddToLibraryButton.vue';
+import BookPlaceholder from './BookPlaceholder.vue';
 
 defineProps({
   books: {
@@ -77,6 +94,17 @@ defineProps({
     default: false
   }
 });
+
+function truncateTitle(title) {
+  return title.length > 25 ? title.substring(0, 25) + '...' : title;
+}
+
+function handleImageError(event) {
+  event.target.style.display = 'none';
+  if (event.target.nextElementSibling) {
+    event.target.nextElementSibling.style.display = 'flex';
+  }
+}
 </script>
 
 <style scoped>

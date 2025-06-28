@@ -31,6 +31,11 @@ const goBack = () => {
   window.history.back();
 };
 
+function truncateTitle(title, maxLength = 20) {
+  if (!title) return 'No Title';
+  return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
+}
+
 onMounted(fetchBook);
 </script>
 
@@ -43,7 +48,24 @@ onMounted(fetchBook);
       <div v-else-if="error" class="text-red-600 text-center">{{ error }}</div>
       <div v-else-if="book" class="max-w-2xl mx-auto bg-white rounded shadow p-6">
         <div class="flex mb-4">
-          <img v-if="book.thumbnail" :src="book.thumbnail" alt="Cover" class="w-32 h-48 object-cover rounded mr-6" />
+          <div class="w-full h-48 mr-6 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
+            <img 
+              v-if="book.thumbnail" 
+              :src="book.thumbnail.replace('http://', 'https://')" 
+              :alt="book.title" 
+              class="w-full h-full object-cover"
+              @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
+            />
+            <div 
+              v-else
+              class="flex flex-col items-center justify-center text-gray-400 p-2 text-center w-full h-full"
+            >
+              <svg class="w-8 h-8 mb-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+              </svg>
+              <span class="text-xs font-medium text-center leading-tight">{{ truncateTitle(book.title) }}</span>
+            </div>
+          </div>
           <div>
             <h1 class="text-3xl font-bold mb-2">{{ book.title }}</h1>
             <div class="text-gray-700 mb-2">By {{ book.authors?.join(', ') }}</div>

@@ -36,5 +36,7 @@ return [
 
     'google_books' => [
         'api_key' => env('GOOGLE_BOOKS_API_KEY'),
+        'cache_enabled' => env('GOOGLE_BOOKS_CACHE_ENABLED', false),
+        'cache_minutes' => env('GOOGLE_BOOKS_CACHE_MINUTES', 60),
     ],
 ];
