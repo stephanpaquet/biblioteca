@@ -1,33 +1,14 @@
-<template>
-  <div class="relative">
-    <select 
-      v-model="currentLocale" 
-      @change="changeLocale"
-      class="appearance-none bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-    >
-      <option v-for="locale in supportedLocales" :key="locale" :value="locale">
-        {{ getLanguageName(locale) }}
-      </option>
-    </select>
-  </div>
-</template>
 
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import { useTranslationsStore } from '../stores/translations';
 
-const props = defineProps({
-  locale: {
-    type: String,
-    required: true
-  },
-  supportedLocales: {
-    type: Array,
-    required: true
-  }
-});
+const translationsStore = useTranslationsStore();
 
-const currentLocale = ref(props.locale);
+console.log(translationsStore.translations);
+
+const currentLocale = ref(translationsStore.translations.locale);
 
 const languageNames = {
   en: 'English',
@@ -40,10 +21,26 @@ function getLanguageName(locale) {
   return languageNames[locale] || locale.toUpperCase();
 }
 
-function changeLocale() {
-  Inertia.get(window.location.pathname, { locale: currentLocale.value }, {
+function changeLocale(event) {
+    console.log(`Changing locale to: ${event.target.value}`);
+
+  Inertia.get(window.location.pathname, { locale: translationsStore.translations.currentLocale }, {
     preserveState: true,
     replace: true
   });
 }
 </script>
+
+<template>
+  <div class="relative">
+    <select
+      v-model="translationsStore.translations.currentLocale"
+      @change="changeLocale"
+      class="appearance-none bg-white border border-gray-300 rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option v-for="locale in translationsStore.translations.supportedLocales" :key="locale" :value="locale">
+        {{ getLanguageName(locale) }}
+      </option>
+    </select>
+  </div>
+</template>

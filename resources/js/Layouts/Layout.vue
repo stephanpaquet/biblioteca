@@ -16,7 +16,7 @@ const translationsStore = useTranslationsStore();
 const route = getCurrentInstance()?.appContext.config.globalProperties.route || window.route;
 
 const user = computed(() => authStore.user);
-const translations = computed(() => translationsStore.translations);
+const translations = computed(() => translationsStore.translations.texts);
 
 function logout() {
   Inertia.post(route('logout'));
@@ -33,17 +33,17 @@ function logout() {
           <!-- Logo/Brand -->
           <div class="flex items-center">
             <Link :href="route('home')" class="text-2xl font-bold text-blue-600">
-              {{ page.props.translations?.layout?.brand || 'Biblioteca' }}
+              {{ translations?.layout?.brand || 'Biblioteca' }}
             </Link>
           </div>
 
           <!-- Navigation Links -->
           <div class="hidden md:flex items-center space-x-6">
             <Link :href="route('home')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url === '/' }" :aria-current="page.url === '/' ? 'page' : null">
-              {{ page.props.translations?.layout?.nav?.home || 'Home' }}
+              {{ translations?.layout?.nav?.home || 'Home' }}
             </Link>
             <Link :href="route('library')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url === '/library' }" :aria-current="page.url === '/library' ? 'page' : null">
-              {{ page.props.translations?.layout?.nav?.library || 'My Library' }}
+              {{ translations?.layout?.nav?.library || 'My Library' }}
             </Link>
             <Link :href="route('dashboard')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url === '/dashboard' }" :aria-current="page.url === '/dashboard' ? 'page' : null">
               {{ translations?.layout?.nav?.dashboard || 'Dashboard' }}
@@ -52,17 +52,13 @@ function logout() {
 
           <!-- Right side: Language Switcher & Auth -->
           <div class="flex items-center space-x-4">
-            <LanguageSwitcher
-              v-if="page.props.locale"
-              :locale="page.props.locale"
-              :supported-locales="page.props.supportedLocales || ['en']"
-            />
+            <LanguageSwitcher />
 
             <!-- Auth buttons -->
             <div class="flex items-center space-x-2">
               <template v-if="user">
                 <span>
-                  {{ (page.props.translations?.layout?.auth?.hi || 'Hi, :name').replace(':name', user.name) }}
+                  {{ (translations?.layout?.auth?.hi || 'Hi, :name').replace(':name', user.name) }}
                 </span>
                 <button @click="logout" class="cursor-pointer text-gray-400 hover:text-gray-800 underline ml-2">
                   {{ translations?.layout?.auth?.logout || 'Logout' }}
@@ -73,7 +69,7 @@ function logout() {
                   {{ translations?.layout?.auth?.login || 'Login' }}
                 </Link>
                 <Link :href="route('register')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">
-                  {{ page.props.translations?.layout?.auth?.register || 'Register' }}
+                  {{ translations?.layout?.auth?.register || 'Register' }}
                 </Link>
               </template>
             </div>
@@ -90,7 +86,7 @@ function logout() {
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8 mt-16">
       <div class="container mx-auto px-4 text-center">
-        <p>{{ page.props.translations?.layout?.footer?.copyright || '© 2024 Biblioteca. All rights reserved.' }}</p>
+        <p>{{ translations?.layout?.footer?.copyright || '© 2024 Biblioteca. All rights reserved.' }}</p>
       </div>
     </footer>
   </div>

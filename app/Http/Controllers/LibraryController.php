@@ -18,7 +18,11 @@ class LibraryController extends Controller
 
             return Inertia::render('Library', [
                 'books' => $books,
-                'user' => $request->user()
+                'translations' => [
+                    'library' => __('library'),
+                    'layout' => __('layout'),
+                ]
+
             ]);
         } catch (\Exception $e) {
             Log::error('Library index error: ' . $e->getMessage());

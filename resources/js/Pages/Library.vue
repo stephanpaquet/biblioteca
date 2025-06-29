@@ -1,6 +1,9 @@
 <script setup>
+import { onMounted } from 'vue';
 import { ref } from 'vue';
 import Layout from '../Layouts/Layout.vue';
+import { useTranslationsStore } from '../stores/translations';
+import { useAuthStore } from '../stores/auth';
 
 const props = defineProps({
     books: {
@@ -11,8 +14,32 @@ const props = defineProps({
         type: Object,
         default: null
     },
+    translations: {
+        type: Object,
+        required: true
+    },
+    supportedLocales: {
+        type: Array,
+        default: () => ['en']
+    },
+    currentLocale: {
+        type: String,
+        default: 'en'
+    }
 });
 
+const authStore = useAuthStore();
+const translationsStore = useTranslationsStore();
+
+onMounted(() => {
+    translationsStore.setTranslations({
+        texts: props.translations,
+        currentLocale: props.currentLocale,
+        supportedLocales: props.supportedLocales,
+    });
+
+    authStore.setUser(props.auth.user || null);
+});
 async function updateStatus(bookId, status) {
     try {
         await fetch(`/api/library/${bookId}/status`, {

@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
+use Illuminate\Support\Facades\Session;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -42,9 +43,8 @@ class HandleInertiaRequests extends Middleware
                 'user' => Auth::check() ? Auth::user() : null,
             ],
             'csrf_token' => csrf_token(),
-            'locale' => app()->getLocale(),
+            'currentLocale' => Session::get('locale') ?? config('app.locale', 'en'),
             'supportedLocales' => config('app.supported_locales', ['en']),
-            'translations' => __('*'),
         ];
     }
 }

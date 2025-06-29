@@ -13,10 +13,6 @@ const props = defineProps({
     type: Object,
     default: null
   },
-  auth: {
-    type: Object,
-    default: null
-  },
   query: {
     type: String,
     default: ''
@@ -29,6 +25,10 @@ const props = defineProps({
     type: Object,
     default: null
   },
+  auth: {
+    type: Object,
+    default: null
+  },
   translations: {
     type: Object,
     required: true
@@ -36,6 +36,10 @@ const props = defineProps({
   supportedLocales: {
     type: Array,
     default: () => ['en']
+  },
+  currentLocale: {
+    type: String,
+    default: 'en'
   }
 });
 
@@ -47,7 +51,11 @@ const translationsStore = useTranslationsStore();
 onMounted(() => {
   // Initialize stores with props data
   libraryStore.setBooks(props.userBooks);
-  translationsStore.setTranslations(props.translations);
+  translationsStore.setTranslations({
+    texts: props.translations,
+    currentLocale: props.currentLocale,
+    supportedLocales: props.supportedLocales,
+  });
 
   authStore.setUser(props.auth.user || null);
   if (props.query) {
