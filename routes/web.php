@@ -7,8 +7,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LibraryController;
 
-Route::get('/', HomeController::class);
-Route::get('/dashboard', DashboardController::class);
+Route::get('/', HomeController::class)->name('home');
+Route::get('/dashboard', DashboardController::class)->name('dashboard');
 Route::get('/books/{id}', function ($id) {
     return Inertia::render('Book', ['id' => $id]);
 })->name('book-detail');

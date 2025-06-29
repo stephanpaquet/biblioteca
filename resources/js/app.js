@@ -9,9 +9,13 @@ const pinia = createPinia()
 createInertiaApp({
   resolve: name => import(`./Pages/${name}.vue`),
   setup({ el, App, props, plugin }) {
-    return createApp({ render: () => h(App, props) })
+    const app = createApp({ render: () => h(App, props) })
       .use(plugin)
-      .use(pinia)
-      .mount(el);
+      .use(pinia);
+
+    // Make route function available globally
+    app.config.globalProperties.route = route;
+
+    return app.mount(el);
   },
 });
