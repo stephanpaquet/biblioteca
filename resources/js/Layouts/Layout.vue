@@ -20,6 +20,7 @@ const translations = computed(() => translationsStore.translations);
 
 function logout() {
   Inertia.post(route('logout'));
+  authStore.setUser(null)
 }
 </script>
 
@@ -63,7 +64,7 @@ function logout() {
                 <span>
                   {{ (page.props.translations?.layout?.auth?.hi || 'Hi, :name').replace(':name', user.name) }}
                 </span>
-                <button @click="logout" class="text-gray-400 hover:text-gray-800 underline ml-2">
+                <button @click="logout" class="cursor-pointer text-gray-400 hover:text-gray-800 underline ml-2">
                   {{ translations?.layout?.auth?.logout || 'Logout' }}
                 </button>
               </template>

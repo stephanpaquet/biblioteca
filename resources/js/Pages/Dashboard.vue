@@ -1,5 +1,5 @@
 <script setup>
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 import { ref } from 'vue';
 
 const activeTab = ref('books'); // Tracks the active tab (books, users, analytics)
