@@ -5,8 +5,10 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
 ## Key Features
 
 - **Book Search**: Search books by title, author, or keywords using Google Books API
+- **User Authentication**: Secure registration and login with Laravel Fortify
 - **Personal Library**: Add books to your personal library with reading status tracking
 - **Reading Status Management**: Organize books as "Want to Read", "Reading", or "Read"
+- **Session-Based Security**: CSRF protection and secure session management
 - **Author Discovery**: Clickable author links for exploring author-specific collections
 - **Modern UI**: Responsive, card-based design with pagination
 - **Book Details**: Comprehensive book information with preview links
@@ -48,7 +50,11 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
    # Generate application key
    ./vendor/bin/sail artisan key:generate
    
-   # Run database migrations
+   # Run database migrations (includes sessions table for authentication)
+   ./vendor/bin/sail artisan migrate
+   
+   # Create session table for Fortify authentication
+   ./vendor/bin/sail artisan session:table
    ./vendor/bin/sail artisan migrate
    ```
 
@@ -67,6 +73,32 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
 8. **Access the application:**
    
    Open your browser to: http://localhost
+
+## Authentication Setup
+
+Biblioteca uses **Laravel Fortify** for session-based authentication with enhanced security features:
+
+### Features
+- **Registration & Login**: Secure user registration and authentication
+- **Session Management**: Database-stored sessions for scalability
+- **CSRF Protection**: Automatic CSRF token handling
+- **Rate Limiting**: Protection against brute force attacks
+- **Password Validation**: Strong password requirements
+- **Inertia.js Integration**: Seamless SPA authentication flow
+
+### Configuration
+The authentication system is pre-configured with:
+- Session driver set to `database`
+- CSRF middleware enabled
+- Rate limiting for login attempts
+- Fortify views using Inertia.js components
+
+### Default Test User
+A test user is created during setup:
+- **Email**: `test@example.com`
+- **Password**: `password`
+
+You can use this account to test the authentication system.
 
 ## New Features
 
@@ -95,6 +127,7 @@ A modern book search and discovery platform built with Laravel and Vue.js. Bibli
 
 **Backend:**
 - **Laravel 12.19.3** - PHP web framework for backend API and routing
+- **Laravel Fortify** - Authentication scaffolding with session-based security
 - **Google Books API** - External API for book data retrieval
 - **Meilisearch** - Fast search engine (optional)
 - **SQLite/MariaDB** - Database for user data and library management
@@ -154,9 +187,11 @@ Run the comprehensive test suite covering all major functionality:
 
 ### Test Coverage
 - **Library Management**: Add, remove, update book status
-- **Authentication**: User registration, login, verification
-- **API Validation**: Request validation and error handling
+- **Authentication**: User registration, login, session validation
+- **API Validation**: Request validation and error handling  
 - **Database**: Migrations, relationships, and data integrity
+- **CSRF Protection**: Token validation and security
+- **Rate Limiting**: Authentication attempt limits
 
 ## System Requirements
 
@@ -169,6 +204,7 @@ Run the comprehensive test suite covering all major functionality:
 | Technology | Version |
 |------------|---------|
 | Laravel | 12.19.3 |
+| Laravel Fortify | 1.x |
 | Vue.js | 3.x |
 | Pinia | 2.x |
 | Inertia.js | 1.x |
@@ -187,6 +223,14 @@ Run the comprehensive test suite covering all major functionality:
 - **State**: Pinia stores provide centralized state management
 
 ## API Endpoints
+
+### Authentication (Laravel Fortify)
+- `GET /login` - Login form
+- `POST /login` - Authenticate user
+- `GET /register` - Registration form  
+- `POST /register` - Register new user
+- `POST /logout` - Log out user
+- `GET /dashboard` - Protected dashboard page
 
 ### Library Management
 - `GET /library` - View user's library
