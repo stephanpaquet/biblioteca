@@ -3,8 +3,10 @@ import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { usePage } from '@inertiajs/inertia-vue3';
 import Layout from '../Layouts/Layout.vue';
+import { useToast } from '../composables/useToast';
 
 const page = usePage();
+const toast = useToast();
 const email = ref('');
 const password = ref('');
 const processing = ref(false);
@@ -24,12 +26,12 @@ function login() {
       processing.value = false;
     },
     onError: (errors) => {
-      // Errors are automatically handled by Inertia
-      console.log('Login errors:', errors);
+      if (errors.email) {
+        toast.loginError();
+      }
     },
     onSuccess: () => {
-      // Redirect will be handled automatically by Fortify
-      console.log('Login successful');
+      toast.loginSuccess(page.props.auth?.user?.name || 'User');
     }
   });
 }

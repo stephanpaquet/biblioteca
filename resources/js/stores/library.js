@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useToast } from '../composables/useToast';
 
 export const useLibraryStore = defineStore('library', () => {
     const books = ref([])
@@ -47,6 +48,7 @@ export const useLibraryStore = defineStore('library', () => {
     }
 
     async function addToLibrary(bookData) {
+        const toast = useToast();
         isLoading.value = true
         error.value = null
 
@@ -65,14 +67,18 @@ export const useLibraryStore = defineStore('library', () => {
 
             if (response.ok) {
                 addBook({ ...bookData, pivot: { status: bookData.status || 'want_to_read' } })
+                toast.bookAdded(bookData.title);
                 return { success: true, message: result.message }
             } else {
                 error.value = result.message
+                toast.error(result.message);
                 return { success: false, message: result.message }
             }
         } catch (err) {
-            error.value = 'Failed to add book to library'
-            return { success: false, message: 'Failed to add book to library' }
+            const errorMsg = 'Failed to add book to library'
+            error.value = errorMsg
+            toast.error(errorMsg);
+            return { success: false, message: errorMsg }
         } finally {
             isLoading.value = false
         }
