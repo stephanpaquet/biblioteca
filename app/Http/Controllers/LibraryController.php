@@ -11,12 +11,6 @@ class LibraryController extends Controller
 {
     public function index(Request $request)
     {
-        // Debug logging
-        dd('Library index accessed', [
-            'user_id' => $request->user()->id,
-            'authenticated' => $request->user() !== null
-        ]);
-
         try {
             $books = $request->user()->books()
                 ->orderBy('user_books.created_at', 'desc')
