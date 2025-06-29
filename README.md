@@ -206,7 +206,7 @@ Run the comprehensive test suite covering all major functionality:
 - **Validation**: Use Laravel request validation for all API endpoints
 - **Error Handling**: Return structured JSON error responses
 - **API Versioning**: Consider versioning for public APIs (e.g., `/api/v1/`)
-- **Security**: Implement Laravel Sanctum for protected endpoints
+- **Security**: Uses Laravel Fortify for session-based authentication and CSRF protection
 - **Testing**: Write comprehensive tests using Pest
 - **State Management**: Use Pinia stores for component communication
 - **Translations**: Extract all user-facing text into language files

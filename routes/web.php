@@ -24,6 +24,11 @@ Route::get('/debug-auth', function () {
     ]);
 });
 
+// CSRF cookie route for API documentation
+Route::get('/csrf-cookie', function () {
+    return response()->json(['csrf_token' => csrf_token()]);
+});
+
 // Test CSRF token endpoint
 Route::get('/test-csrf', function () {
     return response()->json([

@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2024-12-23
+
+### Changed
+
+#### 🔐 Authentication System Migration
+- **Laravel Fortify Integration**: Migrated from Laravel Sanctum to Laravel Fortify for improved session-based authentication
+- **Session-Based Authentication**: Replaced token-based authentication with secure session management
+- **Database Sessions**: Configured session storage using database driver for improved scalability
+- **Inertia.js Authentication**: Refactored frontend authentication to use Inertia.js form helpers instead of raw fetch calls
+- **CSRF Protection**: Enhanced CSRF token handling with automatic meta tag injection and Axios configuration
+- **Authentication Flow**: Streamlined login and registration processes with proper error handling
+
+#### 🛡️ Security Enhancements
+- **Rate Limiting**: Implemented comprehensive rate limiting for login and two-factor authentication attempts
+- **RateLimitServiceProvider**: Created dedicated service provider for managing authentication rate limits
+- **Session Security**: Enhanced session configuration for production-ready security
+- **CSRF Middleware**: Proper CSRF token validation across all authentication endpoints
+- **Protected Routes**: Updated route protection to use session-based authentication middleware
+
+#### 🎨 Frontend Authentication Refactor
+- **Login Component**: Refactored `Login.vue` to use Inertia.js POST requests with automatic CSRF handling
+- **Registration Component**: Updated `Register.vue` to use Inertia.js form helpers with proper validation feedback
+- **Error Handling**: Improved error display and user feedback for authentication failures
+- **Form Validation**: Client-side and server-side validation with real-time error messages
+- **Redirect Handling**: Proper post-authentication redirects to dashboard
+
+### Removed
+- **Laravel Sanctum**: Completely removed Sanctum package and all related configurations
+- **Token Authentication**: Eliminated API token-based authentication system
+- **Custom Auth API**: Removed custom API authentication endpoints in favor of Fortify routes
+- **Manual CSRF Handling**: Removed manual CSRF token management in favor of automatic handling
+
+### Fixed
+- **Session Store Issues**: Resolved "Session store not set on request" errors with proper middleware configuration
+- **CSRF Token Errors**: Fixed CSRF token mismatch issues with proper meta tag and Axios setup
+- **Rate Limiter Exceptions**: Resolved MissingRateLimiterException by implementing proper rate limiting configuration
+- **Authentication State**: Fixed authentication state persistence across page reloads
+- **Middleware Conflicts**: Resolved middleware ordering and configuration conflicts
+
+### Technical Improvements
+
+#### 🏗️ Configuration Updates
+- **Fortify Configuration**: Comprehensive Fortify setup with custom Inertia.js views
+- **Environment Variables**: Updated `.env` configuration for session-based authentication
+- **Middleware Registration**: Proper registration of authentication and rate limiting middleware
+- **Service Providers**: Added and configured RateLimitServiceProvider for authentication security
+- **API Documentation**: Updated Scribe configuration to reflect session-based authentication and CSRF handling
+
+#### 🧪 Testing & Validation
+- **Authentication Testing**: Verified login, registration, and protected route access
+- **Session Validation**: Confirmed proper session creation and management
+- **CSRF Testing**: Validated CSRF token generation and verification
+- **Rate Limit Testing**: Confirmed rate limiting functionality for authentication endpoints
+
+### Migration Notes
+
+#### From 2.0.x to 2.1.x
+- **Authentication Method**: Migration from token-based to session-based authentication
+- **Frontend Changes**: Updated Vue components to use Inertia.js form helpers
+- **Configuration Updates**: New Fortify configuration and rate limiting setup
+- **Database Changes**: Session storage moved to database (requires session table migration)
+
+#### Breaking Changes
+- **API Authentication**: Removed custom API authentication endpoints
+- **Token Storage**: Frontend no longer stores or manages authentication tokens
+- **Authentication Headers**: Changed from Authorization Bearer tokens to session cookies
+
+#### Upgrade Steps
+1. Install Laravel Fortify: `composer require laravel/fortify`
+2. Publish Fortify configuration: `php artisan vendor:publish --provider="Laravel\Fortify\FortifyServiceProvider"`
+3. Run session table migration: `php artisan session:table && php artisan migrate`
+4. Update environment configuration for session driver
+5. Clear all caches: `php artisan config:clear && php artisan cache:clear && php artisan route:clear`
+6. Update frontend components to use new authentication methods
+
 ## [2.0.0] - 2024-01-15
 
 ### Added

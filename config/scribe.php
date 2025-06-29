@@ -36,7 +36,7 @@ return [
 
             // Exclude these routes even if they matched the rules above.
             'exclude' => [
-                // 'GET /health', 'admin.*'
+                'api/user'
             ],
         ],
     ],
@@ -86,10 +86,10 @@ return [
         'base_url' => null,
 
         // Fetch a CSRF token before each request, and add it as an X-XSRF-TOKEN header.
-        'use_csrf' => false,
+        'use_csrf' => true,
 
         // The URL to fetch the CSRF token from (if `use_csrf` is true).
-        'csrf_url' => '/sanctum/csrf-cookie',
+        'csrf_url' => '/csrf-cookie',
     ],
 
     // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
@@ -116,7 +116,7 @@ return [
         'placeholder' => '{YOUR_AUTH_KEY}',
 
         // Any extra authentication-related info for your users. Markdown and HTML are supported.
-        'extra_info' => 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.',
+        'extra_info' => 'Authentication is handled via session cookies through the web interface. API endpoints that require authentication use session-based authentication rather than API tokens.',
     ],
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
