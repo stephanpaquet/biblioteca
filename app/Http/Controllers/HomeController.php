@@ -19,15 +19,16 @@ class HomeController extends Controller
     {
         // Handle locale switching
         $locale = $request->get('locale', app()->getLocale());
+
         if (in_array($locale, ['en', 'fr', 'es', 'de'])) {
             app()->setLocale($locale);
         }
 
-        // Share locale data with all Inertia responses
-        Inertia::share([
-            'locale' => app()->getLocale(),
-            'supportedLocales' => ['en', 'fr', 'es', 'de']
-        ]);
+        // // Share locale data with all Inertia responses
+        // Inertia::share([
+        //     'locale' => app()->getLocale(),
+        //     'supportedLocales' => ['en', 'fr', 'es', 'de']
+        // ]);
 
         $query = $request->get('q');
         $books = null;

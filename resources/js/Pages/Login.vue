@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import { usePage } from '@inertiajs/inertia-vue3';
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 
 const page = usePage();
 const email = ref('');

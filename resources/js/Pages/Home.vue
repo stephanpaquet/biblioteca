@@ -1,13 +1,19 @@
 <script setup>
 import { onMounted } from 'vue';
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 import SearchForm from '../Components/SearchForm.vue';
 import BookGrid from '../Components/BookGrid.vue';
 import { useLibraryStore } from '../stores/library';
 import { useSearchStore } from '../stores/search';
+import { useAuthStore } from '../stores/auth';
+import { useTranslationsStore } from '../stores/translations';
 
 const props = defineProps({
   books: {
+    type: Object,
+    default: null
+  },
+  auth: {
     type: Object,
     default: null
   },
@@ -26,16 +32,24 @@ const props = defineProps({
   translations: {
     type: Object,
     required: true
+  },
+  supportedLocales: {
+    type: Array,
+    default: () => ['en']
   }
 });
 
 const libraryStore = useLibraryStore();
 const searchStore = useSearchStore();
+const authStore = useAuthStore();
+const translationsStore = useTranslationsStore();
 
 onMounted(() => {
   // Initialize stores with props data
   libraryStore.setBooks(props.userBooks);
-  
+  translationsStore.setTranslations(props.translations);
+
+  authStore.setUser(props.auth.user || null);
   if (props.query) {
     searchStore.setQuery(props.query);
     searchStore.setResults(props.books);
@@ -58,9 +72,9 @@ function t(key) {
         <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
           {{ t('subtitle') }}
         </p>
-        
-        <SearchForm 
-          :initial-query="query" 
+
+        <SearchForm
+          :initial-query="query"
           :translations="translations"
         />
       </div>
@@ -68,8 +82,8 @@ function t(key) {
 
     <!-- Search Results Section -->
     <div v-if="query" class="container mx-auto px-4 py-12">
-      <BookGrid 
-        :books="books" 
+      <BookGrid
+        :books="books"
         :user-books="userBooks"
         :title="t('search_results').replace(':query', query)"
         :show-no-results="true"
@@ -79,13 +93,13 @@ function t(key) {
 
     <!-- Featured Books Section -->
     <div v-else class="container mx-auto px-4 py-12">
-      <BookGrid 
-        :books="featured" 
+      <BookGrid
+        :books="featured"
         :user-books="userBooks"
         :title="t('featured_books')"
         :translations="translations"
       />
-      
+
       <!-- Quick Actions -->
       <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="text-center p-6 bg-white rounded-lg shadow-md">
@@ -97,7 +111,7 @@ function t(key) {
           <h3 class="text-xl font-semibold mb-2">{{ t('quick_actions.search.title') }}</h3>
           <p class="text-gray-600">{{ t('quick_actions.search.description') }}</p>
         </div>
-        
+
         <div class="text-center p-6 bg-white rounded-lg shadow-md">
           <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +121,7 @@ function t(key) {
           <h3 class="text-xl font-semibold mb-2">{{ t('quick_actions.library.title') }}</h3>
           <p class="text-gray-600">{{ t('quick_actions.library.description') }}</p>
         </div>
-        
+
         <div class="text-center p-6 bg-white rounded-lg shadow-md">
           <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +133,7 @@ function t(key) {
         </div>
       </div>
        <p class="text-gray-600">{{ t('quick_actions.library.description') }}</p>
-      
+
         <div class="text-center p-6 bg-white rounded-lg shadow-md">
           <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -130,7 +144,7 @@ function t(key) {
           <p class="text-gray-600">{{ t('quick_actions.progress.description') }}</p>
         </div>
     </div>
-     
+
   </Layout>
 </template>
 

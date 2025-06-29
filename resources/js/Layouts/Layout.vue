@@ -4,14 +4,19 @@ import { Inertia } from '@inertiajs/inertia';
 import { computed, getCurrentInstance } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3';
 import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
+import { useAuthStore } from '../stores/auth';
+import { useTranslationsStore } from '../stores/translations';
 
 const page = usePage();
+
+const authStore = useAuthStore();
+const translationsStore = useTranslationsStore();
 
 // Get route function from global properties or window
 const route = getCurrentInstance()?.appContext.config.globalProperties.route || window.route;
 
-// Get user from Inertia shared props
-const user = computed(() => page.props.auth?.user || null);
+const user = computed(() => authStore.user);
+const translations = computed(() => translationsStore.translations);
 
 function logout() {
   Inertia.post(route('logout'));
@@ -40,7 +45,7 @@ function logout() {
               {{ page.props.translations?.layout?.nav?.library || 'My Library' }}
             </Link>
             <Link :href="route('dashboard')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url === '/dashboard' }" :aria-current="page.url === '/dashboard' ? 'page' : null">
-              {{ page.props.translations?.layout?.nav?.dashboard || 'Dashboard' }}
+              {{ translations?.layout?.nav?.dashboard || 'Dashboard' }}
             </Link>
           </div>
 
@@ -55,16 +60,16 @@ function logout() {
             <!-- Auth buttons -->
             <div class="flex items-center space-x-2">
               <template v-if="user">
-                <span class="text-gray-300">
+                <span>
                   {{ (page.props.translations?.layout?.auth?.hi || 'Hi, :name').replace(':name', user.name) }}
                 </span>
-                <button @click="logout" class="text-gray-300 hover:text-white underline ml-2">
-                  {{ page.props.translations?.layout?.auth?.logout || 'Logout' }}
+                <button @click="logout" class="text-gray-400 hover:text-gray-800 underline ml-2">
+                  {{ translations?.layout?.auth?.logout || 'Logout' }}
                 </button>
               </template>
               <template v-else>
                 <Link :href="route('login')" class="text-blue-600 hover:text-blue-800 px-3 py-1 rounded transition-colors">
-                  {{ page.props.translations?.layout?.auth?.login || 'Login' }}
+                  {{ translations?.layout?.auth?.login || 'Login' }}
                 </Link>
                 <Link :href="route('register')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors">
                   {{ page.props.translations?.layout?.auth?.register || 'Register' }}
