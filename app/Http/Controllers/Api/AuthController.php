@@ -18,7 +18,7 @@ class AuthController extends Controller
      * @bodyParam name string required The user's name. Example: John Doe
      * @bodyParam email string required The user's email. Example: john@example.com
      * @bodyParam password string required The user's password. Example: password
-     * @response 201 {"user": {"id": 1, "name": "John Doe", "email": "john@example.com"}, "token": "..."}
+     * @response 201 {"user": {"id": 1, "name": "John Doe", "email": "john@example.com"}}
      */
     public function register(Request $request)
     {
@@ -34,11 +34,11 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        $token = $user->createToken('api')->plainTextToken;
+        Auth::login($user);
 
         return response()->json([
             'user' => $user,
-            'token' => $token,
+            'message' => 'Registration successful',
         ], 201);
     }
 
@@ -48,7 +48,7 @@ class AuthController extends Controller
      * @group Authentication
      * @bodyParam email string required The user's email. Example: john@example.com
      * @bodyParam password string required The user's password. Example: password
-     * @response 200 {"user": {"id": 1, "name": "John Doe", "email": "john@example.com"}, "token": "..."}
+     * @response 200 {"user": {"id": 1, "name": "John Doe", "email": "john@example.com"}}
      */
     public function login(Request $request)
     {
@@ -57,24 +57,22 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        if (! $user || ! Hash::check($credentials['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+            return response()->json([
+                'user' => Auth::user(),
+                'message' => 'Login successful',
             ]);
         }
 
-        $token = $user->createToken('api')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
+        throw ValidationException::withMessages([
+            'email' => ['The provided credentials are incorrect.'],
         ]);
     }
 
     /**
-     * Logout the authenticated user (revoke token).
+     * Logout the authenticated user.
      *
      * @group Authentication
      * @authenticated
@@ -82,8 +80,11 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-        return response()->json([], 204);
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Logout successful'], 200);
     }
 
     /**

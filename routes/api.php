@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GoogleBooksController;
 use App\Http\Controllers\Api\GoogleBookController;
-use App\Http\Controllers\Api\AuthController;
 
 /**
  * API Routes for Google Books integration
@@ -16,10 +15,7 @@ use App\Http\Controllers\Api\AuthController;
 Route::get('books/search', [GoogleBooksController::class, 'search'])->name('api.books.search');
 Route::get('books/{id}', [GoogleBookController::class, 'show'])->name('api.books.show');
 
-// Authentication API
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('user', [AuthController::class, 'user']);
+// Additional API routes that need authentication can be added here
+Route::middleware(['web', 'auth'])->group(function () {
+    // Add authenticated API routes here if needed
 });

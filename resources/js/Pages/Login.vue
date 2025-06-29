@@ -1,30 +1,37 @@
 <script setup>
 import { ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import { usePage } from '@inertiajs/inertia-vue3';
 import Layout from './Layout.vue';
 
+const page = usePage();
 const email = ref('');
 const password = ref('');
-const error = ref(null);
+const processing = ref(false);
+
+// Get errors from Inertia's error bag
+const errors = ref(page.props.errors || {});
 
 function login() {
-  error.value = null;
-  fetch('/api/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ email: email.value, password: password.value })
-  })
-    .then(async res => {
-      if (!res.ok) throw await res.json();
-      return res.json();
-    })
-    .then(data => {
-      localStorage.setItem('token', data.token);
-      window.location.href = '/';
-    })
-    .catch(async err => {
-      error.value = err?.message || 'Login failed.';
-    });
+  processing.value = true;
+
+  // Use Inertia.js post method which automatically handles CSRF tokens
+  Inertia.post(route('login'), {
+    email: email.value,
+    password: password.value,
+  }, {
+    onFinish: () => {
+      processing.value = false;
+    },
+    onError: (errors) => {
+      // Errors are automatically handled by Inertia
+      console.log('Login errors:', errors);
+    },
+    onSuccess: () => {
+      // Redirect will be handled automatically by Fortify
+      console.log('Login successful');
+    }
+  });
 }
 </script>
 
@@ -35,14 +42,43 @@ function login() {
       <form @submit.prevent="login">
         <div class="mb-4">
           <label class="block mb-1">Email</label>
-          <input v-model="email" type="email" class="border rounded w-full p-2" required />
+          <input
+            v-model="email"
+            type="email"
+            class="border rounded w-full p-2"
+            :class="{ 'border-red-500': $page.props.errors?.email }"
+            required
+          />
+          <div v-if="$page.props.errors?.email" class="text-red-600 text-sm mt-1">
+            {{ $page.props.errors.email }}
+          </div>
         </div>
         <div class="mb-4">
           <label class="block mb-1">Password</label>
-          <input v-model="password" type="password" class="border rounded w-full p-2" required />
+          <input
+            v-model="password"
+            type="password"
+            class="border rounded w-full p-2"
+            :class="{ 'border-red-500': $page.props.errors?.password }"
+            required
+          />
+          <div v-if="$page.props.errors?.password" class="text-red-600 text-sm mt-1">
+            {{ $page.props.errors.password }}
+          </div>
         </div>
-        <div v-if="error" class="text-red-600 mb-2">{{ error }}</div>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">Login</button>
+
+        <!-- General error messages -->
+        <div v-if="$page.props.errors?.email" class="text-red-600 mb-2 text-sm">
+          {{ $page.props.errors.email }}
+        </div>
+
+        <button
+          type="submit"
+          :disabled="processing"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full disabled:opacity-50"
+        >
+          {{ processing ? 'Logging in...' : 'Login' }}
+        </button>
       </form>
       <div class="mt-4 text-sm text-center">
         <a href="/register" class="text-blue-600 hover:underline">Register</a> |

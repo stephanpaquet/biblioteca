@@ -1,30 +1,36 @@
 <script setup>
 import { ref } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import { usePage } from '@inertiajs/inertia-vue3';
 import Layout from './Layout.vue';
 
+const page = usePage();
 const name = ref('');
 const email = ref('');
 const password = ref('');
-const error = ref(null);
+const password_confirmation = ref('');
+const processing = ref(false);
 
 function register() {
-  error.value = null;
-  fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ name: name.value, email: email.value, password: password.value })
-  })
-    .then(async res => {
-      if (!res.ok) throw await res.json();
-      return res.json();
-    })
-    .then(data => {
-      localStorage.setItem('token', data.token);
-      window.location.href = '/';
-    })
-    .catch(async err => {
-      error.value = err?.message || 'Registration failed.';
-    });
+  processing.value = true;
+
+  // Use Inertia.js post method which automatically handles CSRF tokens
+  Inertia.post(route('register'), {
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: password_confirmation.value,
+  }, {
+    onFinish: () => {
+      processing.value = false;
+    },
+    onError: (errors) => {
+      console.log('Registration errors:', errors);
+    },
+    onSuccess: () => {
+      console.log('Registration successful');
+    }
+  });
 }
 </script>
 
@@ -35,19 +41,59 @@ function register() {
       <form @submit.prevent="register">
         <div class="mb-4">
           <label class="block mb-1">Name</label>
-          <input v-model="name" type="text" class="border rounded w-full p-2" required />
+          <input
+            v-model="name"
+            type="text"
+            class="border rounded w-full p-2"
+            :class="{ 'border-red-500': $page.props.errors?.name }"
+            required
+          />
+          <div v-if="$page.props.errors?.name" class="text-red-600 text-sm mt-1">
+            {{ $page.props.errors.name }}
+          </div>
         </div>
         <div class="mb-4">
           <label class="block mb-1">Email</label>
-          <input v-model="email" type="email" class="border rounded w-full p-2" required />
+          <input
+            v-model="email"
+            type="email"
+            class="border rounded w-full p-2"
+            :class="{ 'border-red-500': $page.props.errors?.email }"
+            required
+          />
+          <div v-if="$page.props.errors?.email" class="text-red-600 text-sm mt-1">
+            {{ $page.props.errors.email }}
+          </div>
         </div>
         <div class="mb-4">
           <label class="block mb-1">Password</label>
-          <input v-model="password" type="password" class="border rounded w-full p-2" required />
+          <input
+            v-model="password"
+            type="password"
+            class="border rounded w-full p-2"
+            :class="{ 'border-red-500': $page.props.errors?.password }"
+            required
+          />
+          <div v-if="$page.props.errors?.password" class="text-red-600 text-sm mt-1">
+            {{ $page.props.errors.password }}
+          </div>
         </div>
-        <div v-if="error" class="text-red-600 mb-2">{{ error }}</div>
-        <button type="submit"
-          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">Register</button>
+        <div class="mb-4">
+          <label class="block mb-1">Confirm Password</label>
+          <input
+            v-model="password_confirmation"
+            type="password"
+            class="border rounded w-full p-2"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          :disabled="processing"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full disabled:opacity-50"
+        >
+          {{ processing ? 'Creating Account...' : 'Register' }}
+        </button>
       </form>
       <div class="mt-4 text-sm text-center">
         Already have an account? <a href="/login" class="text-blue-600 hover:underline">Login</a>

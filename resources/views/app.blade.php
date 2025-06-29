@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title inertia>Biblioteca</title>
     <meta name="description" inertia content="Biblioteca is a modern digital library and book management platform. Discover, manage, and connect with books easily online.">
     <meta property="og:title" inertia content="Biblioteca | Modern Digital Library & Book Management">
