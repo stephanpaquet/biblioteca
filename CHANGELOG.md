@@ -45,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Rate Limiter Exceptions**: Resolved MissingRateLimiterException by implementing proper rate limiting configuration
 - **Authentication State**: Fixed authentication state persistence across page reloads
 - **Middleware Conflicts**: Resolved middleware ordering and configuration conflicts
+- **CRITICAL: Inertia Response Handling**: Fixed 500 errors on `/register` and `/login` routes caused by improper Fortify-Inertia response integration - updated response bindings to properly convert Inertia responses to HTTP responses
 
 ### Technical Improvements
 

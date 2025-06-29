@@ -12,7 +12,7 @@ class LibraryController extends Controller
     public function index(Request $request)
     {
         // Debug logging
-        Log::info('Library index accessed', [
+        dd('Library index accessed', [
             'user_id' => $request->user()->id,
             'authenticated' => $request->user() !== null
         ]);
@@ -28,7 +28,7 @@ class LibraryController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Library index error: ' . $e->getMessage());
-            
+
             return Inertia::render('Library', [
                 'books' => collect([]),
                 'error' => 'Unable to load library'
@@ -60,7 +60,7 @@ class LibraryController extends Controller
         );
 
         $user = $request->user();
-        
+
         if ($user->books()->where('book_id', $book->id)->exists()) {
             return response()->json(['message' => 'Book already in library'], 409);
         }
@@ -75,7 +75,7 @@ class LibraryController extends Controller
     public function destroy(Request $request, $bookId)
     {
         $request->user()->books()->detach($bookId);
-        
+
         return response()->json(['message' => 'Book removed from library']);
     }
 

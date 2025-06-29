@@ -13,12 +13,12 @@ class SetLocale
     {
         // Get locale from request parameter
         $locale = $request->get('locale');
-        
+
         // If locale is provided and supported, set it
         if ($locale && in_array($locale, config('app.supported_locales', ['en']))) {
             App::setLocale($locale);
             Session::put('locale', $locale);
-        } 
+        }
         // Otherwise, use session locale if available
         elseif (Session::has('locale') && in_array(Session::get('locale'), config('app.supported_locales', ['en']))) {
             App::setLocale(Session::get('locale'));

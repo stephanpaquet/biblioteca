@@ -20,7 +20,20 @@ Route::get('/debug-auth', function () {
         'user' => Auth::user(),
         'session_id' => session()->getId(),
         'guards' => config('auth.guards'),
-        'csrf_token' => csrf_token()
+        'csrf_token' => csrf_token(),
+        'middleware_applied' => request()->hasHeader('X-Inertia'),
+    ]);
+});
+
+// Test the Inertia auth shared data
+Route::get('/debug-inertia', function () {
+    $handleInertiaRequests = new \App\Http\Middleware\HandleInertiaRequests();
+    $sharedData = $handleInertiaRequests->share(request());
+
+    return response()->json([
+        'shared_data' => $sharedData,
+        'auth_check' => Auth::check(),
+        'user' => Auth::user(),
     ]);
 });
 

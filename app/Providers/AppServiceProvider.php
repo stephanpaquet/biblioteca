@@ -4,8 +4,20 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\LoginViewResponse;
+use Laravel\Fortify\Contracts\RegisterViewResponse;
+use App\Actions\Fortify\CreateNewUser;
+use App\Actions\Fortify\ResetUserPassword;
+use App\Actions\Fortify\UpdateUserPassword;
+use App\Actions\Fortify\UpdateUserProfileInformation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +27,50 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(\App\Services\GoogleBooksService::class);
+
+        // Custom login response for Inertia
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+            public function toResponse($request)
+            {
+                if ($request->wantsJson()) {
+                    return response()->json(['two_factor' => false]);
+                }
+
+                // For Inertia requests, return a redirect response
+                return redirect()->intended(config('fortify.home'));
+            }
+        });
+
+        // Custom register response for Inertia
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
+            public function toResponse($request)
+            {
+                if ($request->wantsJson()) {
+                    return response()->json(['two_factor' => false]);
+                }
+
+                // For Inertia requests, return a redirect response
+                return redirect(config('fortify.home'));
+            }
+        });
+
+        // Custom login view response for Inertia
+        $this->app->instance(LoginViewResponse::class, new class implements LoginViewResponse {
+            public function toResponse($request)
+            {
+                // Return the Inertia response directly - Laravel will handle it properly
+                return Inertia::render('Login')->toResponse($request);
+            }
+        });
+
+        // Custom register view response for Inertia
+        $this->app->instance(RegisterViewResponse::class, new class implements RegisterViewResponse {
+            public function toResponse($request)
+            {
+                // Return the Inertia response directly - Laravel will handle it properly
+                return Inertia::render('Register')->toResponse($request);
+            }
+        });
     }
 
     /**
@@ -22,46 +78,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Configure Fortify views for Inertia
-        Fortify::loginView(function () {
-            return Inertia::render('Login');
-        });
-
-        Fortify::registerView(function () {
-            return Inertia::render('Register');
-        });
-
-        Fortify::requestPasswordResetLinkView(function () {
-            return Inertia::render('PasswordReset');
-        });
-
-        Fortify::resetPasswordView(function ($request) {
-            return Inertia::render('ResetPassword', [
-                'token' => $request->route('token'),
-                'email' => $request->email,
-            ]);
-        });
-
-        Inertia::share([
-            'auth' => function () {
-                return [
-                    'user' => Auth::user(),
-                ];
-            },
-            'csrf_token' => function () {
-                return csrf_token();
-            },
-            'locale' => function () {
-                return app()->getLocale();
-            },
-            'supportedLocales' => function () {
-                return config('app.supported_locales', ['en']);
-            },
-            'translations' => function () {
-                return [
-                    'layout' => __('layout')
-                ];
-            }
-        ]);
+        //
     }
 }
