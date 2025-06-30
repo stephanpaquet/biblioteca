@@ -213,7 +213,7 @@ class GoogleBooksService
     /**
      * Clear cache for specific query
      */
-    public function clearCache(string $query = null): bool
+    public function clearCache(?string $query = null): bool
     {
         if ($query) {
             $cacheKey = $this->generateCacheKey('search', $query);

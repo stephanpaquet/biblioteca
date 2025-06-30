@@ -11,7 +11,7 @@ beforeEach(function () {
     $this->user = User::factory()->create([
         'email_verified_at' => now()
     ]);
-    
+
     $this->book = Book::factory()->create([
         'google_book_id' => 'test-book-123',
         'title' => 'Test Book',
@@ -34,7 +34,7 @@ describe('LibraryController Index', function () {
 
     it('redirects unauthenticated users to login', function () {
         $response = $this->get('/library');
-        
+
         $response->assertRedirect(route('login'));
     });
 
@@ -42,7 +42,7 @@ describe('LibraryController Index', function () {
         // Create books for user
         $book1 = Book::factory()->create(['title' => 'First Book']);
         $book2 = Book::factory()->create(['title' => 'Second Book']);
-        
+
         $this->user->books()->attach($book1->id, ['created_at' => now()->subDay()]);
         $this->user->books()->attach($book2->id, ['created_at' => now()]);
 
@@ -133,7 +133,7 @@ describe('LibraryController Store', function () {
         ];
 
         $response = $this->postJson('/api/library', $bookData);
-        
+
         $response->assertStatus(401);
     });
 
@@ -152,7 +152,7 @@ describe('LibraryController Store', function () {
             ->postJson('/api/library', $bookData);
 
         $response->assertStatus(200);
-        
+
         // Should not create new book, should use existing
         $this->assertEquals(1, Book::where('google_book_id', 'existing-book-123')->count());
         $this->assertTrue($this->user->books()->where('book_id', $existingBook->id)->exists());
@@ -185,7 +185,7 @@ describe('LibraryController Destroy', function () {
 
     it('requires authentication', function () {
         $response = $this->deleteJson("/api/library/{$this->book->id}");
-        
+
         $response->assertStatus(401);
     });
 });
@@ -233,7 +233,7 @@ describe('LibraryController UpdateStatus', function () {
         $response = $this->patchJson("/api/library/{$this->book->id}/status", [
             'status' => 'reading'
         ]);
-        
+
         $response->assertStatus(401);
     });
 
@@ -247,15 +247,12 @@ describe('LibraryController UpdateStatus', function () {
                 ]);
 
             $response->assertStatus(200);
-            
+
             $this->assertDatabaseHas('user_books', [
                 'user_id' => $this->user->id,
                 'book_id' => $this->book->id,
                 'status' => $status
             ]);
-        }
-    });
-});
         }
     });
 });
