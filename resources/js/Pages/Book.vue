@@ -1,5 +1,5 @@
 <script setup>
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3';
