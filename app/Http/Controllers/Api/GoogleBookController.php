@@ -29,6 +29,7 @@ class GoogleBookController extends Controller
     {
         $service = app(GoogleBooksService::class);
         $response = $service->getBook($id);
+
         if (!$response) {
             return response()->json(['message' => 'Book not found'], 404);
         }

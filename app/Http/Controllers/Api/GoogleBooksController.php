@@ -31,7 +31,6 @@ class GoogleBooksController extends Controller
     public function search(Request $request): ResourceCollection
     {
         $query = $request->input('q');
-        dd($query);
 
         $service = app(GoogleBooksService::class);
         $results = $service->searchBooks($query);

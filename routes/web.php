@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\SearchController;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
@@ -62,3 +63,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('api.user');
 });
 
+
+// Route::group(function () {
+Route::controller(SearchController::class)->group(function () {
+    Route::get('/search/{query?}', 'index')->name('search.index');
+});

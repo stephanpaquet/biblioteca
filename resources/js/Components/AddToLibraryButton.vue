@@ -1,35 +1,3 @@
-<template>
-  <div class="relative">
-    <button
-      v-if="!isInLibrary"
-      @click="addToLibrary"
-      :disabled="libraryStore.isLoading"
-      class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
-    >
-      {{ libraryStore.isLoading ? 'Adding...' : 'Add to Library' }}
-    </button>
-    
-    <div v-else class="flex items-center space-x-2">
-      <span class="text-green-600 text-sm font-medium">✓ In Library</span>
-      <select
-        v-model="currentStatus"
-        @change="updateStatus"
-        class="text-xs border rounded px-2 py-1"
-      >
-        <option value="want_to_read">Want to Read</option>
-        <option value="reading">Reading</option>
-        <option value="read">Read</option>
-      </select>
-    </div>
-
-    <div v-if="message" class="absolute top-full left-0 mt-1 text-xs text-green-600">
-      {{ message }}
-    </div>
-    <div v-if="libraryStore.error" class="absolute top-full left-0 mt-1 text-xs text-red-600">
-      {{ libraryStore.error }}
-    </div>
-  </div>
-</template>
 
 <script setup>
 import { ref, computed } from 'vue'
@@ -65,7 +33,7 @@ async function addToLibrary() {
   }
 
   const result = await libraryStore.addToLibrary(bookData)
-  
+
   if (result.success) {
     message.value = 'Added to library!'
     setTimeout(() => message.value = '', 3000)
@@ -78,3 +46,36 @@ async function updateStatus() {
   setTimeout(() => message.value = '', 2000)
 }
 </script>
+
+<template>
+  <div class="relative">
+    <button
+      v-if="!isInLibrary"
+      @click="addToLibrary"
+      :disabled="libraryStore.isLoading"
+      class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+    >
+      {{ libraryStore.isLoading ? 'Adding...' : 'Add to Library' }}
+    </button>
+
+    <div v-else class="flex items-center space-x-2">
+      <span class="text-green-600 text-sm font-medium">✓ In Library</span>
+      <select
+        v-model="currentStatus"
+        @change="updateStatus"
+        class="text-xs border rounded px-2 py-1"
+      >
+        <option value="want_to_read">Want to Read</option>
+        <option value="reading">Reading</option>
+        <option value="read">Read</option>
+      </select>
+    </div>
+
+    <div v-if="message" class="absolute top-full left-0 mt-1 text-xs text-green-600">
+      {{ message }}
+    </div>
+    <div v-if="libraryStore.error" class="absolute top-full left-0 mt-1 text-xs text-red-600">
+      {{ libraryStore.error }}
+    </div>
+  </div>
+</template>

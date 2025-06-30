@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 
 const email = ref('');
 const message = ref(null);
@@ -11,7 +11,7 @@ function requestReset() {
   error.value = null;
   message.value = null;
   isLoading.value = true;
-  
+
   fetch('/api/password/email', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
@@ -36,7 +36,7 @@ async function addToLibrary(book, status = 'want_to_read') {
   try {
     const response = await fetch('/api/library', {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -78,8 +78,8 @@ async function addToLibrary(book, status = 'want_to_read') {
         </div>
         <div v-if="error" class="text-red-600 mb-2">{{ error }}</div>
         <div v-if="message" class="text-green-600 mb-2">{{ message }}</div>
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           :disabled="isLoading"
           class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full disabled:opacity-50"
         >

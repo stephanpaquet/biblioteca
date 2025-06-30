@@ -33,7 +33,7 @@ class GoogleBooksService
         }
 
         $cacheKey = $this->generateCacheKey('search', $query, $options);
-        
+
         return Cache::remember($cacheKey, $this->cacheMinutes * 60, function () use ($query, $options) {
             return $this->performSearchRequest($query, $options);
         });
@@ -49,7 +49,7 @@ class GoogleBooksService
         }
 
         $cacheKey = $this->generateCacheKey('book', $bookId);
-        
+
         return Cache::remember($cacheKey, $this->cacheMinutes * 60 * 24, function () use ($bookId) {
             return $this->performBookRequest($bookId);
         });
@@ -65,10 +65,19 @@ class GoogleBooksService
         }
 
         $cacheKey = $this->generateCacheKey('featured', $category);
-        
+
         return Cache::remember($cacheKey, $this->cacheMinutes * 60 * 6, function () use ($category) {
             return $this->performSearchRequest($category, ['maxResults' => 12]);
         });
+    }
+
+    /**
+     * Search books by title
+     */
+    public function searchByTitle(string $title, array $options = []): array
+    {
+        $query = "intitle:\"{$title}\"";
+        return $this->searchBooks($query, $options);
     }
 
     /**
@@ -86,6 +95,15 @@ class GoogleBooksService
     public function searchBySubject(string $subject, array $options = []): array
     {
         $query = "subject:{$subject}";
+        return $this->searchBooks($query, $options);
+    }
+
+    /**
+     * Search books by publisher
+     */
+    public function searchByPublisher(string $publisher, array $options = []): array
+    {
+        $query = "inpublisher:{$publisher}";
         return $this->searchBooks($query, $options);
     }
 
@@ -188,7 +206,7 @@ class GoogleBooksService
             'options' => $options,
             'api_key_present' => $this->hasApiKey()
         ];
-        
+
         return 'google_books:' . md5(json_encode($keyData));
     }
 
@@ -201,7 +219,7 @@ class GoogleBooksService
             $cacheKey = $this->generateCacheKey('search', $query);
             return Cache::forget($cacheKey);
         }
-        
+
         // Clear all Google Books cache
         return Cache::flush();
     }

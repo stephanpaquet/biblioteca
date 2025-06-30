@@ -29,7 +29,7 @@ class HomeController extends Controller
         $userBooks = [];
 
         if ($query) {
-            $books = $this->googleBooksService->searchByAuthor($query);
+            $books = $this->googleBooksService->searchBooks($query);
         }
 
         if (auth()->check()) {

@@ -4,25 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Services\GoogleBooksService;
 
 class SearchController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, GoogleBooksService $googleBooksService, string $query = '')
     {
-        $query = $request->input('query');
-        
-        // Assuming you have a Book model and it's searchable
-        $books = Book::search($query)->get();
-
-        $userBooks = [];
-        if (auth()->check()) {
-            $userBooks = auth()->user()->books()->get();
-        }
-
-        return Inertia::render('SearchResults', [
-            'books' => $books,
-            'query' => $query,
-            'userBooks' => $userBooks
+        $validated = $request->validate([
+            'query' => 'nullable|string|max:255',
         ]);
+
+        $query = $validated['query'] ?? $query;
+
+        if ($query) {
+            return Inertia::render('Search/Index', [
+                'query' => $query,
+                'results' => $googleBooksService->searchBooks($query),
+            ]);
+        }
     }
 }

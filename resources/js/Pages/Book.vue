@@ -1,5 +1,5 @@
 <script setup>
-import Layout from './Layout.vue';
+import Layout from '../Layouts/Layout.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3';
@@ -49,14 +49,14 @@ onMounted(fetchBook);
       <div v-else-if="book" class="max-w-2xl mx-auto bg-white rounded shadow p-6">
         <div class="flex mb-4">
           <div class="w-full h-48 mr-6 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
-            <img 
-              v-if="book.thumbnail" 
-              :src="book.thumbnail.replace('http://', 'https://')" 
-              :alt="book.title" 
+            <img
+              v-if="book.thumbnail"
+              :src="book.thumbnail.replace('http://', 'https://')"
+              :alt="book.title"
               class="w-full h-full object-cover"
               @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
             />
-            <div 
+            <div
               v-else
               class="flex flex-col items-center justify-center text-gray-400 p-2 text-center w-full h-full"
             >
