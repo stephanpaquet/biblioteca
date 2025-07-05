@@ -4,15 +4,18 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 
 class GoogleBooksService
 {
     private string $baseUrl;
+
     private ?string $apiKey;
+
     private int $cacheMinutes;
+
     private bool $cacheEnabled;
 
     public function __construct()
@@ -28,7 +31,7 @@ class GoogleBooksService
      */
     public function searchBooks(string $query, array $options = []): array
     {
-        if (!$this->cacheEnabled) {
+        if (! $this->cacheEnabled) {
             return $this->performSearchRequest($query, $options);
         }
 
@@ -44,7 +47,7 @@ class GoogleBooksService
      */
     public function getBook(string $bookId): ?array
     {
-        if (!$this->cacheEnabled) {
+        if (! $this->cacheEnabled) {
             return $this->performBookRequest($bookId);
         }
 
@@ -60,7 +63,7 @@ class GoogleBooksService
      */
     public function getFeaturedBooks(string $category = 'bestsellers fiction 2024'): array
     {
-        if (!$this->cacheEnabled) {
+        if (! $this->cacheEnabled) {
             return $this->performSearchRequest($category, ['maxResults' => 12]);
         }
 
@@ -77,6 +80,7 @@ class GoogleBooksService
     public function searchByTitle(string $title, array $options = []): array
     {
         $query = "intitle:\"{$title}\"";
+
         return $this->searchBooks($query, $options);
     }
 
@@ -86,6 +90,7 @@ class GoogleBooksService
     public function searchByAuthor(string $author, array $options = []): array
     {
         $query = "inauthor:\"{$author}\"";
+
         return $this->searchBooks($query, $options);
     }
 
@@ -95,6 +100,7 @@ class GoogleBooksService
     public function searchBySubject(string $subject, array $options = []): array
     {
         $query = "subject:{$subject}";
+
         return $this->searchBooks($query, $options);
     }
 
@@ -104,15 +110,8 @@ class GoogleBooksService
     public function searchByPublisher(string $publisher, array $options = []): array
     {
         $query = "inpublisher:{$publisher}";
-        return $this->searchBooks($query, $options);
-    }
 
-    /**
-     * Get API key parameter if available
-     */
-    private function getApiKeyParam(): array
-    {
-        return $this->apiKey ? ['key' => $this->apiKey] : [];
+        return $this->searchBooks($query, $options);
     }
 
     /**
@@ -120,7 +119,7 @@ class GoogleBooksService
      */
     public function hasApiKey(): bool
     {
-        return !empty($this->apiKey);
+        return ! empty($this->apiKey);
     }
 
     /**
@@ -129,6 +128,29 @@ class GoogleBooksService
     public function isCacheEnabled(): bool
     {
         return $this->cacheEnabled;
+    }
+
+    /**
+     * Clear cache for specific query
+     */
+    public function clearCache(?string $query = null): bool
+    {
+        if ($query) {
+            $cacheKey = $this->generateCacheKey('search', $query);
+
+            return Cache::forget($cacheKey);
+        }
+
+        // Clear all Google Books cache
+        return Cache::flush();
+    }
+
+    /**
+     * Get API key parameter if available
+     */
+    private function getApiKeyParam(): array
+    {
+        return $this->apiKey ? ['key' => $this->apiKey] : [];
     }
 
     /**
@@ -153,13 +175,13 @@ class GoogleBooksService
             Log::warning('Google Books API request failed', [
                 'status' => $response->status(),
                 'query' => $query,
-                'response' => $response->body()
+                'response' => $response->body(),
             ]);
 
         } catch (\Exception $e) {
             Log::error('Google Books API exception', [
                 'message' => $e->getMessage(),
-                'query' => $query
+                'query' => $query,
             ]);
         }
 
@@ -182,13 +204,13 @@ class GoogleBooksService
 
             Log::warning('Google Books API book fetch failed', [
                 'status' => $response->status(),
-                'bookId' => $bookId
+                'bookId' => $bookId,
             ]);
 
         } catch (\Exception $e) {
             Log::error('Google Books API book fetch exception', [
                 'message' => $e->getMessage(),
-                'bookId' => $bookId
+                'bookId' => $bookId,
             ]);
         }
 
@@ -204,23 +226,9 @@ class GoogleBooksService
             'type' => $type,
             'identifier' => $identifier,
             'options' => $options,
-            'api_key_present' => $this->hasApiKey()
+            'api_key_present' => $this->hasApiKey(),
         ];
 
-        return 'google_books:' . md5(json_encode($keyData));
-    }
-
-    /**
-     * Clear cache for specific query
-     */
-    public function clearCache(?string $query = null): bool
-    {
-        if ($query) {
-            $cacheKey = $this->generateCacheKey('search', $query);
-            return Cache::forget($cacheKey);
-        }
-
-        // Clear all Google Books cache
-        return Cache::flush();
+        return 'google_books:'.md5(json_encode($keyData));
     }
 }

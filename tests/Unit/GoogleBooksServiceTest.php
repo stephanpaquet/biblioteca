@@ -20,7 +20,7 @@ it('searches for books and returns results', function () {
         ], 200),
     ]);
 
-    $service = new GoogleBooksService();
+    $service = new GoogleBooksService;
     $results = $service->searchBooks('Test Book');
 
     expect($results)->toBeArray();
@@ -33,7 +33,7 @@ it('returns null on API error', function () {
         'https://www.googleapis.com/books/v1/volumes*' => Http::response([], 400),
     ]);
 
-    $service = new GoogleBooksService();
+    $service = new GoogleBooksService;
     $results = $service->searchBooks('Test Book');
 
     expect($results)->toBeNull();

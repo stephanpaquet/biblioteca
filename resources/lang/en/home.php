@@ -13,15 +13,15 @@ return [
     'quick_actions' => [
         'search' => [
             'title' => 'Search Books',
-            'description' => 'Find books by title, author, or topic from Google\'s vast collection.'
+            'description' => 'Find books by title, author, or topic from Google\'s vast collection.',
         ],
         'library' => [
             'title' => 'Build Library',
-            'description' => 'Save books to your personal library and organize them by reading status.'
+            'description' => 'Save books to your personal library and organize them by reading status.',
         ],
         'progress' => [
             'title' => 'Track Progress',
-            'description' => 'Monitor your reading progress and discover new favorites.'
-        ]
-    ]
+            'description' => 'Monitor your reading progress and discover new favorites.',
+        ],
+    ],
 ];

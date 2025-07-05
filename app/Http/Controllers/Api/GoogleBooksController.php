@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\GoogleBooksService;
 use App\Http\Resources\GoogleBookResource;
+use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -25,8 +25,6 @@ class GoogleBooksController extends Controller
      * @queryParam startIndex int The index of the first result to return (for pagination). Example: 0
      *
      * @responseFile status=200 scenario="Success" responses/google-books.success.json
-     *
-     * @return ResourceCollection
      */
     public function search(Request $request): ResourceCollection
     {
@@ -35,6 +33,7 @@ class GoogleBooksController extends Controller
         $service = app(GoogleBooksService::class);
         $results = $service->searchBooks($query);
         $items = $results['items'] ?? [];
+
         return GoogleBookResource::collection($items);
     }
 }

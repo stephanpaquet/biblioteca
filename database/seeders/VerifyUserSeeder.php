@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class VerifyUserSeeder extends Seeder
 {
@@ -11,9 +11,9 @@ class VerifyUserSeeder extends Seeder
     {
         // Verify all existing users
         User::whereNull('email_verified_at')->update([
-            'email_verified_at' => now()
+            'email_verified_at' => now(),
         ]);
-        
+
         echo "All users have been verified!\n";
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -9,7 +9,7 @@ uses(DatabaseMigrations::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create([
-        'email_verified_at' => now()
+        'email_verified_at' => now(),
     ]);
 
     $this->book = Book::factory()->create([
@@ -68,7 +68,7 @@ describe('LibraryController Store', function () {
             'page_count' => 300,
             'language' => 'en',
             'preview_link' => 'http://example.com/preview',
-            'status' => 'want_to_read'
+            'status' => 'want_to_read',
         ];
 
         $response = $this->actingAs($this->user)
@@ -79,12 +79,12 @@ describe('LibraryController Store', function () {
 
         $this->assertDatabaseHas('books', [
             'google_book_id' => 'new-book-456',
-            'title' => 'New Book'
+            'title' => 'New Book',
         ]);
 
         $this->assertDatabaseHas('user_books', [
             'user_id' => $this->user->id,
-            'status' => 'want_to_read'
+            'status' => 'want_to_read',
         ]);
     });
 
@@ -116,7 +116,7 @@ describe('LibraryController Store', function () {
         $bookData = [
             'google_book_id' => 'test-book-789',
             'title' => 'Test Book',
-            'status' => 'invalid_status'
+            'status' => 'invalid_status',
         ];
 
         $response = $this->actingAs($this->user)
@@ -129,7 +129,7 @@ describe('LibraryController Store', function () {
     it('requires authentication', function () {
         $bookData = [
             'google_book_id' => 'test-book-unauthorized',
-            'title' => 'Test Book'
+            'title' => 'Test Book',
         ];
 
         $response = $this->postJson('/api/library', $bookData);
@@ -139,13 +139,13 @@ describe('LibraryController Store', function () {
 
     it('uses existing book if google_book_id already exists', function () {
         $existingBook = Book::factory()->create([
-            'google_book_id' => 'existing-book-123'
+            'google_book_id' => 'existing-book-123',
         ]);
 
         $bookData = [
             'google_book_id' => 'existing-book-123',
             'title' => 'Different Title',
-            'authors' => ['Different Author']
+            'authors' => ['Different Author'],
         ];
 
         $response = $this->actingAs($this->user)
@@ -171,13 +171,13 @@ describe('LibraryController Destroy', function () {
 
         $this->assertDatabaseMissing('user_books', [
             'user_id' => $this->user->id,
-            'book_id' => $this->book->id
+            'book_id' => $this->book->id,
         ]);
     });
 
     it('handles removing non-existent book gracefully', function () {
         $response = $this->actingAs($this->user)
-            ->deleteJson("/api/library/999");
+            ->deleteJson('/api/library/999');
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Book removed from library']);
@@ -198,7 +198,7 @@ describe('LibraryController UpdateStatus', function () {
     it('updates book status successfully', function () {
         $response = $this->actingAs($this->user)
             ->patchJson("/api/library/{$this->book->id}/status", [
-                'status' => 'reading'
+                'status' => 'reading',
             ]);
 
         $response->assertStatus(200)
@@ -207,14 +207,14 @@ describe('LibraryController UpdateStatus', function () {
         $this->assertDatabaseHas('user_books', [
             'user_id' => $this->user->id,
             'book_id' => $this->book->id,
-            'status' => 'reading'
+            'status' => 'reading',
         ]);
     });
 
     it('validates status field', function () {
         $response = $this->actingAs($this->user)
             ->patchJson("/api/library/{$this->book->id}/status", [
-                'status' => 'invalid_status'
+                'status' => 'invalid_status',
             ]);
 
         $response->assertStatus(422)
@@ -231,7 +231,7 @@ describe('LibraryController UpdateStatus', function () {
 
     it('requires authentication', function () {
         $response = $this->patchJson("/api/library/{$this->book->id}/status", [
-            'status' => 'reading'
+            'status' => 'reading',
         ]);
 
         $response->assertStatus(401);
@@ -243,7 +243,7 @@ describe('LibraryController UpdateStatus', function () {
         foreach ($validStatuses as $status) {
             $response = $this->actingAs($this->user)
                 ->patchJson("/api/library/{$this->book->id}/status", [
-                    'status' => $status
+                    'status' => $status,
                 ]);
 
             $response->assertStatus(200);
@@ -251,7 +251,7 @@ describe('LibraryController UpdateStatus', function () {
             $this->assertDatabaseHas('user_books', [
                 'user_id' => $this->user->id,
                 'book_id' => $this->book->id,
-                'status' => $status
+                'status' => $status,
             ]);
         }
     });

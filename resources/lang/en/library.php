@@ -8,7 +8,7 @@ return [
     'status' => [
         'want_to_read' => 'Want to Read',
         'reading' => 'Reading',
-        'read' => 'Read'
+        'read' => 'Read',
     ],
     'messages' => [
         'added' => 'Added to library!',
@@ -16,6 +16,6 @@ return [
         'status_updated' => 'Status updated!',
         'already_exists' => 'Book already in library',
         'failed_to_add' => 'Failed to add book to library',
-        'failed_to_update' => 'Failed to update status'
-    ]
+        'failed_to_update' => 'Failed to update status',
+    ],
 ];

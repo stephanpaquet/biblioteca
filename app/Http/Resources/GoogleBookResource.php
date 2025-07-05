@@ -15,6 +15,7 @@ class GoogleBookResource extends JsonResource
     public function toArray($request): array
     {
         $info = $this['volumeInfo'] ?? [];
+
         return [
             'id' => $this['id'] ?? null,
             'title' => $info['title'] ?? null,

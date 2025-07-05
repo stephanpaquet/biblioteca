@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\GoogleBooksController;
 use App\Http\Controllers\Api\GoogleBookController;
+use App\Http\Controllers\Api\GoogleBooksController;
+use Illuminate\Support\Facades\Route;
 
 /**
  * API Routes for Google Books integration

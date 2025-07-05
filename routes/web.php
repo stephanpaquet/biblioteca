@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\SearchController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/dashboard', DashboardController::class)->name('dashboard');
@@ -28,7 +28,7 @@ Route::get('/debug-auth', function () {
 
 // Test the Inertia auth shared data
 Route::get('/debug-inertia', function () {
-    $handleInertiaRequests = new \App\Http\Middleware\HandleInertiaRequests();
+    $handleInertiaRequests = new \App\Http\Middleware\HandleInertiaRequests;
     $sharedData = $handleInertiaRequests->share(request());
 
     return response()->json([
@@ -47,7 +47,7 @@ Route::get('/csrf-cookie', function () {
 Route::get('/test-csrf', function () {
     return response()->json([
         'csrf_token' => csrf_token(),
-        'session_id' => session()->getId()
+        'session_id' => session()->getId(),
     ]);
 });
 
@@ -63,8 +63,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('api.user');
 });
 
-
 // Route::group(function () {
 Route::controller(SearchController::class)->group(function () {
     Route::get('/search/{query?}', 'index')->name('search.index');
+    Route::get('/search/author/{query?}', 'index')->name('search.author');
 });

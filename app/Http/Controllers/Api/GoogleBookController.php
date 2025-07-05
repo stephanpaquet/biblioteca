@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\GoogleBooksService;
 use App\Http\Resources\GoogleBookResource;
-use Illuminate\Http\Request;
+use App\Services\GoogleBooksService;
 
 /**
  * @group Google Books
@@ -30,9 +29,10 @@ class GoogleBookController extends Controller
         $service = app(GoogleBooksService::class);
         $response = $service->getBook($id);
 
-        if (!$response) {
+        if (! $response) {
             return response()->json(['message' => 'Book not found'], 404);
         }
+
         return new GoogleBookResource($response);
     }
 }

@@ -13,15 +13,15 @@ return [
     'quick_actions' => [
         'search' => [
             'title' => 'Rechercher des Livres',
-            'description' => 'Trouvez des livres par titre, auteur ou sujet dans la vaste collection de Google.'
+            'description' => 'Trouvez des livres par titre, auteur ou sujet dans la vaste collection de Google.',
         ],
         'library' => [
             'title' => 'Construire une Bibliothèque',
-            'description' => 'Sauvegardez des livres dans votre bibliothèque personnelle et organisez-les par statut de lecture.'
+            'description' => 'Sauvegardez des livres dans votre bibliothèque personnelle et organisez-les par statut de lecture.',
         ],
         'progress' => [
             'title' => 'Suivre les Progrès',
-            'description' => 'Surveillez vos progrès de lecture et découvrez de nouveaux favoris.'
-        ]
-    ]
+            'description' => 'Surveillez vos progrès de lecture et découvrez de nouveaux favoris.',
+        ],
+    ],
 ];

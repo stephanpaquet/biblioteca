@@ -11,6 +11,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    userBooks: {
+        type: Array,
+        default: () => []
+    },
 });
 
 </script>
@@ -18,11 +22,6 @@ defineProps({
 <template>
     <Layout>
         <h1>Search result for {{ query }}</h1>
-        <BookGrid
-        :books="result"
-        :user-books="userBooks"
-        title="a title"
-        :show-no-results="true"
-        :translations="translations" />
+        <BookGrid :books="results" :user-books="userBooks" title="a title" :show-no-results="true" />
     </Layout>
 </template>

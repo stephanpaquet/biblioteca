@@ -9,7 +9,7 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'google_book_id' => 'GB_' . $this->faker->unique()->randomNumber(8),
+            'google_book_id' => 'GB_'.$this->faker->unique()->randomNumber(8),
             'title' => $this->faker->words(3, true),
             'authors' => [$this->faker->name(), $this->faker->name()],
             'description' => $this->faker->paragraph(),

@@ -3,21 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\LoginResponse;
-use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\LoginViewResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Contracts\RegisterViewResponse;
-use App\Actions\Fortify\CreateNewUser;
-use App\Actions\Fortify\ResetUserPassword;
-use App\Actions\Fortify\UpdateUserPassword;
-use App\Actions\Fortify\UpdateUserProfileInformation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(\App\Services\GoogleBooksService::class);
 
         // Custom login response for Inertia
-        $this->app->instance(LoginResponse::class, new class implements LoginResponse {
+        $this->app->instance(LoginResponse::class, new class implements LoginResponse
+        {
             public function toResponse($request)
             {
                 if ($request->wantsJson()) {
@@ -42,7 +33,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Custom register response for Inertia
-        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
+        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse
+        {
             public function toResponse($request)
             {
                 if ($request->wantsJson()) {
@@ -55,7 +47,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Custom login view response for Inertia
-        $this->app->instance(LoginViewResponse::class, new class implements LoginViewResponse {
+        $this->app->instance(LoginViewResponse::class, new class implements LoginViewResponse
+        {
             public function toResponse($request)
             {
                 // Return the Inertia response directly - Laravel will handle it properly
@@ -64,7 +57,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Custom register view response for Inertia
-        $this->app->instance(RegisterViewResponse::class, new class implements RegisterViewResponse {
+        $this->app->instance(RegisterViewResponse::class, new class implements RegisterViewResponse
+        {
             public function toResponse($request)
             {
                 // Return the Inertia response directly - Laravel will handle it properly

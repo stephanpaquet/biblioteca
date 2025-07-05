@@ -5,15 +5,15 @@ return [
     'nav' => [
         'home' => 'Accueil',
         'library' => 'Ma Bibliothèque',
-        'dashboard' => 'Tableau de Bord'
+        'dashboard' => 'Tableau de Bord',
     ],
     'auth' => [
         'hi' => 'Salut, :name',
         'logout' => 'Déconnexion',
         'login' => 'Connexion',
-        'register' => 'S\'inscrire'
+        'register' => 'S\'inscrire',
     ],
     'footer' => [
-        'copyright' => '© 2024 Biblioteca. Tous droits réservés.'
-    ]
+        'copyright' => '© 2024 Biblioteca. Tous droits réservés.',
+    ],
 ];

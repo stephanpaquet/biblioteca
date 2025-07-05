@@ -1,0 +1,7 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "ordered_class_elements": true,
+        "line_ending": true
+    }
+}

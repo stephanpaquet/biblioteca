@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
             $table->enum('status', ['want_to_read', 'reading', 'read'])->default('want_to_read');
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'book_id']);
         });
     }

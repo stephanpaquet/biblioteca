@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UserBooks;
 use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
-    private GoogleBooksService $googleBooksService;
-
-    public function __construct(GoogleBooksService $googleBooksService)
-    {
-        $this->googleBooksService = $googleBooksService;
-    }
+    public function __construct(
+        private GoogleBooksService $googleBooksService,
+        private UserBooks $userBooks) {}
 
     public function __invoke(Request $request)
     {
@@ -26,25 +24,20 @@ class HomeController extends Controller
 
         $query = $request->get('q');
         $books = null;
-        $userBooks = [];
 
         if ($query) {
             $books = $this->googleBooksService->searchBooks($query);
         }
 
-        if (auth()->check()) {
-            $userBooks = auth()->user()->books()->get();
-        }
-
         return Inertia::render('Home', [
             'books' => $books,
             'query' => $query,
-            'userBooks' => $userBooks,
+            'userBooks' => $this->userBooks->get(['user_id' => auth()->id()]),
             'featured' => $this->googleBooksService->getFeaturedBooks(),
             'translations' => [
                 'home' => __('home'),
                 'layout' => __('layout'),
-            ]
+            ],
         ]);
     }
 }

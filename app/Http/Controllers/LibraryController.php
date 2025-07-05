@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class LibraryController extends Controller
 {
@@ -21,15 +21,15 @@ class LibraryController extends Controller
                 'translations' => [
                     'library' => __('library'),
                     'layout' => __('layout'),
-                ]
+                ],
 
             ]);
         } catch (\Exception $e) {
-            Log::error('Library index error: ' . $e->getMessage());
+            Log::error('Library index error: '.$e->getMessage());
 
             return Inertia::render('Library', [
                 'books' => collect([]),
-                'error' => 'Unable to load library'
+                'error' => 'Unable to load library',
             ]);
         }
     }
@@ -46,14 +46,14 @@ class LibraryController extends Controller
             'page_count' => 'nullable|integer',
             'language' => 'nullable|string',
             'preview_link' => 'nullable|string',
-            'status' => 'nullable|in:want_to_read,reading,read'
+            'status' => 'nullable|in:want_to_read,reading,read',
         ]);
 
         $book = Book::firstOrCreate(
             ['google_book_id' => $request->google_book_id],
             $request->only([
                 'title', 'authors', 'description', 'thumbnail',
-                'published_date', 'page_count', 'language', 'preview_link'
+                'published_date', 'page_count', 'language', 'preview_link',
             ])
         );
 
@@ -64,7 +64,7 @@ class LibraryController extends Controller
         }
 
         $user->books()->attach($book->id, [
-            'status' => $request->status ?? 'want_to_read'
+            'status' => $request->status ?? 'want_to_read',
         ]);
 
         return response()->json(['message' => 'Book added to library']);
@@ -80,11 +80,11 @@ class LibraryController extends Controller
     public function updateStatus(Request $request, $bookId)
     {
         $request->validate([
-            'status' => 'required|in:want_to_read,reading,read'
+            'status' => 'required|in:want_to_read,reading,read',
         ]);
 
         $request->user()->books()->updateExistingPivot($bookId, [
-            'status' => $request->status
+            'status' => $request->status,
         ]);
 
         return response()->json(['message' => 'Status updated']);
