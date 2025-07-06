@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/library', [LibraryController::class, 'store'])->name('library.store');
     Route::delete('/library/{book}', [LibraryController::class, 'destroy'])->name('library.destroy');
     Route::patch('/library/{book}/status', [LibraryController::class, 'updateStatus'])->name('library.update-status');
+    Route::patch('/library/{book}/sync', [LibraryController::class, 'sync'])->name('library.sync');
 
     // API endpoint to get current user info
     Route::get('/api/user', function () {

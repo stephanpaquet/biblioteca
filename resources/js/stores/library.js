@@ -120,6 +120,52 @@ export const useLibraryStore = defineStore('library', () => {
         }
     }
 
+    async function syncBookWithGoogleApi(googleBookId) {
+        const toast = useToast();
+        isLoading.value = true
+        error.value = null
+
+        try {
+            // Find the book in our library by Google Book ID
+            const book = books.value.find(b => b.google_book_id === googleBookId)
+            if (!book) {
+                throw new Error('Book not found in library')
+            }
+
+            const response = await fetch(route('library.sync', book.id), {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+                // Update the book in the local store with new data
+                const bookIndex = books.value.findIndex(book => book.google_book_id === googleBookId)
+                if (bookIndex > -1 && result.book) {
+                    books.value[bookIndex] = { ...books.value[bookIndex], ...result.book }
+                }
+                toast.success('Book information synced successfully');
+                return { success: true, message: result.message }
+            } else {
+                error.value = result.message
+                toast.error(result.message);
+                return { success: false, message: result.message }
+            }
+        } catch (err) {
+            const errorMsg = 'Failed to sync book information'
+            error.value = errorMsg
+            toast.error(errorMsg);
+            return { success: false, message: errorMsg }
+        } finally {
+            isLoading.value = false
+        }
+    }
+
     return {
         books,
         isLoading,
@@ -134,6 +180,7 @@ export const useLibraryStore = defineStore('library', () => {
         updateBookStatus,
         isBookInLibrary,
         addToLibrary,
-        removeFromLibrary
+        removeFromLibrary,
+        syncBookWithGoogleApi
     }
 })

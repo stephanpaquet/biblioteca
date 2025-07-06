@@ -3,12 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class LibraryController extends Controller
 {
+    protected $googleBooksService;
+
+    public function __construct(GoogleBooksService $googleBooksService)
+    {
+        $this->googleBooksService = $googleBooksService;
+    }
+
     public function index(Request $request)
     {
         try {
@@ -88,5 +96,61 @@ class LibraryController extends Controller
         ]);
 
         return response()->json(['message' => 'Status updated']);
+    }
+
+    public function sync(Request $request, $bookId)
+    {
+        try {
+            $book = Book::findOrFail($bookId);
+
+            // Verify the book belongs to the user
+            if (!$request->user()->books()->where('book_id', $bookId)->exists()) {
+                return response()->json(['message' => 'Book not found in your library'], 404);
+            }
+
+            // Fetch updated data from Google Books API
+            $googleBookData = $this->googleBooksService->getBook($book->google_book_id);
+
+            if (!$googleBookData) {
+                return response()->json(['message' => 'Book not found in Google Books'], 404);
+            }
+
+            // Update the book with new data from Google Books
+            $book->update([
+                'title' => $googleBookData['volumeInfo']['title'] ?? $book->title,
+                'authors' => $googleBookData['volumeInfo']['authors'] ?? $book->authors,
+                'description' => $googleBookData['volumeInfo']['description'] ?? $book->description,
+                'thumbnail' => $googleBookData['volumeInfo']['imageLinks']['thumbnail'] ?? $book->thumbnail,
+                'published_date' => $googleBookData['volumeInfo']['publishedDate'] ?? $book->published_date,
+                'page_count' => $googleBookData['volumeInfo']['pageCount'] ?? $book->page_count,
+                'language' => $googleBookData['volumeInfo']['language'] ?? $book->language,
+                'preview_link' => $googleBookData['volumeInfo']['previewLink'] ?? $book->preview_link,
+                'publisher' => $googleBookData['volumeInfo']['publisher'] ?? $book->publisher,
+                'categories' => $googleBookData['volumeInfo']['categories'] ?? $book->categories,
+                'isbn' => $this->extractIsbn($googleBookData['volumeInfo']['industryIdentifiers'] ?? []) ?? $book->isbn,
+            ]);
+
+            return response()->json([
+                'message' => 'Book information synced successfully',
+                'book' => $book->fresh()
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Book sync error: ' . $e->getMessage());
+            return response()->json(['message' => 'Failed to sync book information'], 500);
+        }
+    }
+
+    /**
+     * Extract ISBN from Google Books industry identifiers
+     */
+    private function extractIsbn(array $identifiers): ?string
+    {
+        foreach ($identifiers as $identifier) {
+            if (in_array($identifier['type'], ['ISBN_10', 'ISBN_13'])) {
+                return $identifier['identifier'];
+            }
+        }
+        return null;
     }
 }

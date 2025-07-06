@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Toast Notifications**: Replaced custom message displays with consistent toast notifications across the application
 - **Library Management with BookGrid**: Library page now uses the BookGrid component for consistent interface
 - **Remove from Library Functionality**: Added proper remove book functionality through the library store with API integration
+- **Book Sync Functionality**: Added sync buttons to update book information from Google Books API
+- **Individual Book Sync**: Each book in library can be synced individually with Google Books API data
+- **Bulk Library Sync**: Added "Sync All Books" button to update all library books at once
+- **Sync API Endpoint**: New `library/{book}/sync` PATCH endpoint for updating book information
 
 ### Changed
 - **Google Books API Result Limiting**: Limited totalItems to maximum of 300 to prevent excessive pagination and improve user experience

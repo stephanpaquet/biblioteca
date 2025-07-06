@@ -31,6 +31,10 @@ defineProps({
     showRemove: {
         type: Boolean,
         default: false
+    },
+    showSync: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -46,23 +50,23 @@ function handleImageError(event) {
 }
 
 function searchByISBN(isbn) {
-  Inertia.visit(route('search.index'), {
-    method: 'get',
-    data: {
-      q: isbn,
-      type: 'isbn'
-    }
-  });
+    Inertia.visit(route('search.index'), {
+        method: 'get',
+        data: {
+            q: isbn,
+            type: 'isbn'
+        }
+    });
 }
 
 function searchByPublisher(publisher) {
-  Inertia.visit(route('search.index'), {
-    method: 'get',
-    data: {
-      q: publisher,
-      type: 'publisher'
-    }
-  });
+    Inertia.visit(route('search.index'), {
+        method: 'get',
+        data: {
+            q: publisher,
+            type: 'publisher'
+        }
+    });
 }
 </script>
 
@@ -116,37 +120,39 @@ function searchByPublisher(publisher) {
 
                 <div v-if="book.volumeInfo.publisher" class="text-gray-500 text-sm mb-2">
                     <span class="text-gray-400">Publisher:</span>
-                    <button
-                        @click="searchByPublisher(book.volumeInfo.publisher)"
-                        class="ml-1 text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer"
-                    >
+                    <button @click="searchByPublisher(book.volumeInfo.publisher)"
+                        class="ml-1 text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer">
                         {{ book.volumeInfo.publisher }}
                     </button>
-                    <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{ book.volumeInfo.publishedDate }})</span>
+                    <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{
+                        book.volumeInfo.publishedDate }})</span>
                 </div>
 
-                <SearchBySubject
-                    v-if="book.volumeInfo.categories && book.volumeInfo.categories.length > 0"
-                    :categories="book.volumeInfo.categories"
-                    :current-page="pagination.currentPage"
-                />
+                <SearchBySubject v-if="book.volumeInfo.categories && book.volumeInfo.categories.length > 0"
+                    :categories="book.volumeInfo.categories" :current-page="pagination.currentPage" />
 
-                <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3">
-                    {{ book.volumeInfo.description }}
+                <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3"
+                    v-html="book.volumeInfo.description">
                 </p>
 
-                <div class="flex items-center justify-between mt-auto">
-                    <AddToLibraryButton :book="book" :user-books="userBooks" :show-remove="showRemove" />
+                <div class="mt-auto pt-4 border-t border-gray-100">
+                    <div class="flex flex-col space-y-3">
+                        <AddToLibraryButton :book="book" :user-books="userBooks" :show-remove="showRemove"
+                            :show-sync="showSync" />
 
-                    <div class="flex space-x-2">
-                        <a :href="`/books/${book.id}`" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            Details
-                        </a>
+                        <div class="flex justify-center space-x-3">
+                            <a :href="`/books/${book.id}`"
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                                📖 Details
+                            </a>
 
-                        <a v-if="book.volumeInfo.previewLink" :href="book.volumeInfo.previewLink" target="_blank"
-                            class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                            Preview
-                        </a>
+                            <a v-if="book.volumeInfo.previewLink"
+                               :href="book.volumeInfo.previewLink"
+                               target="_blank"
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-600 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 hover:text-green-700 transition-colors">
+                                👁️ Preview
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
