@@ -1,5 +1,6 @@
 
 <script setup>
+import { Inertia } from '@inertiajs/inertia';
 import AddToLibraryButton from './AddToLibraryButton.vue';
 import BookPlaceholder from './BookPlaceholder.vue';
 
@@ -32,6 +33,16 @@ function handleImageError(event) {
     event.target.nextElementSibling.style.display = 'flex';
   }
 }
+
+function searchByAuthor(author) {
+  Inertia.visit(route('search.index'), {
+    method: 'get',
+    data: {
+      q: author,
+      type: 'author'
+    }
+  });
+}
 </script>
 
 <template>
@@ -56,7 +67,12 @@ function handleImageError(event) {
             </svg>
             <span class="text-xs font-medium">{{ truncateTitle(book.volumeInfo.title) }}</span>
             <span v-if="book.volumeInfo.authors" class="text-xs mt-1 opacity-75">
-              {{ book.volumeInfo.authors[0] }}
+              <button
+                @click="searchByAuthor(book.volumeInfo.authors[0])"
+                class="text-blue-400 hover:text-blue-600 hover:underline transition-colors cursor-pointer"
+              >
+                {{ book.volumeInfo.authors[0] }}
+              </button>
             </span>
           </div>
         </div>
@@ -64,10 +80,19 @@ function handleImageError(event) {
         <h3 class="font-semibold text-lg mb-2 line-clamp-2">
           {{ book.volumeInfo.title }}
         </h3>
+        <pre>{{  book.volumeInfo  }}</pre>
 
-        <p v-if="book.volumeInfo.authors" class="text-gray-600 mb-2">
-          {{ book.volumeInfo.authors.join(', ') }}
-        </p>
+        <div v-if="book.volumeInfo.authors" class="text-gray-600 mb-2">
+          <template v-for="(author, index) in book.volumeInfo.authors" :key="index">
+            <button
+              @click="searchByAuthor(author)"
+              class="text-blue-600 hover:text-blue-800 hover:underline transition-colors cursor-pointer"
+            >
+              {{ author }}
+            </button>
+            <span v-if="index < book.volumeInfo.authors.length - 1" class="text-gray-600">, </span>
+          </template>
+        </div>
 
         <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3">
           {{ book.volumeInfo.description }}
@@ -105,6 +130,5 @@ function handleImageError(event) {
     <div class="text-gray-500 text-lg">No books found</div>
     <p class="text-gray-400 mt-2">Try adjusting your search terms</p>
   </div>
-              <pre>{{  books  }}</pre>
 
 </template>
