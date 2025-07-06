@@ -20,10 +20,14 @@ class SearchController extends Controller
             'printType' => 'nullable|string|in:books,magazines',
             'orderBy' => 'nullable|string|in:relevance,newest,oldest',
             'maxResults' => 'nullable|integer|in:10,20,40',
+            'page' => 'nullable|integer|min:1',
         ]);
 
         $query = $validated['q'];
         $searchType = $validated['type'] ?? 'general';
+        $page = $validated['page'] ?? 1;
+        $maxResults = $validated['maxResults'] ?? 20;
+        $startIndex = ($page - 1) * $maxResults;
 
         // Build search parameters for Google Books API
         $searchParams = [
@@ -34,7 +38,8 @@ class SearchController extends Controller
             'publishedBefore' => $validated['publishedBefore'] ?? null,
             'printType' => $validated['printType'] ?? null,
             'orderBy' => $validated['orderBy'] ?? 'relevance',
-            'maxResults' => $validated['maxResults'] ?? 20,
+            'maxResults' => $maxResults,
+            'startIndex' => $startIndex,
         ];
 
         // Remove null values
@@ -45,13 +50,30 @@ class SearchController extends Controller
         try {
             $results = $googleBooksService->advancedSearch($searchParams);
 
+            // Calculate pagination info
+            $totalItems = $results['totalItems'] ?? 0;
+            $currentPage = $page;
+            $perPage = $maxResults;
+            $totalPages = $totalItems > 0 ? ceil($totalItems / $perPage) : 1;
+            $hasNextPage = $currentPage < $totalPages;
+            $hasPrevPage = $currentPage > 1;
+
             return Inertia::render('Search/Index', [
                 'query' => $query,
                 'searchType' => $searchType,
                 'filters' => $validated,
                 'results' => $results,
                 'userBooks' => $userBooks->get(),
-                'totalResults' => $results['totalItems'] ?? 0,
+                'pagination' => [
+                    'currentPage' => $currentPage,
+                    'totalPages' => $totalPages,
+                    'totalItems' => $totalItems,
+                    'perPage' => $perPage,
+                    'hasNextPage' => $hasNextPage,
+                    'hasPrevPage' => $hasPrevPage,
+                    'startIndex' => $startIndex,
+                    'endIndex' => min($startIndex + $perPage, $totalItems),
+                ],
             ]);
         } catch (\Exception $e) {
             return Inertia::render('Search/Index', [

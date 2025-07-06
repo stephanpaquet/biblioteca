@@ -1,9 +1,11 @@
 <script setup>
+import { Inertia } from '@inertiajs/inertia';
 import Layout from '../../Layouts/Layout.vue';
 import SearchForm from '../../Components/SearchForm.vue';
 import BookGrid from '../../Components/BookGrid.vue';
+import Paginator from '../../Components/Paginator.vue';
 
-defineProps({
+const props = defineProps({
     query: {
         type: String,
         required: true,
@@ -24,9 +26,18 @@ defineProps({
         type: Array,
         default: () => []
     },
-    totalResults: {
-        type: Number,
-        default: 0
+    pagination: {
+        type: Object,
+        default: () => ({
+            currentPage: 1,
+            totalPages: 1,
+            totalItems: 0,
+            perPage: 20,
+            hasNextPage: false,
+            hasPrevPage: false,
+            startIndex: 0,
+            endIndex: 0
+        })
     },
     error: {
         type: String,
@@ -66,9 +77,6 @@ const searchTypeLabels = {
                         <span class="font-medium">Query:</span> "{{ query }}"
                         <span class="ml-2 text-blue-600">({{ searchTypeLabels[searchType] || searchType }})</span>
                     </p>
-                    <p v-if="totalResults > 0">
-                        <span class="font-medium">Results:</span> {{ totalResults.toLocaleString() }} books found
-                    </p>
                     <div v-if="Object.keys(filters).length > 1" class="flex flex-wrap gap-2 mt-2">
                         <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded" v-if="filters.language">
                             Language: {{ filters.language.toUpperCase() }}
@@ -98,12 +106,39 @@ const searchTypeLabels = {
 
             <!-- Search Results -->
             <div v-if="results && results.items && results.items.length > 0">
+                <!-- Results Summary -->
+                <div class="mb-4 text-sm text-gray-600">
+                    Showing {{ pagination.startIndex + 1 }}-{{ pagination.endIndex }} of {{ pagination.totalItems.toLocaleString() }} results
+                </div>
+
+                <!-- Top Paginator -->
+                <div class="mb-6">
+                    <Paginator
+                        :pagination="pagination"
+                        :query="query"
+                        :search-type="searchType"
+                        :filters="filters"
+                        :show-summary="false"
+                    />
+                </div>
+
                 <BookGrid
                     :books="results"
                     :user-books="userBooks"
                     :title="`Search Results for '${query}'`"
                     :show-no-results="false"
                 />
+
+                <!-- Bottom Paginator -->
+                <div class="mt-8">
+                    <Paginator
+                        :pagination="pagination"
+                        :query="query"
+                        :search-type="searchType"
+                        :filters="filters"
+                        :show-summary="true"
+                    />
+                </div>
             </div>
 
             <!-- No Results -->
