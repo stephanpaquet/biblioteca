@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Advanced Library Search and Filtering**: Added comprehensive search and filter system to library page with:
+  - Text search across titles, authors, publishers, and ISBNs
+  - Category filtering with dynamic category options
+  - Status filtering (to read, reading, read, favorite)
+  - Multi-field sorting (title, author, date added)
+  - Sort order control (ascending/descending)
+  - Clear filters functionality
+  - Real-time results counter showing filtered vs total books
+- **Enhanced Library UI**: Added dedicated search and filter interface with:
+  - Prominent search bar with search icon
+  - Four-column filter grid layout on desktop
+  - Responsive design that stacks on mobile
+  - Visual feedback for active filters
+  - "No results" message when filters don't match any books
 - **Book Categories System**: Added support for displaying and searching by book categories/subjects
 - **SearchBySubject Component**: Created dedicated component for clickable category tags that trigger subject-specific searches
 - **Category Display in BookGrid**: Categories are now displayed as styled pill buttons (green background) with click-to-search functionality
