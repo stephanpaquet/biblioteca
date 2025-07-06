@@ -1,5 +1,6 @@
 <script setup>
 import Layout from '../Layouts/Layout.vue';
+import AddToLibraryButton from '../Components/AddToLibraryButton.vue';
 import { Head } from '@inertiajs/inertia-vue3';
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/inertia-vue3';
@@ -70,6 +71,12 @@ onMounted(fetchBook);
             <h1 class="text-3xl font-bold mb-2">{{ book.title }}</h1>
             <div class="text-gray-700 mb-2">By {{ book.authors?.join(', ') }}</div>
             <div class="text-gray-500 text-sm mb-2">Published: {{ book.publishedDate }}</div>
+
+            <!-- Add to Library Button -->
+            <div class="mb-4">
+              <AddToLibraryButton :book="{ id: book.id, volumeInfo: book }" />
+            </div>
+
             <a v-if="book.previewLink" :href="book.previewLink" target="_blank" class="text-blue-600 hover:underline text-sm">Preview on Google Books</a>
           </div>
         </div>

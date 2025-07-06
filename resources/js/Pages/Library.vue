@@ -1,10 +1,11 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { ref } from 'vue';
 import Layout from '../Layouts/Layout.vue';
 import { useTranslationsStore } from '../stores/translations';
 import { useAuthStore } from '../stores/auth';
 import { useLibraryStore } from '../stores/library';
+import BookGrid from '../Components/BookGrid.vue';
 
 const props = defineProps({
     books: {
@@ -45,29 +46,35 @@ onMounted(() => {
     // Initialize library store with books from props
     libraryStore.setBooks(props.books);
 });
-async function updateStatus(bookId, status) {
-    try {
-        await fetch(route('library.update-status', bookId), {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ status })
-        });
 
-        // Update local state
-        libraryStore.updateBookStatus(bookId, status);
-    } catch (error) {
-        console.error('Failed to update status:', error);
+// Transform library books to match Google Books API format for BookGrid
+const formattedBooks = computed(() => {
+    if (!libraryStore.books || libraryStore.books.length === 0) {
+        return { items: [], totalItems: 0 };
     }
-}
 
-async function removeFromLibrary(bookId) {
-    if (confirm('Are you sure you want to remove this book from your library?')) {
-        await libraryStore.removeFromLibrary(bookId);
-    }
-}
+    const items = libraryStore.books.map(book => ({
+        id: book.google_book_id,
+        volumeInfo: {
+            title: book.title,
+            authors: Array.isArray(book.authors) ? book.authors : (book.authors ? [book.authors] : []),
+            description: book.description,
+            imageLinks: book.thumbnail ? { thumbnail: book.thumbnail } : null,
+            publishedDate: book.published_date,
+            pageCount: book.page_count,
+            language: book.language,
+            previewLink: book.preview_link,
+            publisher: book.publisher || null,
+            categories: book.categories || [],
+            industryIdentifiers: book.isbn ? [{ type: 'ISBN', identifier: book.isbn }] : []
+        }
+    }));
+
+    return {
+        items,
+        totalItems: items.length
+    };
+});
 </script>
 
 <template>
@@ -80,29 +87,14 @@ async function removeFromLibrary(bookId) {
                 <a href="/search" class="text-blue-600 hover:underline">Start searching for books</a>
             </div>
 
-            <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div v-for="book in libraryStore.books" :key="book.id" class="bg-white rounded-lg shadow-md p-4">
-                    <img :src="book.thumbnail || '/img/placeholder-book.png'" :alt="book.title"
-                        class="w-full h-48 object-cover rounded mb-4" />
-                    <h3 class="font-semibold text-lg mb-2 line-clamp-2">{{ book.title }}</h3>
-                    <p v-if="book.authors" class="text-gray-600 mb-2">
-                        {{ Array.isArray(book.authors) ? book.authors.join(', ') : book.authors }}
-                    </p>
-
-                    <div class="flex items-center justify-between mt-4">
-                        <select :value="book.pivot.status" @change="updateStatus(book.id, $event.target.value)"
-                            class="text-sm border rounded px-2 py-1">
-                            <option value="want_to_read">Want to Read</option>
-                            <option value="reading">Reading</option>
-                            <option value="read">Read</option>
-                        </select>
-
-                        <button @click="removeFromLibrary(book.id)" class="text-red-600 hover:text-red-800 text-sm">
-                            Remove
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <BookGrid
+                v-else
+                :books="formattedBooks"
+                :user-books="libraryStore.books"
+                title="My Library"
+                :show-no-results="false"
+                :show-remove="true"
+            />
         </div>
     </Layout>
 </template>

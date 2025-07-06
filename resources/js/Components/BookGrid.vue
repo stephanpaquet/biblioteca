@@ -27,6 +27,10 @@ defineProps({
         default: () => ({
             currentPage: 1
         })
+    },
+    showRemove: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -132,7 +136,7 @@ function searchByPublisher(publisher) {
                 </p>
 
                 <div class="flex items-center justify-between mt-auto">
-                    <AddToLibraryButton :book="book" :user-books="userBooks" />
+                    <AddToLibraryButton :book="book" :user-books="userBooks" :show-remove="showRemove" />
 
                     <div class="flex space-x-2">
                         <a :href="`/books/${book.id}`" class="text-blue-600 hover:text-blue-800 text-sm font-medium">

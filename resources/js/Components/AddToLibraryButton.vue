@@ -2,16 +2,21 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useLibraryStore } from '../stores/library'
+import { useToast } from '../composables/useToast'
 
 const props = defineProps({
   book: {
     type: Object,
     required: true
+  },
+  showRemove: {
+    type: Boolean,
+    default: false
   }
 })
 
 const libraryStore = useLibraryStore()
-const message = ref('')
+const toast = useToast()
 const currentStatus = ref('want_to_read')
 
 const isInLibrary = computed(() => {
@@ -35,14 +40,19 @@ async function addToLibrary() {
   const result = await libraryStore.addToLibrary(bookData)
 
   if (result.success) {
-    setTimeout(() => message.value = '', 3000)
+    toast.bookAdded(bookData.title)
   }
 }
 
 async function updateStatus() {
   libraryStore.updateBookStatus(props.book.id, currentStatus.value)
-  message.value = 'Status updated!'
-  setTimeout(() => message.value = '', 2000)
+  toast.success('Status updated!')
+}
+
+async function removeFromLibrary() {
+  if (confirm('Are you sure you want to remove this book from your library?')) {
+    await libraryStore.removeFromLibrary(props.book.id)
+  }
 }
 </script>
 
@@ -68,11 +78,15 @@ async function updateStatus() {
         <option value="reading">Reading</option>
         <option value="read">Read</option>
       </select>
+      <button
+        v-if="showRemove"
+        @click="removeFromLibrary"
+        class="text-red-600 hover:text-red-800 text-xs font-medium"
+      >
+        Remove
+      </button>
     </div>
 
-    <div v-if="message" class="absolute top-full left-0 mt-1 text-xs text-green-600">
-      {{ message }}
-    </div>
     <div v-if="libraryStore.error" class="absolute top-full left-0 mt-1 text-xs text-red-600">
       {{ libraryStore.error }}
     </div>
