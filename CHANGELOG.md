@@ -30,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Consistency**: Implemented consistent spacing, braces positioning, and quote usage
 
 ### Fixed
+- **UserBooks Authentication**: Fixed `Method Illuminate\Auth\SessionGuard::books does not exist` error by properly accessing user books through the authenticated user model
+- **Auth Helper Issues**: Resolved authentication method calls in UserBooks action and HomeController using proper Auth facade
 - **Search Form Routing**: Fixed search form to properly navigate to `/search` route with parameters
 - **Component Import Paths**: Corrected Vue component import paths for proper module resolution
 - **Advanced Search Parameters**: Proper handling of date filters, language restrictions, and ordering in Google Books API calls

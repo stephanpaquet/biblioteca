@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\UserBooks;
 use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -33,7 +34,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'books' => $books,
             'query' => $query,
-            'userBooks' => $this->userBooks->get(['user_id' => auth()->id()]),
+            'userBooks' => $this->userBooks->get(),
             'featured' => $books,
             'translations' => [
                 'home' => __('home'),

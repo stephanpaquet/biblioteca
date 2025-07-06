@@ -2,12 +2,17 @@
 
 namespace App\Actions;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 class UserBooks
 {
-    public function get(): array
+    public function get(array $params = []): array
     {
-        if (auth()->check()) {
-            return auth()->books()->get()->toArray();
+        if (Auth::check()) {
+            /** @var User $user */
+            $user = Auth::user();
+            return $user->books()->get()->toArray();
         }
 
         return [];
