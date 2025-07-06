@@ -14,12 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Search Type Selector**: Visual buttons for easy switching between search types
 - **Clickable Author Links**: Authors in book results are now clickable links that trigger author-specific searches
 - **Clickable ISBN Links**: Industry identifiers (ISBN-10, ISBN-13) are displayed as clickable links that trigger ISBN-specific searches
+- **Clickable Publisher Links**: Publisher information is displayed with clickable links that trigger publisher-specific searches
+- **Publication Date Display**: Added publication date information alongside publisher details for better book context
 - **Laravel Pint Integration**: Added Laravel Pint for automated PHP code formatting and style consistency
 - **Code Formatting Configuration**: Created `pint.json` with Laravel preset and custom rules for ordered class elements
 
 ### Changed
-- **BookGrid Component Enhancement**: Authors and ISBNs are now displayed as clickable links instead of plain text, enabling quick searches
+- **BookGrid Component Enhancement**: Authors, ISBNs, and publishers are now displayed as clickable links instead of plain text, enabling quick searches
 - **Industry Identifiers Display**: Added professional display of ISBN-10, ISBN-13, and other book identifiers with proper formatting
+- **Publisher Information**: Added publisher display with publication date and clickable publisher search functionality
 - **SearchController Enhancement**: Updated to handle advanced search parameters with proper validation and error handling
 - **GoogleBooksService Expansion**: Added `advancedSearch()` method with support for all Google Books API search parameters
 - **Search Results Display**: Enhanced Search/Index.vue with better result presentation, error handling, and filter display
@@ -37,7 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Advanced Search Parameters**: Proper handling of date filters, language restrictions, and ordering in Google Books API calls
 
 ### Technical Improvements
-- **Interactive Book Display**: Enhanced user experience with clickable author names and ISBN identifiers in book displays
+- **Interactive Book Display**: Enhanced user experience with clickable author names, ISBN identifiers, and publisher information in book displays
+- **Publisher Search Integration**: Added dedicated publisher search functionality with proper formatting and validation
 - **ISBN Search Integration**: Added dedicated ISBN search functionality with proper formatting and validation
 - **Google Books API Integration**: Enhanced API query building with support for specialized search operators (intitle, inauthor, isbn, etc.)
 - **Search Parameter Validation**: Comprehensive validation for all search inputs and filters

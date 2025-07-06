@@ -35,13 +35,23 @@ function handleImageError(event) {
 }
 
 function searchByISBN(isbn) {
-    Inertia.visit(route('search.index'), {
-        method: 'get',
-        data: {
-            q: isbn,
-            type: 'isbn'
-        }
-    });
+  Inertia.visit(route('search.index'), {
+    method: 'get',
+    data: {
+      q: isbn,
+      type: 'isbn'
+    }
+  });
+}
+
+function searchByPublisher(publisher) {
+  Inertia.visit(route('search.index'), {
+    method: 'get',
+    data: {
+      q: publisher,
+      type: 'publisher'
+    }
+  });
 }
 </script>
 
@@ -86,6 +96,17 @@ function searchByISBN(isbn) {
                         <span v-if="index < book.volumeInfo.industryIdentifiers.length - 1"
                             class="text-gray-400 mx-2">•</span>
                     </template>
+                </div>
+
+                <div v-if="book.volumeInfo.publisher" class="text-gray-500 text-sm mb-2">
+                    <span class="text-gray-400">Publisher:</span>
+                    <button
+                        @click="searchByPublisher(book.volumeInfo.publisher)"
+                        class="ml-1 text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer"
+                    >
+                        {{ book.volumeInfo.publisher }}
+                    </button>
+                    <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{ book.volumeInfo.publishedDate }})</span>
                 </div>
 
                 <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3">
