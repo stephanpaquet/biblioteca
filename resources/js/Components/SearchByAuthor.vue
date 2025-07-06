@@ -26,7 +26,7 @@ function searchByAuthor(author) {
     <div class="text-gray-600 mb-2">
         <template v-for="(author, index) in authors" :key="index">
             <button @click="searchByAuthor(author)"
-                class="text-blue-600 hover:text-blue-800 hover:underline transition-colors cursor-pointer">
+                class="text-primary-600 hover:text-primary-800 hover:underline transition-colors cursor-pointer">
                 {{ author }}
             </button>
             <span v-if="index < authors.length - 1" class="text-gray-600">, </span>

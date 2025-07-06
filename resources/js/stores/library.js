@@ -149,7 +149,7 @@ export const useLibraryStore = defineStore('library', () => {
                 if (bookIndex > -1 && result.book) {
                     books.value[bookIndex] = { ...books.value[bookIndex], ...result.book }
                 }
-                toast.success('Book information synced successfully');
+                toast.success('Book information synced successfully: ' + book.title);
                 return { success: true, message: result.message }
             } else {
                 error.value = result.message

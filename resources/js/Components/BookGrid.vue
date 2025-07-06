@@ -80,8 +80,8 @@ function searchByPublisher(publisher) {
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div v-for="book in books.items" :key="book.id"
-                class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-                <div class="w-full h-48 mb-4 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
+                class="bg-white rounded-lg shadow-soft p-4 hover:shadow-book transition-all duration-200 border border-gray-100">
+                <div class="w-full h-48 mb-4 rounded overflow-hidden bg-gray-50 flex items-center justify-center">
                     <img v-if="book.volumeInfo.imageLinks?.thumbnail"
                         :src="book.volumeInfo.imageLinks.thumbnail.replace('http://', 'https://')"
                         :alt="book.volumeInfo.title" class="w-full h-full object-cover"
@@ -95,7 +95,7 @@ function searchByPublisher(publisher) {
                     </div>
                 </div>
 
-                <h3 class="font-semibold text-lg mb-2 line-clamp-2">
+                <h3 class="font-semibold text-lg mb-2 line-clamp-2 text-gray-800">
                     {{ book.volumeInfo.title }}
                 </h3>
 
@@ -109,7 +109,7 @@ function searchByPublisher(publisher) {
                         <span class="inline-flex items-center">
                             <span class="text-gray-400 mr-1">{{ identifier.type }}:</span>
                             <button @click="searchByISBN(identifier.identifier)"
-                                class="text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer font-mono text-xs">
+                                class="text-primary-600 hover:text-primary-700 hover:underline transition-colors cursor-pointer font-mono text-xs">
                                 {{ identifier.identifier }}
                             </button>
                         </span>
@@ -121,7 +121,7 @@ function searchByPublisher(publisher) {
                 <div v-if="book.volumeInfo.publisher" class="text-gray-500 text-sm mb-2">
                     <span class="text-gray-400">Publisher:</span>
                     <button @click="searchByPublisher(book.volumeInfo.publisher)"
-                        class="ml-1 text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer">
+                        class="ml-1 text-primary-600 hover:text-primary-700 hover:underline transition-colors cursor-pointer">
                         {{ book.volumeInfo.publisher }}
                     </button>
                     <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{
@@ -131,25 +131,25 @@ function searchByPublisher(publisher) {
                 <SearchBySubject v-if="book.volumeInfo.categories && book.volumeInfo.categories.length > 0"
                     :categories="book.volumeInfo.categories" :current-page="pagination.currentPage" />
 
-                <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3"
+                <p v-if="book.volumeInfo.description" class="text-gray-600 text-sm mb-4 line-clamp-3"
                     v-html="book.volumeInfo.description">
                 </p>
 
-                <div class="mt-auto pt-4 border-t border-gray-100">
+                <div class="mt-auto pt-4 border-t border-gray-200">
                     <div class="flex flex-col space-y-3">
                         <AddToLibraryButton :book="book" :user-books="userBooks" :show-remove="showRemove"
                             :show-sync="showSync" />
 
                         <div class="flex justify-center space-x-3">
                             <a :href="`/books/${book.id}`"
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:text-blue-700 transition-colors">
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-primary-600 bg-primary-50 border border-primary-200 rounded-md hover:bg-primary-100 hover:text-primary-700 transition-colors">
                                 📖 Details
                             </a>
 
                             <a v-if="book.volumeInfo.previewLink"
                                :href="book.volumeInfo.previewLink"
                                target="_blank"
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-green-600 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 hover:text-green-700 transition-colors">
+                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-success-600 bg-success-50 border border-success-200 rounded-md hover:bg-success-100 hover:text-success-700 transition-colors">
                                 👁️ Preview
                             </a>
                         </div>

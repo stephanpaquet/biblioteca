@@ -35,7 +35,7 @@ function searchBySubject(subject) {
             <template v-for="(category, index) in categories.slice(0, 3)" :key="index">
                 <button
                     @click="searchBySubject(category)"
-                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 transition-colors cursor-pointer"
+                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800 hover:bg-secondary-200 transition-colors cursor-pointer"
                 >
                     {{ category }}
                 </button>
