@@ -11,7 +11,8 @@ class HomeController extends Controller
 {
     public function __construct(
         private GoogleBooksService $googleBooksService,
-        private UserBooks $userBooks) {}
+        private UserBooks $userBooks
+    ) {}
 
     public function __invoke(Request $request)
     {
@@ -33,7 +34,7 @@ class HomeController extends Controller
             'books' => $books,
             'query' => $query,
             'userBooks' => $this->userBooks->get(['user_id' => auth()->id()]),
-            'featured' => $this->googleBooksService->getFeaturedBooks(),
+            'featured' => $books,
             'translations' => [
                 'home' => __('home'),
                 'layout' => __('layout'),

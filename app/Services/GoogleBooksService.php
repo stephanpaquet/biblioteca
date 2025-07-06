@@ -114,6 +114,13 @@ class GoogleBooksService
         return $this->searchBooks($query, $options);
     }
 
+    public function searchByIsbn(string $isbn, array $options = []): array
+    {
+        $query = "isbn:{$isbn}";
+
+        return $this->searchBooks($query, $options);
+    }
+
     /**
      * Check if API key is configured
      */
@@ -165,6 +172,11 @@ class GoogleBooksService
             'startIndex' => $options['startIndex'] ?? 0,
         ], $this->getApiKeyParam());
 
+        Log::info(sprintf('Google Books API search request: %s', $query), [
+            'query' => $query,
+            'params' => $params,
+        ]);
+
         try {
             $response = Http::timeout(10)->get($this->baseUrl, $params);
 
@@ -172,12 +184,11 @@ class GoogleBooksService
                 return $response->json();
             }
 
-            Log::warning('Google Books API request failed', [
+            Log::warning(sprintf('Google Books API request failed'), [
                 'status' => $response->status(),
                 'query' => $query,
                 'response' => $response->body(),
             ]);
-
         } catch (\Exception $e) {
             Log::error('Google Books API exception', [
                 'message' => $e->getMessage(),
@@ -206,7 +217,6 @@ class GoogleBooksService
                 'status' => $response->status(),
                 'bookId' => $bookId,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Google Books API book fetch exception', [
                 'message' => $e->getMessage(),
@@ -229,6 +239,6 @@ class GoogleBooksService
             'api_key_present' => $this->hasApiKey(),
         ];
 
-        return 'google_books:'.md5(json_encode($keyData));
+        return 'google_books:' . md5(json_encode($keyData));
     }
 }
