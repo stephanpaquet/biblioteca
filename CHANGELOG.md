@@ -8,6 +8,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Book Categories System**: Added support for displaying and searching by book categories/subjects
+- **SearchBySubject Component**: Created dedicated component for clickable category tags that trigger subject-specific searches
+- **Category Display in BookGrid**: Categories are now displayed as styled pill buttons (green background) with click-to-search functionality
+- **Page Count Display in BookGrid**: Added "Page X of Y" indicator in BookGrid component header for better navigation context
+- **Page Numbers in Search Results**: Each book card now shows current page number when browsing paginated results
+- **AddToLibraryButton on Book Details**: Added library management functionality to the book details page
+- **Toast Notifications**: Replaced custom message displays with consistent toast notifications across the application
+- **Library Management with BookGrid**: Library page now uses the BookGrid component for consistent interface
+- **Remove from Library Functionality**: Added proper remove book functionality through the library store with API integration
+
+### Changed
+- **Google Books API Result Limiting**: Limited totalItems to maximum of 300 to prevent excessive pagination and improve user experience
+- **Library Store Route Correction**: Fixed library store to use correct `/library` route instead of `/api/library`
+- **AddToLibraryButton Toast Integration**: Replaced custom message handling with toast notifications for better user feedback
+- **Library.vue Component Architecture**: Refactored to use BookGrid component instead of custom book display, providing feature parity with search results
+- **Book Data Transformation**: Added computed property to transform library book data to Google Books API format for BookGrid compatibility
+- **Consistent Interactive Elements**: Library page now includes all interactive features (clickable authors, categories, ISBNs, publishers)
+
+### Fixed
+- **Library Store API Routes**: Corrected API endpoint from `/api/library` to `/library` to match Laravel route definitions
+- **Remove Book Functionality**: Fixed removeFromLibrary function to use proper library store method with toast notifications
+- **Code Duplication**: Eliminated duplicate library management functions by using centralized store methods
+
+### Removed
+- **Custom Library Book Display**: Removed custom book grid HTML in favor of reusable BookGrid component
+- **Duplicate Library Functions**: Removed duplicate updateStatus and removeFromLibrary functions from Library.vue
+- **Custom Message Handling**: Removed local message state management in favor of toast notifications
+
+### Technical Improvements
+- **Consistent UI/UX**: Library page now provides the same user experience as search results with all interactive features
+- **Code Maintainability**: Centralized book display logic in BookGrid component reduces code duplication
+- **Toast System Integration**: Unified notification system across all library operations
+- **API Integration**: Proper integration with Laravel backend for all library operations
+- **Component Reusability**: Enhanced component architecture for better code organization
+
+### Enhanced Search System
 - **Enhanced Search System**: Comprehensive search functionality with multiple search types (ISBN, Title, Author, Publisher, Subject, Description)
 - **Advanced Search Filters**: Language restriction, publication date range, print type selection, and result ordering
 - **Smart Search Interface**: Dynamic search form with collapsible advanced options and contextual placeholders
@@ -23,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Laravel Pint Integration**: Added Laravel Pint for automated PHP code formatting and style consistency
 - **Code Formatting Configuration**: Created `pint.json` with Laravel preset and custom rules for ordered class elements
 
-### Changed
+### Previous Changes
 - **BookGrid Component Enhancement**: Authors, ISBNs, and publishers are now displayed as clickable links instead of plain text, enabling quick searches
 - **Industry Identifiers Display**: Added professional display of ISBN-10, ISBN-13, and other book identifiers with proper formatting
 - **Publisher Information**: Added publisher display with publication date and clickable publisher search functionality
@@ -39,14 +75,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Class Structure**: Applied ordered class elements for better code organization
 - **Code Consistency**: Implemented consistent spacing, braces positioning, and quote usage
 
-### Fixed
+### Previous Fixes
 - **UserBooks Authentication**: Fixed `Method Illuminate\Auth\SessionGuard::books does not exist` error by properly accessing user books through the authenticated user model
 - **Auth Helper Issues**: Resolved authentication method calls in UserBooks action and HomeController using proper Auth facade
 - **Search Form Routing**: Fixed search form to properly navigate to `/search` route with parameters
 - **Component Import Paths**: Corrected Vue component import paths for proper module resolution
 - **Advanced Search Parameters**: Proper handling of date filters, language restrictions, and ordering in Google Books API calls
 
-### Technical Improvements
+### Previous Technical Improvements
 - **Interactive Book Display**: Enhanced user experience with clickable author names, ISBN identifiers, and publisher information in book displays
 - **Publisher Search Integration**: Added dedicated publisher search functionality with proper formatting and validation
 - **Pagination System**: Complete pagination implementation with Google Books API startIndex support, page navigation, and smart page number display
