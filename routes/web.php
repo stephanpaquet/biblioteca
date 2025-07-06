@@ -63,8 +63,8 @@ Route::middleware(['auth'])->group(function () {
     })->name('api.user');
 });
 
-// Route::group(function () {
+// Search routes
 Route::controller(SearchController::class)->group(function () {
-    Route::get('/search/{query?}', 'index')->name('search.index');
-    Route::get('/search/author/{query?}', 'index')->name('search.author');
+    Route::get('/search', 'index')->name('search.index');
+    Route::get('/search/{query?}', 'index')->name('search.query'); // For backward compatibility
 });

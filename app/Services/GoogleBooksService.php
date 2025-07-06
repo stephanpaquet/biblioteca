@@ -122,6 +122,97 @@ class GoogleBooksService
     }
 
     /**
+     * Advanced search with multiple criteria and filters
+     */
+    public function advancedSearch(array $params): array
+    {
+        $query = $this->buildAdvancedQuery($params);
+        $options = $this->buildAdvancedOptions($params);
+
+        if (! $this->cacheEnabled) {
+            return $this->performSearchRequest($query, $options);
+        }
+
+        $cacheKey = $this->generateCacheKey('advanced_search', $query, $options);
+
+        return Cache::remember($cacheKey, $this->cacheMinutes * 60, function () use ($query, $options) {
+            return $this->performSearchRequest($query, $options);
+        });
+    }
+
+    /**
+     * Build the query string for advanced search
+     */
+    private function buildAdvancedQuery(array $params): string
+    {
+        $query = $params['query'];
+        $type = $params['type'] ?? 'general';
+
+        // Apply search type specific formatting
+        switch ($type) {
+            case 'isbn':
+                return "isbn:{$query}";
+            case 'title':
+                return "intitle:\"{$query}\"";
+            case 'author':
+                return "inauthor:\"{$query}\"";
+            case 'publisher':
+                return "inpublisher:\"{$query}\"";
+            case 'subject':
+                return "subject:{$query}";
+            case 'description':
+                return $query; // Search in all fields including description
+            case 'general':
+            default:
+                return $query; // General search across all fields
+        }
+    }
+
+    /**
+     * Build the options array for advanced search
+     */
+    private function buildAdvancedOptions(array $params): array
+    {
+        $options = [
+            'maxResults' => $params['maxResults'] ?? 20,
+            'printType' => $params['printType'] ?? 'books',
+            'startIndex' => $params['startIndex'] ?? 0,
+        ];
+
+        // Add language restriction if specified
+        if (!empty($params['language'])) {
+            $options['langRestrict'] = $params['language'];
+        }
+
+        // Add order by if specified
+        if (!empty($params['orderBy'])) {
+            switch ($params['orderBy']) {
+                case 'newest':
+                    $options['orderBy'] = 'newest';
+                    break;
+                case 'oldest':
+                    $options['orderBy'] = 'relevance'; // Google Books doesn't have "oldest", use relevance
+                    break;
+                case 'relevance':
+                default:
+                    $options['orderBy'] = 'relevance';
+                    break;
+            }
+        }
+
+        // Add publication date filters
+        if (!empty($params['publishedAfter'])) {
+            $options['publishedAfter'] = $params['publishedAfter'];
+        }
+
+        if (!empty($params['publishedBefore'])) {
+            $options['publishedBefore'] = $params['publishedBefore'];
+        }
+
+        return $options;
+    }
+
+    /**
      * Check if API key is configured
      */
     public function hasApiKey(): bool
@@ -172,7 +263,24 @@ class GoogleBooksService
             'startIndex' => $options['startIndex'] ?? 0,
         ], $this->getApiKeyParam());
 
-        Log::info(sprintf('Google Books API search request: %s', $query), [
+        // Add optional parameters if they exist
+        if (!empty($options['langRestrict'])) {
+            $params['langRestrict'] = $options['langRestrict'];
+        }
+
+        if (!empty($options['orderBy'])) {
+            $params['orderBy'] = $options['orderBy'];
+        }
+
+        // Handle publication date filtering in the query
+        if (!empty($options['publishedAfter']) || !empty($options['publishedBefore'])) {
+            $dateFilter = $this->buildDateFilter($options['publishedAfter'] ?? null, $options['publishedBefore'] ?? null);
+            if ($dateFilter) {
+                $params['q'] = $query . ' ' . $dateFilter;
+            }
+        }
+
+        Log::info(sprintf('Google Books API search request: %s', $params['q']), [
             'query' => $query,
             'params' => $params,
         ]);
@@ -197,6 +305,22 @@ class GoogleBooksService
         }
 
         return ['items' => [], 'totalItems' => 0];
+    }
+
+    /**
+     * Build date filter for Google Books API query
+     */
+    private function buildDateFilter(?int $after, ?int $before): string
+    {
+        if ($after && $before) {
+            return "publishedDate:{$after}..{$before}";
+        } elseif ($after) {
+            return "publishedDate:{$after}..";
+        } elseif ($before) {
+            return "publishedDate:..{$before}";
+        }
+
+        return '';
     }
 
     /**

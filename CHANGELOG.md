@@ -8,16 +8,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Enhanced Search System**: Comprehensive search functionality with multiple search types (ISBN, Title, Author, Publisher, Subject, Description)
+- **Advanced Search Filters**: Language restriction, publication date range, print type selection, and result ordering
+- **Smart Search Interface**: Dynamic search form with collapsible advanced options and contextual placeholders
+- **Search Type Selector**: Visual buttons for easy switching between search types
 - **Laravel Pint Integration**: Added Laravel Pint for automated PHP code formatting and style consistency
 - **Code Formatting Configuration**: Created `pint.json` with Laravel preset and custom rules for ordered class elements
 
 ### Changed
+- **SearchController Enhancement**: Updated to handle advanced search parameters with proper validation and error handling
+- **GoogleBooksService Expansion**: Added `advancedSearch()` method with support for all Google Books API search parameters
+- **Search Results Display**: Enhanced Search/Index.vue with better result presentation, error handling, and filter display
+- **Search Routing**: Improved search routes to handle query parameters and maintain backward compatibility
 - **Code Style Standardization**: Applied Laravel Pint formatting to entire codebase (71 files, 36 style issues fixed)
 - **Import Organization**: Standardized and ordered import statements across all PHP files
 - **Class Structure**: Applied ordered class elements for better code organization
 - **Code Consistency**: Implemented consistent spacing, braces positioning, and quote usage
 
+### Fixed
+- **Search Form Routing**: Fixed search form to properly navigate to `/search` route with parameters
+- **Component Import Paths**: Corrected Vue component import paths for proper module resolution
+- **Advanced Search Parameters**: Proper handling of date filters, language restrictions, and ordering in Google Books API calls
+
 ### Technical Improvements
+- **Google Books API Integration**: Enhanced API query building with support for specialized search operators (intitle, inauthor, isbn, etc.)
+- **Search Parameter Validation**: Comprehensive validation for all search inputs and filters
+- **Error Handling**: Robust error handling for failed API requests with user-friendly error messages
+- **Caching Strategy**: Extended caching support for advanced search queries
 - **Automated Formatting**: Integrated Laravel Pint for consistent code formatting
 - **Development Workflow**: Added code style checks and formatting tools
 

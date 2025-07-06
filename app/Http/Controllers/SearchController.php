@@ -9,37 +9,70 @@ use Inertia\Inertia;
 
 class SearchController extends Controller
 {
-    public function index(Request $request, GoogleBooksService $googleBooksService, UserBooks $userBooks, string $query = '')
+    public function index(Request $request, GoogleBooksService $googleBooksService, UserBooks $userBooks)
     {
         $validated = $request->validate([
-            'query' => 'nullable|string|max:255',
+            'q' => 'required|string|max:255',
+            'type' => 'nullable|string|in:general,isbn,title,author,publisher,subject,description',
+            'language' => 'nullable|string|max:10',
+            'publishedAfter' => 'nullable|integer|min:1000|max:2024',
+            'publishedBefore' => 'nullable|integer|min:1000|max:2024',
+            'printType' => 'nullable|string|in:books,magazines',
+            'orderBy' => 'nullable|string|in:relevance,newest,oldest',
+            'maxResults' => 'nullable|integer|in:10,20,40',
         ]);
 
-        $query = $validated['query'] ?? $query;
+        $query = $validated['q'];
+        $searchType = $validated['type'] ?? 'general';
 
-        if ($query) {
+        // Build search parameters for Google Books API
+        $searchParams = [
+            'query' => $query,
+            'type' => $searchType,
+            'language' => $validated['language'] ?? null,
+            'publishedAfter' => $validated['publishedAfter'] ?? null,
+            'publishedBefore' => $validated['publishedBefore'] ?? null,
+            'printType' => $validated['printType'] ?? null,
+            'orderBy' => $validated['orderBy'] ?? 'relevance',
+            'maxResults' => $validated['maxResults'] ?? 20,
+        ];
+
+        // Remove null values
+        $searchParams = array_filter($searchParams, function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        try {
+            $results = $googleBooksService->advancedSearch($searchParams);
+
             return Inertia::render('Search/Index', [
                 'query' => $query,
-                'results' => $googleBooksService->searchByAuthor($query),
+                'searchType' => $searchType,
+                'filters' => $validated,
+                'results' => $results,
                 'userBooks' => $userBooks->get(),
+                'totalResults' => $results['totalItems'] ?? 0,
+            ]);
+        } catch (\Exception $e) {
+            return Inertia::render('Search/Index', [
+                'query' => $query,
+                'searchType' => $searchType,
+                'filters' => $validated,
+                'results' => null,
+                'userBooks' => $userBooks->get(),
+                'error' => 'Search failed. Please try again.',
+                'totalResults' => 0,
             ]);
         }
     }
 
-    public function search(Request $request, GoogleBooksService $googleBooksService, string $query = '')
+    /**
+     * Legacy search method - kept for backward compatibility
+     *
+     * @deprecated Use index() method instead
+     */
+    public function search(Request $request, GoogleBooksService $googleBooksService, UserBooks $userBooks)
     {
-        $validated = $request->validate([
-            'query' => 'nullable|string|max:255',
-        ]);
-
-        $query = $validated['query'] ?? $query;
-
-        if ($query) {
-            return Inertia::render('Search/Index', [
-                'query' => $query,
-                'results' => $googleBooksService->searchBooks($query),
-                'userBooks' => $this->userBooks->get(['user_id' => auth()->id()]),
-            ]);
-        }
+        return $this->index($request, $googleBooksService, $userBooks);
     }
 }
