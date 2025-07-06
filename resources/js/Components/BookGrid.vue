@@ -43,6 +43,16 @@ function searchByAuthor(author) {
     }
   });
 }
+
+function searchByISBN(isbn) {
+  Inertia.visit(route('search.index'), {
+    method: 'get',
+    data: {
+      q: isbn,
+      type: 'isbn'
+    }
+  });
+}
 </script>
 
 <template>
@@ -80,7 +90,6 @@ function searchByAuthor(author) {
         <h3 class="font-semibold text-lg mb-2 line-clamp-2">
           {{ book.volumeInfo.title }}
         </h3>
-        <pre>{{  book.volumeInfo  }}</pre>
 
         <div v-if="book.volumeInfo.authors" class="text-gray-600 mb-2">
           <template v-for="(author, index) in book.volumeInfo.authors" :key="index">
@@ -91,6 +100,21 @@ function searchByAuthor(author) {
               {{ author }}
             </button>
             <span v-if="index < book.volumeInfo.authors.length - 1" class="text-gray-600">, </span>
+          </template>
+        </div>
+
+        <div v-if="book.volumeInfo.industryIdentifiers && book.volumeInfo.industryIdentifiers.length > 0" class="text-gray-500 text-sm mb-2">
+          <template v-for="(identifier, index) in book.volumeInfo.industryIdentifiers" :key="index">
+            <span class="inline-flex items-center">
+              <span class="text-gray-400 mr-1">{{ identifier.type }}:</span>
+              <button
+                @click="searchByISBN(identifier.identifier)"
+                class="text-blue-500 hover:text-blue-700 hover:underline transition-colors cursor-pointer font-mono text-xs"
+              >
+                {{ identifier.identifier }}
+              </button>
+            </span>
+            <span v-if="index < book.volumeInfo.industryIdentifiers.length - 1" class="text-gray-400 mx-2">•</span>
           </template>
         </div>
 
