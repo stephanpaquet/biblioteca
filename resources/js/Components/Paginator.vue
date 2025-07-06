@@ -13,7 +13,7 @@ const props = defineProps({
             hasNextPage: false,
             hasPrevPage: false,
             startIndex: 0,
-            endIndex: 0
+            endIndex: 0,
         })
     },
     query: {
@@ -35,12 +35,15 @@ const props = defineProps({
 });
 
 function goToPage(page) {
+    console.log('goToPage called with page:', page);
+    delete props.filters['page']; // Ensure 'page' is not in filters
     const searchParams = {
         q: props.query,
         type: props.searchType,
-        page: page,
+        page,
         ...props.filters
     };
+    console.log('Navigating to page:', page, 'with params:', searchParams);
 
     // Remove empty filters
     Object.keys(searchParams).forEach(key => {
@@ -49,8 +52,8 @@ function goToPage(page) {
         }
     });
 
-    Inertia.get(route('search.index'), searchParams, {
-        preserveState: true,
+    Inertia.get('/search', searchParams, {
+        preserveState: false,
         preserveScroll: false
     });
 }

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import Layout from '../Layouts/Layout.vue';
 import { useTranslationsStore } from '../stores/translations';
 import { useAuthStore } from '../stores/auth';
+import { useLibraryStore } from '../stores/library';
 
 const props = defineProps({
     books: {
@@ -30,6 +31,7 @@ const props = defineProps({
 
 const authStore = useAuthStore();
 const translationsStore = useTranslationsStore();
+const libraryStore = useLibraryStore();
 
 onMounted(() => {
     translationsStore.setTranslations({
@@ -39,10 +41,13 @@ onMounted(() => {
     });
 
     authStore.setUser(props.auth.user || null);
+
+    // Initialize library store with books from props
+    libraryStore.setBooks(props.books);
 });
 async function updateStatus(bookId, status) {
     try {
-        await fetch(`/api/library/${bookId}/status`, {
+        await fetch(route('library.update-status', bookId), {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -50,6 +55,9 @@ async function updateStatus(bookId, status) {
             },
             body: JSON.stringify({ status })
         });
+
+        // Update local state
+        libraryStore.updateBookStatus(bookId, status);
     } catch (error) {
         console.error('Failed to update status:', error);
     }
@@ -57,18 +65,7 @@ async function updateStatus(bookId, status) {
 
 async function removeFromLibrary(bookId) {
     if (confirm('Are you sure you want to remove this book from your library?')) {
-        try {
-            await fetch(`/api/library/${bookId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-            // Refresh page or remove from local state
-            window.location.reload();
-        } catch (error) {
-            console.error('Failed to remove book:', error);
-        }
+        await libraryStore.removeFromLibrary(bookId);
     }
 }
 </script>
@@ -78,13 +75,13 @@ async function removeFromLibrary(bookId) {
         <div class="container mx-auto px-4 py-8">
             <h1 class="text-3xl font-bold mb-8">My Library</h1>
 
-            <div v-if="books.length === 0" class="text-center py-12">
+            <div v-if="libraryStore.books.length === 0" class="text-center py-12">
                 <p class="text-gray-600 mb-4">Your library is empty</p>
                 <a href="/search" class="text-blue-600 hover:underline">Start searching for books</a>
             </div>
 
             <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <div v-for="book in books" :key="book.id" class="bg-white rounded-lg shadow-md p-4">
+                <div v-for="book in libraryStore.books" :key="book.id" class="bg-white rounded-lg shadow-md p-4">
                     <img :src="book.thumbnail || '/img/placeholder-book.png'" :alt="book.title"
                         class="w-full h-48 object-cover rounded mb-4" />
                     <h3 class="font-semibold text-lg mb-2 line-clamp-2">{{ book.title }}</h3>

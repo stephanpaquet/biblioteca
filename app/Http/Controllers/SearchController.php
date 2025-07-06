@@ -83,7 +83,16 @@ class SearchController extends Controller
                 'results' => null,
                 'userBooks' => $userBooks->get(),
                 'error' => 'Search failed. Please try again.',
-                'totalResults' => 0,
+                'pagination' => [
+                    'currentPage' => $currentPage,
+                    'totalPages' => 1,
+                    'totalItems' => 0,
+                    'perPage' => $perPage,
+                    'hasNextPage' => false,
+                    'hasPrevPage' => false,
+                    'startIndex' => 0,
+                    'endIndex' => 0,
+                ],
             ]);
         }
     }

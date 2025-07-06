@@ -8,13 +8,13 @@ export const useLibraryStore = defineStore('library', () => {
     const error = ref(null)
 
     const bookCount = computed(() => books.value.length)
-    const readBooks = computed(() => 
+    const readBooks = computed(() =>
         books.value.filter(book => book.pivot?.status === 'read')
     )
-    const currentlyReading = computed(() => 
+    const currentlyReading = computed(() =>
         books.value.filter(book => book.pivot?.status === 'reading')
     )
-    const wantToRead = computed(() => 
+    const wantToRead = computed(() =>
         books.value.filter(book => book.pivot?.status === 'want_to_read')
     )
 
@@ -53,7 +53,7 @@ export const useLibraryStore = defineStore('library', () => {
         error.value = null
 
         try {
-            const response = await fetch('/api/library', {
+            const response = await fetch(route('library.store'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -84,6 +84,42 @@ export const useLibraryStore = defineStore('library', () => {
         }
     }
 
+    async function removeFromLibrary(bookId) {
+        const toast = useToast();
+        isLoading.value = true
+        error.value = null
+
+        try {
+            const response = await fetch(route('library.destroy', bookId), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+
+            const result = await response.json()
+
+            if (response.ok) {
+                removeBook(bookId)
+                toast.success('Book removed from library');
+                return { success: true, message: result.message }
+            } else {
+                error.value = result.message
+                toast.error(result.message);
+                return { success: false, message: result.message }
+            }
+        } catch (err) {
+            const errorMsg = 'Failed to remove book from library'
+            error.value = errorMsg
+            toast.error(errorMsg);
+            return { success: false, message: errorMsg }
+        } finally {
+            isLoading.value = false
+        }
+    }
+
     return {
         books,
         isLoading,
@@ -97,6 +133,7 @@ export const useLibraryStore = defineStore('library', () => {
         removeBook,
         updateBookStatus,
         isBookInLibrary,
-        addToLibrary
+        addToLibrary,
+        removeFromLibrary
     }
 })

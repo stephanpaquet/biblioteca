@@ -127,6 +127,7 @@ const searchTypeLabels = {
                     :user-books="userBooks"
                     :title="`Search Results for '${query}'`"
                     :show-no-results="false"
+                    :pagination="pagination"
                 />
 
                 <!-- Bottom Paginator -->

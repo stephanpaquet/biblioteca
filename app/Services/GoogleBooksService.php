@@ -281,6 +281,7 @@ class GoogleBooksService
         }
 
         Log::info(sprintf('Google Books API search request: %s', $params['q']), [
+            'baseUrl' => $this->baseUrl,
             'query' => $query,
             'params' => $params,
         ]);
@@ -289,7 +290,14 @@ class GoogleBooksService
             $response = Http::timeout(10)->get($this->baseUrl, $params);
 
             if ($response->successful()) {
-                return $response->json();
+                $data = $response->json();
+
+                // Limit totalItems to 300 to prevent excessive pagination
+                if (isset($data['totalItems']) && $data['totalItems'] > 300) {
+                    $data['totalItems'] = 300;
+                }
+
+                return $data;
             }
 
             Log::warning(sprintf('Google Books API request failed'), [

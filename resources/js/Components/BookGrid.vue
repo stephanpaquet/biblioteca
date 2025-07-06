@@ -3,6 +3,7 @@ import { Inertia } from '@inertiajs/inertia';
 import AddToLibraryButton from './AddToLibraryButton.vue';
 import BookPlaceholder from './BookPlaceholder.vue';
 import SearchByAuthor from './SearchByAuthor.vue';
+import SearchBySubject from './SearchBySubject.vue';
 
 defineProps({
     books: {
@@ -20,6 +21,12 @@ defineProps({
     showNoResults: {
         type: Boolean,
         default: false
+    },
+    pagination: {
+        type: Object,
+        default: () => ({
+            currentPage: 1
+        })
     }
 });
 
@@ -57,7 +64,12 @@ function searchByPublisher(publisher) {
 
 <template>
     <div v-if="books && books.items && books.items.length > 0">
-        <h2 v-if="title" class="text-2xl font-bold mb-6">{{ title }}</h2>
+        <div v-if="title" class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold">{{ title }}</h2>
+            <div v-if="pagination.totalPages > 1" class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                Page {{ pagination.currentPage }} of {{ pagination.totalPages }}
+            </div>
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div v-for="book in books.items" :key="book.id"
                 class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
@@ -108,6 +120,12 @@ function searchByPublisher(publisher) {
                     </button>
                     <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{ book.volumeInfo.publishedDate }})</span>
                 </div>
+
+                <SearchBySubject
+                    v-if="book.volumeInfo.categories && book.volumeInfo.categories.length > 0"
+                    :categories="book.volumeInfo.categories"
+                    :current-page="pagination.currentPage"
+                />
 
                 <p v-if="book.volumeInfo.description" class="text-gray-700 text-sm mb-4 line-clamp-3">
                     {{ book.volumeInfo.description }}

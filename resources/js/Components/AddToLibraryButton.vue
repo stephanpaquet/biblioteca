@@ -35,7 +35,6 @@ async function addToLibrary() {
   const result = await libraryStore.addToLibrary(bookData)
 
   if (result.success) {
-    message.value = 'Added to library!'
     setTimeout(() => message.value = '', 3000)
   }
 }
