@@ -36,10 +36,33 @@ export const useLibraryStore = defineStore('library', () => {
         }
     }
 
-    function updateBookStatus(bookId, status) {
-        const book = books.value.find(book => book.id === bookId)
-        if (book && book.pivot) {
-            book.pivot.status = status
+    async function updateBookStatus(googleBookId, status) {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            // Find the book by google_book_id to get the actual book id
+            const book = books.value.find(book => book.google_book_id === googleBookId)
+            if (!book) {
+                throw new Error('Book not found in library')
+            }
+
+            const response = await axios.patch(`/library/${book.id}/status`, {
+                status: status
+            })
+
+            // Update local state only after successful API call
+            if (book.pivot) {
+                book.pivot.status = status
+            }
+
+            return { success: true, message: response.data.message }
+        } catch (err) {
+            console.error('Failed to update book status:', err)
+            error.value = err.response?.data?.message || 'Failed to update book status'
+            return { success: false, error: error.value }
+        } finally {
+            isLoading.value = false
         }
     }
 
