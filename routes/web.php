@@ -14,6 +14,11 @@ Route::get('/books/{id}', function ($id) {
     return Inertia::render('Book', ['id' => $id]);
 })->name('book-detail');
 
+// Button component documentation/test page
+Route::get('/button-test', function () {
+    return Inertia::render('ButtonTest');
+})->name('button-test');
+
 // Temporary debug route to check auth status
 Route::get('/debug-auth', function () {
     return response()->json([

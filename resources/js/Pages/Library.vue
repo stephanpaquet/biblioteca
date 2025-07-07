@@ -6,6 +6,7 @@ import { useTranslationsStore } from '../stores/translations';
 import { useAuthStore } from '../stores/auth';
 import { useLibraryStore } from '../stores/library';
 import BookGrid from '../Components/BookGrid.vue';
+import Button from '../Components/Button.vue';
 
 const props = defineProps({
     books: {
@@ -192,17 +193,16 @@ async function syncAllBooks() {
                     <div v-if="libraryStore.books.length > 0" class="text-sm text-gray-600">
                         {{ libraryStore.books.length }} book{{ libraryStore.books.length !== 1 ? 's' : '' }}
                     </div>
-                    <button
+                    <Button
                         v-if="libraryStore.books.length > 0"
                         @click="syncAllBooks"
                         :disabled="libraryStore.isLoading"
-                        class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-medium rounded-md transition-colors space-x-2 shadow-sm"
+                        :loading="libraryStore.isLoading"
+                        variant="primary"
+                        left-icon="sync"
                     >
-                        <svg :class="libraryStore.isLoading ? 'animate-spin' : ''" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                        </svg>
-                        <span>{{ libraryStore.isLoading ? 'Syncing...' : 'Sync All Books' }}</span>
-                    </button>
+                        {{ libraryStore.isLoading ? 'Syncing...' : 'Sync All Books' }}
+                    </Button>
                 </div>
             </div>
 
@@ -286,16 +286,15 @@ async function syncAllBooks() {
                         <div class="text-sm text-gray-600">
                             Showing {{ filteredBooks.length }} of {{ libraryStore.books.length }} books
                         </div>
-                        <button
+                        <Button
                             v-if="searchQuery || selectedCategory || selectedStatus || sortBy !== 'title' || sortOrder !== 'asc'"
                             @click="clearFilters"
-                            class="inline-flex items-center px-3 py-1 text-sm font-medium text-secondary-700 bg-secondary-50 hover:bg-secondary-100 rounded-md transition-colors"
+                            variant="outline"
+                            size="sm"
+                            left-icon="x"
                         >
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
                             Clear Filters
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -307,9 +306,13 @@ async function syncAllBooks() {
                     </svg>
                     <h3 class="text-lg font-medium text-gray-900 mb-2">Your library is empty</h3>
                     <p class="text-gray-600 mb-6">Start building your personal library by adding books from search results.</p>
-                    <a href="/search" class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-md transition-colors shadow-sm">
+                    <Button
+                        href="/search"
+                        variant="primary"
+                        left-icon="search"
+                    >
                         🔍 Start searching for books
-                    </a>
+                    </Button>
                 </div>
             </div>
 
@@ -321,15 +324,13 @@ async function syncAllBooks() {
                     </svg>
                     <h3 class="text-lg font-medium text-gray-900 mb-2">No books found</h3>
                     <p class="text-gray-600 mb-6">No books match your current search and filter criteria.</p>
-                    <button
+                    <Button
                         @click="clearFilters"
-                        class="inline-flex items-center px-4 py-2 bg-secondary-600 hover:bg-secondary-700 text-white font-medium rounded-md transition-colors shadow-sm"
+                        variant="secondary"
+                        left-icon="x"
                     >
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
                         Clear All Filters
-                    </button>
+                    </Button>
                 </div>
             </div>
 

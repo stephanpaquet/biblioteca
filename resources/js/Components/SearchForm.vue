@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import Button from './Button.vue';
 
 const props = defineProps({
     initialQuery: {
@@ -88,15 +89,16 @@ function clearFilters() {
         <!-- Search Type Selector -->
         <div class="mb-4">
             <div class="flex flex-wrap gap-2 justify-center">
-                <button v-for="type in searchTypes" :key="type.value" type="button" @click="searchType = type.value"
-                    :class="[
-                        'px-4 py-2 rounded-lg text-sm font-medium transition-all',
-                        searchType === type.value
-                            ? 'bg-blue-600 text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    ]">
+                <Button
+                    v-for="type in searchTypes"
+                    :key="type.value"
+                    type="button"
+                    @click="searchType = type.value"
+                    :variant="searchType === type.value ? 'primary' : 'neutral'"
+                    size="sm"
+                >
                     {{ type.label }}
-                </button>
+                </Button>
             </div>
         </div>
 
@@ -113,18 +115,27 @@ function clearFilters() {
                 </svg>
             </div>
 
-            <button type="submit" :disabled="isLoading || !searchQuery || !searchQuery.trim()"
-                class="absolute inset-y-0 right-0 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-r-lg transition-colors">
+            <Button
+                type="submit"
+                :disabled="isLoading || !searchQuery || !searchQuery.trim()"
+                :loading="isLoading"
+                variant="primary"
+                class="absolute inset-y-0 right-0 rounded-l-none"
+            >
                 {{ isLoading ? 'Searching...' : 'Search' }}
-            </button>
+            </Button>
         </div>
 
         <!-- Advanced Search Options (collapsible) -->
         <div class="text-center">
-            <button type="button" @click="showAdvanced = !showAdvanced"
-                class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <Button
+                type="button"
+                @click="showAdvanced = !showAdvanced"
+                variant="link"
+                size="sm"
+            >
                 {{ showAdvanced ? 'Hide Advanced Options' : 'Show Advanced Options' }}
-            </button>
+            </Button>
         </div>
 
         <!-- Advanced Search Fields -->
@@ -192,9 +203,14 @@ function clearFilters() {
             </div>
 
             <div class="mt-4 flex justify-center">
-                <button type="button" @click="clearFilters" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
+                <Button
+                    type="button"
+                    @click="clearFilters"
+                    variant="neutral"
+                    size="sm"
+                >
                     Clear Filters
-                </button>
+                </Button>
             </div>
         </div>
     </form>
