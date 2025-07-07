@@ -188,24 +188,6 @@ async function syncAllBooks() {
 <template>
     <Layout>
         <div class="container mx-auto px-4 py-8">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
-                <h1 class="text-3xl font-bold text-gray-900">My Library</h1>
-                <div class="flex items-center space-x-4">
-                    <div v-if="libraryStore.books.length > 0" class="text-sm text-gray-600">
-                        {{ libraryStore.books.length }} book{{ libraryStore.books.length !== 1 ? 's' : '' }}
-                    </div>
-                    <Button
-                        v-if="libraryStore.books.length > 0"
-                        @click="syncAllBooks"
-                        :disabled="libraryStore.isLoading"
-                        :loading="libraryStore.isLoading"
-                        variant="primary"
-                        left-icon="sync"
-                    >
-                        {{ libraryStore.isLoading ? 'Syncing...' : 'Sync All Books' }}
-                    </Button>
-                </div>
-            </div>
 
             <!-- Search and Filter Controls -->
             <div v-if="libraryStore.books.length > 0" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
@@ -295,6 +277,24 @@ async function syncAllBooks() {
                             Clear Filters
                         </Button>
                     </div>
+                </div>
+            </div>
+
+             <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 space-y-4 md:space-y-0">
+                <div class="flex items-center space-x-4">
+                    <div v-if="libraryStore.books.length > 0" class="text-sm text-gray-600">
+                        {{ libraryStore.books.length }} book{{ libraryStore.books.length !== 1 ? 's' : '' }}
+                    </div>
+                    <Button
+                        v-if="libraryStore.books.length > 0"
+                        @click="syncAllBooks"
+                        :disabled="libraryStore.isLoading"
+                        :loading="libraryStore.isLoading"
+                        variant="primary"
+                        left-icon="sync"
+                    >
+                        {{ libraryStore.isLoading ? 'Syncing...' : 'Sync All Books' }}
+                    </Button>
                 </div>
             </div>
 

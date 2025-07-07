@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
+use App\Models\User;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,10 +38,20 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = null;
+        if (Auth::check()) {
+            /** @var User $authUser */
+            $authUser = Auth::user();
+            $authUser->load('roles.permissions');
+
+            $user = $authUser->toArray();
+            $user['can_manage_users'] = $authUser->can('manage users');
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
-                'user' => Auth::check() ? Auth::user() : null,
+                'user' => $user,
             ],
             'csrf_token' => csrf_token(),
             'currentLocale' => Session::get('locale') ?? config('app.locale', 'en'),

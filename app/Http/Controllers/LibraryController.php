@@ -30,7 +30,6 @@ class LibraryController extends Controller
                     'library' => __('library'),
                     'layout' => __('layout'),
                 ],
-
             ]);
         } catch (\Exception $e) {
             Log::error('Library index error: '.$e->getMessage());
@@ -44,6 +43,11 @@ class LibraryController extends Controller
 
     public function store(Request $request)
     {
+        // // Check if user has permission to add books
+        // if (!$request->user()->can('add books')) {
+        //     return response()->json(['message' => 'You do not have permission to add books.'], 403);
+        // }
+
         $request->validate([
             'google_book_id' => 'required|string',
             'title' => 'required|string',
@@ -80,6 +84,12 @@ class LibraryController extends Controller
 
     public function destroy(Request $request, $bookId)
     {
+        // // Check if user has permission to remove books
+        // if (!$request->user()->can('remove books')) {
+        //     return response()->json(['message' => 'You do not have permission to remove books.'], 403);
+        // }
+
+        dd($bookId);
         $request->user()->books()->detach($bookId);
 
         return response()->json(['message' => 'Book removed from library']);
@@ -87,6 +97,11 @@ class LibraryController extends Controller
 
     public function updateStatus(Request $request, $bookId)
     {
+        // Check if user has permission to update book status
+        if (!$request->user()->can('update book status')) {
+            return response()->json(['message' => 'You do not have permission to update book status.'], 403);
+        }
+
         $request->validate([
             'status' => 'required|in:want_to_read,reading,read',
         ]);

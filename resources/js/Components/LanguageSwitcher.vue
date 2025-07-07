@@ -6,8 +6,6 @@ import { useTranslationsStore } from '../stores/translations';
 
 const translationsStore = useTranslationsStore();
 
-console.log(translationsStore.translations);
-
 const currentLocale = ref(translationsStore.translations.locale);
 
 const languageNames = {
@@ -22,8 +20,6 @@ function getLanguageName(locale) {
 }
 
 function changeLocale(event) {
-    console.log(`Changing locale to: ${event.target.value}`);
-
   Inertia.get(window.location.pathname, { locale: translationsStore.translations.currentLocale }, {
     preserveState: true,
     replace: true

@@ -48,6 +48,9 @@ function logout() {
             <Link :href="route('dashboard')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url === '/dashboard' }" :aria-current="page.url === '/dashboard' ? 'page' : null">
               {{ translations?.layout?.nav?.dashboard || 'Dashboard' }}
             </Link>
+            <!-- <Link v-if="user && user.can_manage_users" :href="route('admin.index')" class="text-gray-700 hover:text-blue-600 transition-colors" :class="{ 'font-bold underline': page.url.startsWith('/admin') }" :aria-current="page.url.startsWith('/admin') ? 'page' : null">
+              {{ translations?.layout?.nav?.admin || 'Admin' }}
+            </Link> -->
           </div>
 
           <!-- Right side: Language Switcher & Auth -->

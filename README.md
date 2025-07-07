@@ -102,6 +102,258 @@ A test user is created during setup:
 
 You can use this account to test the authentication system.
 
+## Roles and Permissions System
+
+Biblioteca implements a comprehensive roles and permissions system using **Spatie Laravel Permission** package, providing fine-grained access control for different user types.
+
+### Setup
+
+1. **Install and configure (already done):**
+   ```bash
+   # The package is already installed and configured
+   # Run the role seeder to create roles and permissions
+   ./vendor/bin/sail artisan db:seed --class=RolePermissionSeeder
+   ```
+
+2. **Assign admin role to a user:**
+   ```bash
+   # Using Tinker to assign admin role to first user
+   ./vendor/bin/sail artisan tinker
+   # In tinker console:
+   $user = App\Models\User::first();
+   $user->assignRole('admin');
+   ```
+
+### Available Roles
+
+#### 1. **User** (Default Role)
+- Basic library management permissions
+- Can manage their own library
+- Can add/remove books
+- Can update book status
+- Can sync books with external APIs
+
+**Permissions:**
+- `manage library` - Access to library management
+- `add books` - Add books to personal library
+- `remove books` - Remove books from personal library
+- `update book status` - Change reading status
+- `sync books` - Sync library with external sources
+
+#### 2. **Librarian**
+- Extended permissions for library management
+- Can view all users' libraries
+- Cannot manage users or system settings
+
+**Permissions:**
+- All User permissions, plus:
+- `view all libraries` - View other users' libraries
+
+#### 3. **Admin**
+- Full system access
+- Can manage users and assign roles
+- Can access admin panel
+- Can manage system settings
+
+**Permissions:**
+- All permissions (full access)
+- `manage users` - User management access
+- `assign roles` - Assign/remove roles from users
+- `manage system` - System administration
+- `view analytics` - View system analytics
+- `manage settings` - System configuration
+
+### Using Permissions in Code
+
+#### Backend (Laravel)
+
+**Controller Authorization:**
+```php
+// Check permission in controller
+public function index(Request $request)
+{
+    // Using middleware
+    if (!$request->user()->can('manage users')) {
+        abort(403, 'Unauthorized');
+    }
+    
+    // Or using gate
+    Gate::authorize('manage users');
+}
+```
+
+**Route Protection:**
+```php
+// Protect routes with middleware
+Route::middleware(['can:manage users'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index']);
+});
+```
+
+**Blade Templates:**
+```php
+@can('manage users')
+    <a href="{{ route('admin.index') }}">Admin Panel</a>
+@endcan
+```
+
+#### Frontend (Vue.js)
+
+**Component Authorization:**
+```vue
+<template>
+  <div>
+    <!-- Show admin link only to users with permission -->
+    <Link v-if="user && user.can_manage_users" :href="route('admin.index')">
+      Admin Panel
+    </Link>
+  </div>
+</template>
+
+<script setup>
+import { usePage } from '@inertiajs/vue3';
+
+const { props } = usePage();
+const user = props.auth.user;
+</script>
+```
+
+### Admin Panel Features
+
+The admin panel provides comprehensive user and role management:
+
+#### 1. **User Management** (`/admin`)
+- View all users with their assigned roles
+- Assign/change user roles via dropdown
+- Visual role indicators with color coding
+- Paginated user list
+
+#### 2. **Library Overview** (`/admin/libraries`)
+- View all users' libraries
+- See book collections with reading status
+- Monitor user activity
+- Books displayed with thumbnails and status indicators
+
+#### 3. **Role & Permission Overview**
+- Display all roles with their permissions
+- Role descriptions and capability summaries
+- Permission matrix view
+
+### API Endpoints
+
+#### Admin Management
+- `GET /admin` - Admin dashboard (requires `manage users` permission)
+- `GET /admin/libraries` - View all libraries (requires `view all libraries` permission)
+- `POST /admin/users/{user}/assign-role` - Assign role (requires `assign roles` permission)
+- `DELETE /admin/users/{user}/remove-role` - Remove role (requires `assign roles` permission)
+
+### Creating Custom Roles and Permissions
+
+#### 1. **Add New Permissions**
+```php
+// In RolePermissionSeeder.php
+$permissions = [
+    'manage library',
+    'add books',
+    // ... existing permissions
+    'export data',        // New permission
+    'import data',        // New permission
+    'manage categories',  // New permission
+];
+```
+
+#### 2. **Create Custom Role**
+```php
+// In RolePermissionSeeder.php
+$customRole = Role::create(['name' => 'editor']);
+$customRole->givePermissionTo([
+    'manage library',
+    'add books',
+    'remove books',
+    'update book status',
+    'manage categories',  // Custom permission
+]);
+```
+
+#### 3. **Assign Custom Role**
+```php
+// Programmatically
+$user = User::find(1);
+$user->assignRole('editor');
+
+// Or via admin panel dropdown
+```
+
+### Permission Checking Examples
+
+#### Check Single Permission
+```php
+// Laravel
+if ($user->can('manage users')) {
+    // User can manage users
+}
+
+// Vue.js
+if (user.can_manage_users) {
+    // Show admin features
+}
+```
+
+#### Check Multiple Permissions
+```php
+// Laravel - Check if user has ANY of these permissions
+if ($user->hasAnyPermission(['manage users', 'view all libraries'])) {
+    // User has at least one permission
+}
+
+// Laravel - Check if user has ALL permissions
+if ($user->hasAllPermissions(['manage users', 'assign roles'])) {
+    // User has all permissions
+}
+```
+
+#### Check Role
+```php
+// Laravel
+if ($user->hasRole('admin')) {
+    // User is admin
+}
+
+// Check multiple roles
+if ($user->hasAnyRole(['admin', 'librarian'])) {
+    // User has admin or librarian role
+}
+```
+
+### Security Considerations
+
+1. **Route Protection**: All admin routes are protected with permission middleware
+2. **Frontend Checks**: UI elements are conditionally shown based on permissions
+3. **API Validation**: All API endpoints validate permissions before executing
+4. **Role Hierarchy**: Roles are hierarchical (admin > librarian > user)
+5. **Permission Caching**: Spatie package caches permissions for performance
+
+### Extending the System
+
+#### Adding New Admin Features
+1. Create controller methods with permission checks
+2. Add corresponding routes with middleware
+3. Create frontend components with permission-based rendering
+4. Update the admin navigation
+
+#### Custom Permission Middleware
+```php
+// Create custom middleware
+php artisan make:middleware CheckLibrarianPermission
+
+// In middleware
+if (!auth()->user()->hasRole(['admin', 'librarian'])) {
+    abort(403);
+}
+```
+
+This roles and permissions system provides a solid foundation for user management and access control, making it easy to extend and customize based on your specific needs.
+
 ## New Features
 
 ### 📚 Personal Library Management
