@@ -4,6 +4,8 @@ import AddToLibraryButton from './AddToLibraryButton.vue';
 import BookPlaceholder from './BookPlaceholder.vue';
 import SearchByAuthor from './SearchByAuthor.vue';
 import SearchBySubject from './SearchBySubject.vue';
+import Button from './Button.vue';
+import Icon from './Icon.vue';
 
 defineProps({
     books: {
@@ -87,11 +89,8 @@ function searchByPublisher(publisher) {
                         :alt="book.volumeInfo.title" class="w-full h-full object-cover"
                         @error="$event.target.style.display = 'none'; $event.target.nextElementSibling.style.display = 'flex'" />
                     <div v-else class="flex flex-col items-center justify-center text-gray-400 p-4 text-center">
-                        <svg class="w-12 h-12 mb-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z" />
-                        </svg>
-                        <span class="text-xs font-medium">{{ truncateTitle(book.volumeInfo.title) }}*** </span>
+                        <Icon name="menu_book" class="w-12 h-12 mb-2" />
+                        <span class="text-xs font-medium">{{ truncateTitle(book.volumeInfo.title) }}</span>
                     </div>
                 </div>
 
@@ -108,10 +107,14 @@ function searchByPublisher(publisher) {
                     <template v-for="(identifier, index) in book.volumeInfo.industryIdentifiers" :key="index">
                         <span class="inline-flex items-center">
                             <span class="text-gray-400 mr-1">{{ identifier.type }}:</span>
-                            <button @click="searchByISBN(identifier.identifier)"
-                                class="text-primary-600 hover:text-primary-700 hover:underline transition-colors cursor-pointer font-mono text-xs">
+                            <Button
+                                @click="searchByISBN(identifier.identifier)"
+                                variant="link"
+                                size="sm"
+                                class="!text-xs font-mono !px-0 !py-0"
+                            >
                                 {{ identifier.identifier }}
-                            </button>
+                            </Button>
                         </span>
                         <span v-if="index < book.volumeInfo.industryIdentifiers.length - 1"
                             class="text-gray-400 mx-2">•</span>
@@ -120,10 +123,14 @@ function searchByPublisher(publisher) {
 
                 <div v-if="book.volumeInfo.publisher" class="text-gray-500 text-sm mb-2">
                     <span class="text-gray-400">Publisher:</span>
-                    <button @click="searchByPublisher(book.volumeInfo.publisher)"
-                        class="ml-1 text-primary-600 hover:text-primary-700 hover:underline transition-colors cursor-pointer">
+                    <Button
+                        @click="searchByPublisher(book.volumeInfo.publisher)"
+                        variant="link"
+                        size="sm"
+                        class="!text-xs !px-0 !py-0 ml-1"
+                    >
                         {{ book.volumeInfo.publisher }}
-                    </button>
+                    </Button>
                     <span v-if="book.volumeInfo.publishedDate" class="text-gray-400 ml-2">({{
                         book.volumeInfo.publishedDate }})</span>
                 </div>
@@ -141,17 +148,25 @@ function searchByPublisher(publisher) {
                             :show-sync="showSync" />
 
                         <div class="flex justify-center space-x-3">
-                            <a :href="`/books/${book.id}`"
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-primary-600 bg-primary-50 border border-primary-200 rounded-md hover:bg-primary-100 hover:text-primary-700 transition-colors">
-                                📖 Details
-                            </a>
+                            <Button
+                                :href="`/books/${book.id}`"
+                                variant="primary"
+                                size="sm"
+                                left-icon="menu_book"
+                            >
+                                Details
+                            </Button>
 
-                            <a v-if="book.volumeInfo.previewLink"
-                               :href="book.volumeInfo.previewLink"
-                               target="_blank"
-                               class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-success-600 bg-success-50 border border-success-200 rounded-md hover:bg-success-100 hover:text-success-700 transition-colors">
-                                👁️ Preview
-                            </a>
+                            <Button
+                                v-if="book.volumeInfo.previewLink"
+                                :href="book.volumeInfo.previewLink"
+                                target="_blank"
+                                variant="success"
+                                size="sm"
+                                left-icon="visibility"
+                            >
+                                Preview
+                            </Button>
                         </div>
                     </div>
                 </div>

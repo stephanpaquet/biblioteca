@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import Button from './Button.vue';
+import Icon from './Icon.vue';
 
 const loading = ref(false);
 const showExamples = ref(true);
@@ -44,26 +45,93 @@ const simulateLoading = async () => {
                 <Button size="lg">Large</Button>
                 <Button size="xl">Extra Large</Button>
             </div>
-        </section>
-
-        <!-- Icons -->
+        </section>        <!-- Icons -->
         <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Icons</h2>
-            <div class="space-y-4">
-                <div class="flex flex-wrap gap-4">
-                    <Button left-icon="search">Search</Button>
-                    <Button right-icon="arrow_right">Next</Button>
-                    <Button left-icon="plus" variant="success">Add Item</Button>
-                    <Button left-icon="trash" variant="danger">Delete</Button>
-                    <Button left-icon="edit" variant="outline">Edit</Button>
-                    <Button left-icon="sync" variant="secondary">Sync</Button>
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Material Symbols Integration</h2>
+            <div class="space-y-6">
+                <!-- Material Symbols Icons -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Material Symbols (New!)</h3>
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <Button left-icon="search">Search Books</Button>
+                        <Button left-icon="library_books" variant="secondary">My Library</Button>
+                        <Button left-icon="favorite" variant="success">Add to Favorites</Button>
+                        <Button left-icon="delete" variant="danger">Remove Book</Button>
+                        <Button left-icon="edit" variant="outline">Edit Details</Button>
+                        <Button left-icon="share" variant="ghost">Share Book</Button>
+                    </div>
                 </div>
 
-                <div class="flex flex-wrap gap-4">
-                    <Button icon-only left-icon="search" variant="outline" />
-                    <Button icon-only left-icon="plus" variant="success" />
-                    <Button icon-only left-icon="trash" variant="danger" />
-                    <Button icon-only left-icon="edit" variant="ghost" />
+                <!-- Icon Variants -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Icon Variants</h3>
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <Button left-icon="star" icon-variant="outlined">Outlined</Button>
+                        <Button left-icon="star" icon-variant="rounded" variant="secondary">Rounded</Button>
+                        <Button left-icon="star" icon-variant="sharp" variant="success">Sharp</Button>
+                    </div>
+                </div>
+
+                <!-- Icon Weights and Fills -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Icon Customization</h3>
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <Button left-icon="bookmark" :icon-fill="0" variant="outline">Outlined Bookmark</Button>
+                        <Button left-icon="bookmark" :icon-fill="1" variant="primary">Filled Bookmark</Button>
+                        <Button left-icon="heart" :icon-weight="300" variant="ghost">Light Weight</Button>
+                        <Button left-icon="heart" :icon-weight="700" variant="danger">Bold Weight</Button>
+                    </div>
+                </div>
+
+                <!-- Legacy Icons (Backward Compatible) -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Legacy Icons (Auto-mapped)</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <Button left-icon="plus" variant="success">Add (Legacy)</Button>
+                        <Button left-icon="trash" variant="danger">Delete (Legacy)</Button>
+                        <Button left-icon="sync" variant="outline">Sync (Legacy)</Button>
+                        <Button left-icon="external_link" variant="ghost">External (Legacy)</Button>
+                    </div>
+                </div>
+
+                <!-- Icon Only Buttons -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Icon-Only Buttons</h3>
+                    <div class="flex flex-wrap gap-4">
+                        <Button icon-only left-icon="search" variant="outline" />
+                        <Button icon-only left-icon="favorite" variant="success" />
+                        <Button icon-only left-icon="settings" variant="neutral" />
+                        <Button icon-only left-icon="more_vert" variant="ghost" />
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Standalone Icon Component -->
+        <section class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Standalone Icon Component</h2>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Basic Usage</h3>
+                    <div class="flex items-center gap-4 mb-4">
+                        <Icon name="book" size="md" />
+                        <Icon name="library_books" size="lg" variant="rounded" />
+                        <Icon name="favorite" size="xl" :fill="1" class="text-red-500" />
+                        <Icon name="star" size="2xl" variant="sharp" :weight="700" class="text-yellow-500" />
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Different Sizes</h3>
+                    <div class="flex items-center gap-4">
+                        <Icon name="home" size="xs" />
+                        <Icon name="home" size="sm" />
+                        <Icon name="home" size="md" />
+                        <Icon name="home" size="lg" />
+                        <Icon name="home" size="xl" />
+                        <Icon name="home" size="2xl" />
+                        <Icon name="home" :size="48" />
+                    </div>
                 </div>
             </div>
         </section>

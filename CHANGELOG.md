@@ -8,6 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Material Symbols Integration**: Complete Google Material Symbols icon system:
+  - Added Material Symbols Outlined, Rounded, and Sharp variants
+  - Created comprehensive Icon component with full customization options
+  - Support for icon weight, fill, grade, and optical size adjustments
+  - Backward compatibility with legacy icon names (auto-mapping)
+  - Performance optimized with variable fonts and proper preloading
+- **Enhanced Icon Component**: Standalone Icon component with:
+  - Material Symbols integration with 2,500+ available icons
+  - Customizable variants (outlined, rounded, sharp)
+  - Adjustable size system (xs, sm, md, lg, xl, 2xl, or custom px values)
+  - Font variation settings (weight, fill, grade, optical size)
+  - Legacy icon mapping for seamless migration
+  - Proper accessibility with ARIA labels
+- **Button Component Material Symbols**: Updated Button component to use Material Symbols:
+  - Replaced hardcoded SVG icons with Material Symbols
+  - Added icon customization props (variant, fill, weight)
+  - Automatic icon sizing based on button size
+  - Maintained backward compatibility with existing icon names
+  - Improved loading animation with Material Symbols
 - **Generic Button Component**: Created a comprehensive, reusable Button component with:
   - Multiple variants (primary, secondary, success, danger, outline, ghost, link)
   - Size options (xs, sm, md, lg, xl)
@@ -75,6 +94,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Enhanced Button Styling**: Improved button designs with better hover states, shadows, and visual feedback
 - **Typography Improvements**: Upgraded to Inter font for better readability and modern appearance
 - **Card Design Enhancement**: Book cards now feature softer shadows and improved visual hierarchy
+- **Library Page Buttons**: Updated all buttons in the "My Library" section to use the new Button component and Material Symbols
+  - **AddToLibraryButton**: Replaced custom buttons with Button component, added Material Symbols icons (add, sync, delete, check_circle)
+  - **BookGrid**: Updated Details and Preview buttons to use Button component with Material Symbols (menu_book, visibility)
+  - **Clickable Elements**: Updated ISBN and publisher links to use Button component with link variant
+  - **Book Placeholders**: Replaced SVG icons with Material Symbols (menu_book)
+- **Library Page UI**: Updated search bar and empty state icons to use Material Symbols (search, menu_book, search_off, clear)
+- **Filter Controls**: Updated "Clear Filters" and "Clear All Filters" buttons to use Button component
+- **Icon System**: Migrated from emoji and SVG icons to Material Symbols throughout the library components
 
 ### Fixed
 - **Library Store API Routes**: Corrected API endpoint from `/api/library` to `/library` to match Laravel route definitions
@@ -87,8 +114,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Custom Message Handling**: Removed local message state management in favor of toast notifications
 
 ### Technical Improvements
+- **Material Symbols Architecture**: Modern icon system implementation:
+  - Variable font loading with optimal performance
+  - CSS font-variation-settings for dynamic icon customization
+  - Component-based architecture for consistent icon usage
+  - Legacy SVG to Material Symbols migration path
+  - Automated icon name mapping for backward compatibility
 - **Component Reusability**: Created generic Button component to eliminate code duplication and ensure consistent styling
-- **Icon System**: Built-in icon library with commonly used SVG icons (search, plus, minus, check, x, arrows, sync, trash, edit, external link)
+- **Icon System**: Comprehensive Material Symbols integration replacing hardcoded SVG icons
 - **Props Validation**: Implemented comprehensive prop validation similar to TypeScript for better development experience
 - **Dynamic Component Rendering**: Button component can render as button, anchor, or router-link based on props
 - **Accessibility Enhancement**: Added proper ARIA attributes, focus management, and keyboard navigation support

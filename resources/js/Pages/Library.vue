@@ -7,6 +7,7 @@ import { useAuthStore } from '../stores/auth';
 import { useLibraryStore } from '../stores/library';
 import BookGrid from '../Components/BookGrid.vue';
 import Button from '../Components/Button.vue';
+import Icon from '../Components/Icon.vue';
 
 const props = defineProps({
     books: {
@@ -212,9 +213,7 @@ async function syncAllBooks() {
                     <!-- Search Bar -->
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                            <Icon name="search" class="h-5 w-5 text-gray-400" />
                         </div>
                         <input
                             v-model="searchQuery"
@@ -291,7 +290,7 @@ async function syncAllBooks() {
                             @click="clearFilters"
                             variant="outline"
                             size="sm"
-                            left-icon="x"
+                            left-icon="clear"
                         >
                             Clear Filters
                         </Button>
@@ -301,9 +300,7 @@ async function syncAllBooks() {
 
             <div v-if="libraryStore.books.length === 0" class="text-center py-16">
                 <div class="max-w-md mx-auto">
-                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z"></path>
-                    </svg>
+                    <Icon name="menu_book" class="mx-auto h-12 w-12 text-gray-400 mb-4" />
                     <h3 class="text-lg font-medium text-gray-900 mb-2">Your library is empty</h3>
                     <p class="text-gray-600 mb-6">Start building your personal library by adding books from search results.</p>
                     <Button
@@ -311,7 +308,7 @@ async function syncAllBooks() {
                         variant="primary"
                         left-icon="search"
                     >
-                        🔍 Start searching for books
+                        Start searching for books
                     </Button>
                 </div>
             </div>
@@ -319,15 +316,13 @@ async function syncAllBooks() {
             <!-- No filtered results message -->
             <div v-if="libraryStore.books.length > 0 && filteredBooks.length === 0" class="text-center py-16">
                 <div class="max-w-md mx-auto">
-                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.291-1.007-5.824-2.562M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                    </svg>
+                    <Icon name="search_off" class="mx-auto h-12 w-12 text-gray-400 mb-4" />
                     <h3 class="text-lg font-medium text-gray-900 mb-2">No books found</h3>
                     <p class="text-gray-600 mb-6">No books match your current search and filter criteria.</p>
                     <Button
                         @click="clearFilters"
                         variant="secondary"
-                        left-icon="x"
+                        left-icon="clear"
                     >
                         Clear All Filters
                     </Button>
