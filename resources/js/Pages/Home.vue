@@ -35,11 +35,11 @@ const props = defineProps({
   },
   supportedLocales: {
     type: Array,
-    default: () => ['en']
+    default: () => ['fr']
   },
   currentLocale: {
     type: String,
-    default: 'en'
+    default: 'fr'
   }
 });
 
