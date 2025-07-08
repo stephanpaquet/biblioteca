@@ -76,7 +76,7 @@ onMounted(() => {
               v-if="book.thumbnail"
               :src="book.thumbnail.replace('http://', 'https://')"
               :alt="book.title"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-contain"
               @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
             />
             <div
