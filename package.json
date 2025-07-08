@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "pint": "php ./vendor/bin/pint",
+        "pint:test": "php ./vendor/bin/pint --test"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

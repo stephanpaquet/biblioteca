@@ -7,7 +7,7 @@ trait HasTranslations
     /**
      * Get translations for specific translation files
      */
-    protected function getTranslations(array $files = [], string $locale = null): array
+    protected function getTranslations(array $files = [], ?string $locale = null): array
     {
         $locale = $locale ?? session('locale', config('app.locale', 'en'));
         $translations = [];
@@ -26,7 +26,7 @@ trait HasTranslations
     /**
      * Get all global translations that are loaded in middleware
      */
-    protected function getGlobalTranslations(string $locale = null): array
+    protected function getGlobalTranslations(?string $locale = null): array
     {
         $locale = $locale ?? session('locale', config('app.locale', 'en'));
 
@@ -48,6 +48,7 @@ trait HasTranslations
     protected function getPageTranslations(string $page, array $additionalFiles = []): array
     {
         $files = array_merge([$page], $additionalFiles);
+
         return $this->getTranslations($files);
     }
 

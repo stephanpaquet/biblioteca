@@ -98,7 +98,7 @@ class LibraryController extends Controller
     public function updateStatus(Request $request, $bookId)
     {
         // Check if user has permission to update book status
-        if (!$request->user()->can('update book status')) {
+        if (! $request->user()->can('update book status')) {
             return response()->json(['message' => 'You do not have permission to update book status.'], 403);
         }
 
@@ -119,14 +119,14 @@ class LibraryController extends Controller
             $book = Book::findOrFail($bookId);
 
             // Verify the book belongs to the user
-            if (!$request->user()->books()->where('book_id', $bookId)->exists()) {
+            if (! $request->user()->books()->where('book_id', $bookId)->exists()) {
                 return response()->json(['message' => 'Book not found in your library'], 404);
             }
 
             // Fetch updated data from Google Books API
             $googleBookData = $this->googleBooksService->getBook($book->google_book_id);
 
-            if (!$googleBookData) {
+            if (! $googleBookData) {
                 return response()->json(['message' => 'Book not found in Google Books'], 404);
             }
 
@@ -147,11 +147,12 @@ class LibraryController extends Controller
 
             return response()->json([
                 'message' => 'Book information synced successfully',
-                'book' => $book->fresh()
+                'book' => $book->fresh(),
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Book sync error: ' . $e->getMessage());
+            Log::error('Book sync error: '.$e->getMessage());
+
             return response()->json(['message' => 'Failed to sync book information'], 500);
         }
     }
@@ -166,6 +167,7 @@ class LibraryController extends Controller
                 return $identifier['identifier'];
             }
         }
+
         return null;
     }
 }

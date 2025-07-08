@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\SearchController;
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -68,11 +68,11 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['can:manage users'])
         ->prefix('admin')
         ->name('admin.')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('index');
-        Route::get('/libraries', [AdminController::class, 'userLibraries'])->name('libraries');
-        Route::post('/users/{user}/assign-role', [AdminController::class, 'assignRole'])->name('assign-role');
-        Route::delete('/users/{user}/remove-role', [AdminController::class, 'removeRole'])->name('remove-role');
-    });
+            Route::get('/', [AdminController::class, 'index'])->name('index');
+            Route::get('/libraries', [AdminController::class, 'userLibraries'])->name('libraries');
+            Route::post('/users/{user}/assign-role', [AdminController::class, 'assignRole'])->name('assign-role');
+            Route::delete('/users/{user}/remove-role', [AdminController::class, 'removeRole'])->name('remove-role');
+        });
 
     // API endpoint to get current user info
     Route::get('/api/user', function () {

@@ -141,6 +141,37 @@ class GoogleBooksService
     }
 
     /**
+     * Check if API key is configured
+     */
+    public function hasApiKey(): bool
+    {
+        return ! empty($this->apiKey);
+    }
+
+    /**
+     * Check if caching is enabled
+     */
+    public function isCacheEnabled(): bool
+    {
+        return $this->cacheEnabled;
+    }
+
+    /**
+     * Clear cache for specific query
+     */
+    public function clearCache(?string $query = null): bool
+    {
+        if ($query) {
+            $cacheKey = $this->generateCacheKey('search', $query);
+
+            return Cache::forget($cacheKey);
+        }
+
+        // Clear all Google Books cache
+        return Cache::flush();
+    }
+
+    /**
      * Build the query string for advanced search
      */
     private function buildAdvancedQuery(array $params): string
@@ -180,67 +211,39 @@ class GoogleBooksService
         ];
 
         // Add language restriction if specified
-        if (!empty($params['language'])) {
+        if (! empty($params['language'])) {
             $options['langRestrict'] = $params['language'];
         }
 
         // Add order by if specified
-        if (!empty($params['orderBy'])) {
+        if (! empty($params['orderBy'])) {
             switch ($params['orderBy']) {
                 case 'newest':
                     $options['orderBy'] = 'newest';
+
                     break;
                 case 'oldest':
                     $options['orderBy'] = 'relevance'; // Google Books doesn't have "oldest", use relevance
+
                     break;
                 case 'relevance':
                 default:
                     $options['orderBy'] = 'relevance';
+
                     break;
             }
         }
 
         // Add publication date filters
-        if (!empty($params['publishedAfter'])) {
+        if (! empty($params['publishedAfter'])) {
             $options['publishedAfter'] = $params['publishedAfter'];
         }
 
-        if (!empty($params['publishedBefore'])) {
+        if (! empty($params['publishedBefore'])) {
             $options['publishedBefore'] = $params['publishedBefore'];
         }
 
         return $options;
-    }
-
-    /**
-     * Check if API key is configured
-     */
-    public function hasApiKey(): bool
-    {
-        return ! empty($this->apiKey);
-    }
-
-    /**
-     * Check if caching is enabled
-     */
-    public function isCacheEnabled(): bool
-    {
-        return $this->cacheEnabled;
-    }
-
-    /**
-     * Clear cache for specific query
-     */
-    public function clearCache(?string $query = null): bool
-    {
-        if ($query) {
-            $cacheKey = $this->generateCacheKey('search', $query);
-
-            return Cache::forget($cacheKey);
-        }
-
-        // Clear all Google Books cache
-        return Cache::flush();
     }
 
     /**
@@ -264,19 +267,19 @@ class GoogleBooksService
         ], $this->getApiKeyParam());
 
         // Add optional parameters if they exist
-        if (!empty($options['langRestrict'])) {
+        if (! empty($options['langRestrict'])) {
             $params['langRestrict'] = $options['langRestrict'];
         }
 
-        if (!empty($options['orderBy'])) {
+        if (! empty($options['orderBy'])) {
             $params['orderBy'] = $options['orderBy'];
         }
 
         // Handle publication date filtering in the query
-        if (!empty($options['publishedAfter']) || !empty($options['publishedBefore'])) {
+        if (! empty($options['publishedAfter']) || ! empty($options['publishedBefore'])) {
             $dateFilter = $this->buildDateFilter($options['publishedAfter'] ?? null, $options['publishedBefore'] ?? null);
             if ($dateFilter) {
-                $params['q'] = $query . ' ' . $dateFilter;
+                $params['q'] = $query.' '.$dateFilter;
             }
         }
 
@@ -371,6 +374,6 @@ class GoogleBooksService
             'api_key_present' => $this->hasApiKey(),
         ];
 
-        return 'google_books:' . md5(json_encode($keyData));
+        return 'google_books:'.md5(json_encode($keyData));
     }
 }

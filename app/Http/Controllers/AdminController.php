@@ -6,16 +6,17 @@ use App\Models\User;
 use App\Traits\HasTranslations;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
     use HasTranslations;
+
     public function index(Request $request)
     {
         // Check if user has admin permissions
-        if (!$request->user()->can('manage users')) {
+        if (! $request->user()->can('manage users')) {
             abort(403, 'You do not have permission to access the admin panel.');
         }
 
@@ -36,7 +37,7 @@ class AdminController extends Controller
     public function assignRole(Request $request, User $user)
     {
         // Check if user has permission to assign roles
-        if (!$request->user()->can('assign roles')) {
+        if (! $request->user()->can('assign roles')) {
             return response()->json(['message' => 'You do not have permission to assign roles.'], 403);
         }
 
@@ -52,7 +53,7 @@ class AdminController extends Controller
     public function removeRole(Request $request, User $user)
     {
         // Check if user has permission to assign roles
-        if (!$request->user()->can('assign roles')) {
+        if (! $request->user()->can('assign roles')) {
             return response()->json(['message' => 'You do not have permission to remove roles.'], 403);
         }
 
@@ -68,7 +69,7 @@ class AdminController extends Controller
     public function userLibraries(Request $request)
     {
         // Check if user has permission to view all libraries
-        if (!$request->user()->can('view all libraries')) {
+        if (! $request->user()->can('view all libraries')) {
             abort(403, 'You do not have permission to view all libraries.');
         }
 

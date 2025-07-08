@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionSeeder extends Seeder
 {
@@ -71,7 +71,7 @@ class RolePermissionSeeder extends Seeder
         // Assign default role to existing users
         $users = User::all();
         foreach ($users as $user) {
-            if (!$user->hasAnyRole(['user', 'librarian', 'admin'])) {
+            if (! $user->hasAnyRole(['user', 'librarian', 'admin'])) {
                 $user->assignRole('user');
             }
         }

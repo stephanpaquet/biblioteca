@@ -12,6 +12,7 @@ class UserBooks
         if (Auth::check()) {
             /** @var User $user */
             $user = Auth::user();
+
             return $user->books()->get()->toArray();
         }
 
