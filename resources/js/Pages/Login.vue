@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/inertia-vue3';
 import Layout from '../Layouts/Layout.vue';
 import { useToast } from '../composables/useToast';
@@ -18,7 +18,7 @@ function login() {
   processing.value = true;
 
   // Use Inertia.js post method which automatically handles CSRF tokens
-  Inertia.post(route('login'), {
+  router.post(route('login'), {
     email: email.value,
     password: password.value,
   }, {

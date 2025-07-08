@@ -1,8 +1,6 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
-import { Inertia } from '@inertiajs/inertia';
+import { Link, usePage, router } from '@inertiajs/vue3';
 import { computed, getCurrentInstance } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
 import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 import { useAuthStore } from '../stores/auth';
 import { useTranslationsStore } from '../stores/translations';
@@ -19,7 +17,7 @@ const user = computed(() => authStore.user);
 const translations = computed(() => translationsStore.translations.texts);
 
 function logout() {
-  Inertia.post(route('logout'));
+  router.post(route('logout'));
   authStore.setUser(null)
 }
 </script>

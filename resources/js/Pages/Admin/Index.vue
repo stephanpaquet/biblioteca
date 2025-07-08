@@ -149,6 +149,7 @@
 </template>
 
 <script setup>
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import Layout from '@/Layouts/Layout.vue';
 

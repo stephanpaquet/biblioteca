@@ -1,5 +1,5 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 
 defineProps({
     categories: {
@@ -13,7 +13,7 @@ defineProps({
 });
 
 function searchBySubject(subject) {
-    Inertia.visit(route('search.index'), {
+    router.visit(route('search.index'), {
         method: 'get',
         data: {
             q: subject,

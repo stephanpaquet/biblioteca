@@ -1,5 +1,4 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
 import Layout from '../../Layouts/Layout.vue';
 import SearchForm from '../../Components/SearchForm.vue';
 import BookGrid from '../../Components/BookGrid.vue';

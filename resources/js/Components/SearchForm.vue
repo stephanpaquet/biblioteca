@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import Button from './Button.vue';
 
 const props = defineProps({
@@ -63,7 +63,7 @@ function handleSearch() {
     });
 
     // Navigate to search results
-    Inertia.get('/search', searchParams, {
+    router.get('/search', searchParams, {
         preserveState: true,
         preserveScroll: true,
         onFinish: () => {

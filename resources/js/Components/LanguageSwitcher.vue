@@ -1,7 +1,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import { useTranslationsStore } from '../stores/translations';
 
 const translationsStore = useTranslationsStore();
@@ -20,7 +20,7 @@ function getLanguageName(locale) {
 }
 
 function changeLocale(event) {
-  Inertia.get(window.location.pathname, { locale: translationsStore.translations.currentLocale }, {
+  router.get(window.location.pathname, { locale: translationsStore.translations.currentLocale }, {
     preserveState: true,
     replace: true
   });

@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import Layout from '../Layouts/Layout.vue';
 import SearchForm from '../Components/SearchForm.vue';
 import BookGrid from '../Components/BookGrid.vue';
@@ -29,10 +30,7 @@ const props = defineProps({
     type: Object,
     default: null
   },
-  translations: {
-    type: Object,
-    required: true
-  },
+  // Remove translations prop since it's now global
   supportedLocales: {
     type: Array,
     default: () => ['fr']
@@ -51,8 +49,11 @@ const translationsStore = useTranslationsStore();
 onMounted(() => {
   // Initialize stores with props data
   libraryStore.setBooks(props.userBooks);
+
+  // Get global translations from Inertia's shared data
+  const sharedTranslations = usePage().props.translations;
   translationsStore.setTranslations({
-    texts: props.translations,
+    texts: sharedTranslations,
     currentLocale: props.currentLocale,
     supportedLocales: props.supportedLocales,
   });
@@ -65,7 +66,8 @@ onMounted(() => {
 });
 
 function t(key) {
-  return props.translations.home[key] || key;
+  const translations = translationsStore.translations?.texts?.home;
+  return translations?.[key] || key;
 }
 </script>
 
@@ -83,7 +85,6 @@ function t(key) {
 
         <SearchForm
           :initial-query="query"
-          :translations="translations"
         />
       </div>
     </div>

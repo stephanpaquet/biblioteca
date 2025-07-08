@@ -1,5 +1,5 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import AddToLibraryButton from './AddToLibraryButton.vue';
 import BookPlaceholder from './BookPlaceholder.vue';
 
@@ -11,7 +11,7 @@ defineProps({
 });
 
 function searchByAuthor(author) {
-    Inertia.visit(route('search.index'), {
+    router.visit(route('search.index'), {
         method: 'get',
         data: {
             q: author,

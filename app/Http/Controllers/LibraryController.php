@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Services\GoogleBooksService;
+use App\Traits\HasTranslations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class LibraryController extends Controller
 {
+    use HasTranslations;
+
     protected $googleBooksService;
 
     public function __construct(GoogleBooksService $googleBooksService)
@@ -26,10 +29,7 @@ class LibraryController extends Controller
 
             return Inertia::render('Library', [
                 'books' => $books,
-                'translations' => [
-                    'library' => __('library'),
-                    'layout' => __('layout'),
-                ],
+                // Translations are now global - no need to pass them
             ]);
         } catch (\Exception $e) {
             Log::error('Library index error: '.$e->getMessage());

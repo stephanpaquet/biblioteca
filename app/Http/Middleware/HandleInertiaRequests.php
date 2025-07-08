@@ -48,14 +48,51 @@ class HandleInertiaRequests extends Middleware
             $user['can_manage_users'] = $authUser->can('manage users');
         }
 
+        // Get current locale
+        $currentLocale = Session::get('locale') ?? config('app.locale', 'en');
+
+        // Load all global translations
+        $globalTranslations = $this->getGlobalTranslations($currentLocale);
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
             ],
             'csrf_token' => csrf_token(),
-            'currentLocale' => Session::get('locale') ?? config('app.locale', 'en'),
+            'currentLocale' => $currentLocale,
             'supportedLocales' => config('app.supported_locales', ['en']),
+            'translations' => $globalTranslations,
         ];
+    }
+
+    /**
+     * Get all global translations for the given locale
+     */
+    private function getGlobalTranslations(string $locale): array
+    {
+        // Define all translation files to load globally
+        $translationFiles = [
+            'layout',
+            'navigation',
+            'home',
+            'library',
+            'bookgrid',
+            'admin', // Added admin translations
+            // Add more as needed
+        ];
+
+        $translations = [];
+
+        foreach ($translationFiles as $file) {
+            try {
+                $translations[$file] = trans($file, [], $locale);
+            } catch (\Exception $e) {
+                // If translation file doesn't exist, provide empty array
+                $translations[$file] = [];
+            }
+        }
+
+        return $translations;
     }
 }

@@ -1,6 +1,7 @@
 import './bootstrap';
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import { createInertiaApp } from '@inertiajs/vue3';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia'
 import '../css/app.css';
 import Toast from "vue-toastification";
@@ -24,10 +25,8 @@ const toastOptions = {
 };
 
 createInertiaApp({
-  resolve: name => {
-    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-    return pages[`./Pages/${name}.vue`]
-  },
+  title: (title) => `${title} - Biblioteca`,
+  resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) })
       .use(plugin)
@@ -38,5 +37,8 @@ createInertiaApp({
     app.config.globalProperties.route = route;
 
     return app.mount(el);
+  },
+  progress: {
+    color: '#4F46E5',
   },
 });

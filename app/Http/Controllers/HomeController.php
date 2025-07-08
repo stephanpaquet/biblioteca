@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Actions\UserBooks;
 use App\Services\GoogleBooksService;
+use App\Traits\HasTranslations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    use HasTranslations;
+
     public function __construct(
         private GoogleBooksService $googleBooksService,
         private UserBooks $userBooks
@@ -22,6 +26,7 @@ class HomeController extends Controller
 
         if (in_array($locale, ['en', 'fr', 'es', 'de'])) {
             app()->setLocale($locale);
+            Session::put('locale', $locale);
         }
 
         $query = $request->get('q');
@@ -36,10 +41,9 @@ class HomeController extends Controller
             'query' => $query,
             'userBooks' => $this->userBooks->get(),
             'featured' => $books,
-            'translations' => [
-                'home' => __('home'),
-                'layout' => __('layout'),
-            ],
+            // No need to pass translations anymore - they're global!
+            // But if you need additional page-specific translations:
+            // 'additionalTranslations' => $this->getPageTranslations('home-specific'),
         ]);
     }
 }

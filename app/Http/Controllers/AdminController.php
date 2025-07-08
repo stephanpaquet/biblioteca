@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Traits\HasTranslations;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
@@ -10,6 +11,7 @@ use Spatie\Permission\Models\Permission;
 
 class AdminController extends Controller
 {
+    use HasTranslations;
     public function index(Request $request)
     {
         // Check if user has admin permissions
@@ -25,6 +27,9 @@ class AdminController extends Controller
             'users' => $users,
             'roles' => $roles,
             'permissions' => $permissions,
+            // Example: Add page-specific translations if needed
+            // All global translations are already available via middleware
+            // 'pageSpecificTranslations' => $this->getPageTranslations('admin-specific'),
         ]);
     }
 

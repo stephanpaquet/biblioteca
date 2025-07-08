@@ -1,5 +1,5 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     pagination: {
@@ -52,7 +52,7 @@ function goToPage(page) {
         }
     });
 
-    Inertia.get('/search', searchParams, {
+    router.get('/search', searchParams, {
         preserveState: false,
         preserveScroll: false
     });

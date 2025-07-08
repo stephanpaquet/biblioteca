@@ -1,5 +1,5 @@
 <script setup>
-import { Inertia } from '@inertiajs/inertia';
+import { router } from '@inertiajs/vue3';
 import AddToLibraryButton from './AddToLibraryButton.vue';
 import BookPlaceholder from './BookPlaceholder.vue';
 import SearchByAuthor from './SearchByAuthor.vue';
@@ -74,7 +74,7 @@ function handleImageError(event) {
 }
 
 function searchByISBN(isbn) {
-    Inertia.visit(route('search.index'), {
+    router.visit(route('search.index'), {
         method: 'get',
         data: {
             q: isbn,
@@ -84,7 +84,7 @@ function searchByISBN(isbn) {
 }
 
 function searchByPublisher(publisher) {
-    Inertia.visit(route('search.index'), {
+    router.visit(route('search.index'), {
         method: 'get',
         data: {
             q: publisher,

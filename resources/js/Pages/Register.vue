@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/inertia-vue3';
 import Layout from '../Layouts/Layout.vue';
 
