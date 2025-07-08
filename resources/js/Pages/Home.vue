@@ -95,7 +95,6 @@ function t(key) {
         :user-books="userBooks"
         :title="t('search_results').replace(':query', query)"
         :show-no-results="true"
-        :translations="translations"
       />
     </div>
 
@@ -105,7 +104,6 @@ function t(key) {
         :books="featured"
         :user-books="userBooks"
         :title="t('featured_books')"
-        :translations="translations"
       />
 
       <!-- Quick Actions -->

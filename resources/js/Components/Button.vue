@@ -190,7 +190,7 @@ const buttonClasses = computed(() => {
             disabled: 'disabled:bg-gray-50 disabled:text-gray-400 disabled:border-gray-300'
         },
         link: {
-            base: 'bg-transparent text-primary-600 border border-transparent underline-offset-4',
+            base: 'bg-transparent text-primary-600 border border-transparent underline-offset-4 cursor-pointer',
             hover: 'hover:underline hover:text-primary-700',
             focus: 'focus:ring-primary-500',
             disabled: 'disabled:text-gray-400 disabled:no-underline'
