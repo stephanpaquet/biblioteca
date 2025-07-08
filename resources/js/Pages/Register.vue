@@ -1,7 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/inertia-vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import Layout from '../Layouts/Layout.vue';
 
 const page = usePage();
@@ -15,7 +14,7 @@ function register() {
   processing.value = true;
 
   // Use Inertia.js post method which automatically handles CSRF tokens
-  Inertia.post(route('register'), {
+  router.post(route('register'), {
     name: name.value,
     email: email.value,
     password: password.value,

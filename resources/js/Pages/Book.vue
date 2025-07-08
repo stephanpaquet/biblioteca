@@ -1,9 +1,9 @@
 <script setup>
 import Layout from '../Layouts/Layout.vue';
 import AddToLibraryButton from '../Components/AddToLibraryButton.vue';
-import { Head } from '@inertiajs/inertia-vue3';
+import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 
 const page = usePage();
