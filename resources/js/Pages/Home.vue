@@ -151,7 +151,6 @@ function t(key) {
           <p class="text-gray-600">{{ t('quick_actions.progress.description') }}</p>
         </div>
     </div>
-
   </Layout>
 </template>
 
