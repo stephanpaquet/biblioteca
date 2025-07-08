@@ -5,13 +5,13 @@ import prettier from '@vue/eslint-config-prettier';
 export default [
   // Apply recommended rules to all files
   js.configs.recommended,
-  
+
   // Vue 3 recommended rules for .vue files
   ...vue.configs['flat/recommended'],
-  
+
   // Prettier config (should be last)
   prettier,
-  
+
   {
     // Configuration for all files
     languageOptions: {
@@ -33,7 +33,7 @@ export default [
         global: 'readonly',
       },
     },
-    
+
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
       'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -41,7 +41,7 @@ export default [
       'vue/multi-word-component-names': 'off',
     },
   },
-  
+
   {
     // Configuration specifically for .vue files
     files: ['**/*.vue'],
@@ -59,7 +59,7 @@ export default [
       ],
     },
   },
-  
+
   {
     // Files to ignore
     ignores: [
