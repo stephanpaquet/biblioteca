@@ -5,9 +5,23 @@ import { Head } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import { useTranslationsStore } from '../stores/translations';
 
+
+const props = defineProps({
+  supportedLocales: {
+    type: Array,
+    default: () => ['fr']
+  },
+  currentLocale: {
+    type: String,
+    default: 'fr'
+  }
+});
+const translationsStore = useTranslationsStore();
 const page = usePage();
-const bookId = page.props.value.id;
+
+const bookId = page.props.id;
 const apiUrl = route('api.books.show', { id: bookId });
 const book = ref(null);
 const loading = ref(true);
@@ -37,7 +51,15 @@ function truncateTitle(title, maxLength = 20) {
   return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
 }
 
-onMounted(fetchBook);
+onMounted(() => {
+  translationsStore.setTranslations({
+    texts: usePage().props.translations,
+    currentLocale: props.currentLocale,
+    supportedLocales: props.supportedLocales,
+  });
+
+  fetchBook();
+});
 </script>
 
 <template>

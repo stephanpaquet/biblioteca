@@ -50,10 +50,8 @@ onMounted(() => {
   // Initialize stores with props data
   libraryStore.setBooks(props.userBooks);
 
-  // Get global translations from Inertia's shared data
-  const sharedTranslations = usePage().props.translations;
   translationsStore.setTranslations({
-    texts: sharedTranslations,
+    texts: usePage().props.translations,
     currentLocale: props.currentLocale,
     supportedLocales: props.supportedLocales,
   });
