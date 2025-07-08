@@ -7,16 +7,15 @@ import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import { useTranslationsStore } from '../stores/translations';
 
-
 const props = defineProps({
   supportedLocales: {
     type: Array,
-    default: () => ['fr']
+    default: () => ['fr'],
   },
   currentLocale: {
     type: String,
-    default: 'fr'
-  }
+    default: 'fr',
+  },
 });
 const translationsStore = useTranslationsStore();
 const page = usePage();
@@ -66,27 +65,38 @@ onMounted(() => {
   <Layout>
     <Head title="Book Details" />
     <div class="container mx-auto p-8">
-      <button @click="goBack" class="mb-4 text-blue-600 hover:underline">&larr; Back to search</button>
+      <button class="mb-4 text-blue-600 hover:underline" @click="goBack">
+        &larr; Back to search
+      </button>
       <div v-if="loading" class="text-center">Loading...</div>
       <div v-else-if="error" class="text-red-600 text-center">{{ error }}</div>
       <div v-else-if="book" class="max-w-2xl mx-auto bg-white rounded shadow p-6">
         <div class="flex mb-4">
-          <div class="w-full h-48 mr-6 rounded overflow-hidden bg-gray-100 flex items-center justify-center">
+          <div
+            class="w-full h-48 mr-6 rounded overflow-hidden bg-gray-100 flex items-center justify-center"
+          >
             <img
               v-if="book.thumbnail"
               :src="book.thumbnail.replace('http://', 'https://')"
               :alt="book.title"
               class="w-full h-full object-contain"
-              @error="$event.target.style.display='none'; $event.target.nextElementSibling.style.display='flex'"
+              @error="
+                $event.target.style.display = 'none';
+                $event.target.nextElementSibling.style.display = 'flex';
+              "
             />
             <div
               v-else
               class="flex flex-col items-center justify-center text-gray-400 p-2 text-center w-full h-full"
             >
               <svg class="w-8 h-8 mb-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                <path
+                  d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"
+                />
               </svg>
-              <span class="text-xs font-medium text-center leading-tight">{{ truncateTitle(book.title) }}</span>
+              <span class="text-xs font-medium text-center leading-tight">{{
+                truncateTitle(book.title)
+              }}</span>
             </div>
           </div>
           <div>
@@ -99,10 +109,16 @@ onMounted(() => {
               <AddToLibraryButton :book="{ id: book.id, volumeInfo: book }" />
             </div>
 
-            <a v-if="book.previewLink" :href="book.previewLink" target="_blank" class="text-blue-600 hover:underline text-sm">Preview on Google Books</a>
+            <a
+              v-if="book.previewLink"
+              :href="book.previewLink"
+              target="_blank"
+              class="text-blue-600 hover:underline text-sm"
+              >Preview on Google Books</a
+            >
           </div>
         </div>
-        <div class="text-gray-800 mb-4" v-html="book.description"></div>
+        <div class="text-gray-800 mb-4" v-html="book.description" />
         <div v-if="book.categories?.length" class="mb-2">
           <span class="font-semibold">Categories:</span> {{ book.categories.join(', ') }}
         </div>

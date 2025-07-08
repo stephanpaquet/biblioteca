@@ -14,17 +14,17 @@ function requestReset() {
 
   fetch('/api/password/email', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ email: email.value })
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({ email: email.value }),
   })
-    .then(async res => {
+    .then(async (res) => {
       if (!res.ok) throw await res.json();
       return res.json();
     })
     .then(() => {
       message.value = 'If your email exists in our system, a password reset link has been sent.';
     })
-    .catch(async err => {
+    .catch(async (err) => {
       error.value = err?.message || 'Request failed.';
     })
     .finally(() => {
@@ -38,8 +38,8 @@ async function addToLibrary(book, status = 'want_to_read') {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        Accept: 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       },
       body: JSON.stringify({
         google_book_id: book.id,
@@ -51,8 +51,8 @@ async function addToLibrary(book, status = 'want_to_read') {
         page_count: book.volumeInfo.pageCount,
         language: book.volumeInfo.language,
         preview_link: book.volumeInfo.previewLink,
-        status: status
-      })
+        status: status,
+      }),
     });
 
     if (response.ok) {

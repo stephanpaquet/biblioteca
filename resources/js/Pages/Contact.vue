@@ -20,17 +20,34 @@ import { Head } from '@inertiajs/vue3';
       <form class="max-w-md mx-auto bg-white p-6 rounded shadow">
         <div class="mb-4">
           <label class="block mb-1 font-semibold" for="name">Name</label>
-          <input class="w-full border rounded px-3 py-2" id="name" type="text" placeholder="Your Name" />
+          <input
+            id="name"
+            class="w-full border rounded px-3 py-2"
+            type="text"
+            placeholder="Your Name"
+          />
         </div>
         <div class="mb-4">
           <label class="block mb-1 font-semibold" for="email">Email</label>
-          <input class="w-full border rounded px-3 py-2" id="email" type="email" placeholder="Your Email" />
+          <input
+            id="email"
+            class="w-full border rounded px-3 py-2"
+            type="email"
+            placeholder="Your Email"
+          />
         </div>
         <div class="mb-4">
           <label class="block mb-1 font-semibold" for="message">Message</label>
-          <textarea class="w-full border rounded px-3 py-2" id="message" rows="4" placeholder="Your Message"></textarea>
+          <textarea
+            id="message"
+            class="w-full border rounded px-3 py-2"
+            rows="4"
+            placeholder="Your Message"
+          />
         </div>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" type="submit">Send</button>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" type="submit">
+          Send
+        </button>
       </form>
     </div>
   </Layout>

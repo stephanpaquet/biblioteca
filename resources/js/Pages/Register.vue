@@ -14,22 +14,26 @@ function register() {
   processing.value = true;
 
   // Use Inertia.js post method which automatically handles CSRF tokens
-  router.post(route('register'), {
-    name: name.value,
-    email: email.value,
-    password: password.value,
-    password_confirmation: password_confirmation.value,
-  }, {
-    onFinish: () => {
-      processing.value = false;
+  router.post(
+    route('register'),
+    {
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: password_confirmation.value,
     },
-    onError: (errors) => {
-      console.log('Registration errors:', errors);
-    },
-    onSuccess: () => {
-      console.log('Registration successful');
+    {
+      onFinish: () => {
+        processing.value = false;
+      },
+      onError: (errors) => {
+        console.log('Registration errors:', errors);
+      },
+      onSuccess: () => {
+        console.log('Registration successful');
+      },
     }
-  });
+  );
 }
 </script>
 

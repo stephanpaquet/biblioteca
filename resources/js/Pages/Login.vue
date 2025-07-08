@@ -18,22 +18,26 @@ function login() {
   processing.value = true;
 
   // Use Inertia.js post method which automatically handles CSRF tokens
-  router.post(route('login'), {
-    email: email.value,
-    password: password.value,
-  }, {
-    onFinish: () => {
-      processing.value = false;
+  router.post(
+    route('login'),
+    {
+      email: email.value,
+      password: password.value,
     },
-    onError: (errors) => {
-      if (errors.email) {
-        toast.loginError();
-      }
-    },
-    onSuccess: () => {
-      toast.loginSuccess(page.props.auth?.user?.name || 'User');
+    {
+      onFinish: () => {
+        processing.value = false;
+      },
+      onError: (errors) => {
+        if (errors.email) {
+          toast.loginError();
+        }
+      },
+      onSuccess: () => {
+        toast.loginSuccess(page.props.auth?.user?.name || 'User');
+      },
     }
-  });
+  );
 }
 </script>
 

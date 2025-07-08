@@ -12,33 +12,33 @@ import { useTranslationsStore } from '../stores/translations';
 const props = defineProps({
   books: {
     type: Object,
-    default: null
+    default: null,
   },
   query: {
     type: String,
-    default: ''
+    default: '',
   },
   userBooks: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   featured: {
     type: Object,
-    default: null
+    default: null,
   },
   auth: {
     type: Object,
-    default: null
+    default: null,
   },
   // Remove translations prop since it's now global
   supportedLocales: {
     type: Array,
-    default: () => ['fr']
+    default: () => ['fr'],
   },
   currentLocale: {
     type: String,
-    default: 'fr'
-  }
+    default: 'fr',
+  },
 });
 
 const libraryStore = useLibraryStore();
@@ -81,9 +81,7 @@ function t(key) {
           {{ t('subtitle') }}
         </p>
 
-        <SearchForm
-          :initial-query="query"
-        />
+        <SearchForm :initial-query="query" />
       </div>
     </div>
 
@@ -99,13 +97,7 @@ function t(key) {
 
     <!-- Featured Books Section -->
     <div v-else class="container mx-auto px-4 py-12">
-      <BookGrid
-        :books="featured"
-        :user-books="userBooks"
-        :title="t('featured_books')"
-      />
+      <BookGrid :books="featured" :user-books="userBooks" :title="t('featured_books')" />
     </div>
   </Layout>
 </template>
-
-

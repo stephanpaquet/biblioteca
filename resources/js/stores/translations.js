@@ -1,15 +1,15 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
 
 export const useTranslationsStore = defineStore('translations', () => {
-    const translations = ref({})
+  const translations = ref({});
 
-    function setTranslations(translationsData) {
-        translations.value = translationsData
-    }
+  function setTranslations(translationsData) {
+    translations.value = translationsData;
+  }
 
-    return {
-        setTranslations,
-        translations,
-    }
-})
+  return {
+    setTranslations,
+    translations,
+  };
+});

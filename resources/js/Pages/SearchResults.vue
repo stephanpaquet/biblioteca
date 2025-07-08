@@ -1,4 +1,3 @@
-
 <script setup>
 import Layout from '../Layouts/Layout.vue';
 import SearchForm from '../Components/SearchForm.vue';
@@ -9,8 +8,8 @@ const props = defineProps({
   query: String,
   userBooks: {
     type: Array,
-    default: () => []
-  }
+    default: () => [],
+  },
 });
 </script>
 
