@@ -112,7 +112,7 @@ onUnmounted(() => {
 });
 
 async function removeFromLibrary() {
-  if (confirm('Are you sure you want to remove this book from your library?')) {
+  if (window.confirm('Are you sure you want to remove this book from your library?')) {
     console.log(`Removing book with ID: `);
     console.log(props.book);
 
@@ -122,7 +122,7 @@ async function removeFromLibrary() {
 
 async function syncBook() {
   if (
-    confirm(
+    window.confirm(
       'This will update the book information with the latest data from Google Books. Continue?'
     )
   ) {

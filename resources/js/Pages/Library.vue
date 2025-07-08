@@ -168,7 +168,9 @@ onMounted(() => {
 
 async function syncAllBooks() {
   if (
-    confirm('This will update all your books with the latest data from Google Books. Continue?')
+    window.confirm(
+      'This will update all your books with the latest data from Google Books. Continue?'
+    )
   ) {
     const bookIds = libraryStore.books.map((book) => book.google_book_id);
 
@@ -176,7 +178,7 @@ async function syncAllBooks() {
       try {
         await libraryStore.syncBookWithGoogleApi(googleBookId);
         // Add a small delay to avoid overwhelming the API
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => window.setTimeout(resolve, 100));
       } catch (error) {
         console.error('Failed to sync book:', googleBookId, error);
       }

@@ -96,7 +96,7 @@ export const useLibraryStore = defineStore('library', () => {
         return { success: false, message: result.message };
       }
     } catch (err) {
-      const errorMsg = 'Failed to add book to library';
+      const errorMsg = 'Failed to add book to library: ' + err.message;
       error.value = errorMsg;
       toast.error(errorMsg);
       return { success: false, message: errorMsg };
@@ -132,7 +132,7 @@ export const useLibraryStore = defineStore('library', () => {
         return { success: false, message: result.message };
       }
     } catch (err) {
-      const errorMsg = 'Failed to remove book from library';
+      const errorMsg = 'Failed to remove book from library: ' + err.message;
       error.value = errorMsg;
       toast.error(errorMsg);
       return { success: false, message: errorMsg };
@@ -178,7 +178,7 @@ export const useLibraryStore = defineStore('library', () => {
         return { success: false, message: result.message };
       }
     } catch (err) {
-      const errorMsg = 'Failed to sync book information';
+      const errorMsg = 'Failed to sync book information: ' + err.message;
       error.value = errorMsg;
       toast.error(errorMsg);
       return { success: false, message: errorMsg };

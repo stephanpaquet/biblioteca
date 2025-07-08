@@ -8,7 +8,7 @@ const showExamples = ref(true);
 
 const simulateLoading = async () => {
   loading.value = true;
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => window.setTimeout(resolve, 2000));
   loading.value = false;
 };
 </script>

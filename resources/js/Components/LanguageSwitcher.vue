@@ -1,11 +1,8 @@
 <script setup>
-import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useTranslationsStore } from '../stores/translations';
 
 const translationsStore = useTranslationsStore();
-
-const currentLocale = ref(translationsStore.translations.locale);
 
 const languageNames = {
   en: 'English',
@@ -18,7 +15,7 @@ function getLanguageName(locale) {
   return languageNames[locale] || locale.toUpperCase();
 }
 
-function changeLocale(event) {
+function changeLocale() {
   router.get(
     window.location.pathname,
     { locale: translationsStore.translations.currentLocale },

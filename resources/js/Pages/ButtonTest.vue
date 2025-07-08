@@ -2,7 +2,7 @@
 import Layout from '../Layouts/Layout.vue';
 import ButtonDocs from '../Components/ButtonDocs.vue';
 
-const props = defineProps({
+defineProps({
   auth: {
     type: Object,
     default: null,

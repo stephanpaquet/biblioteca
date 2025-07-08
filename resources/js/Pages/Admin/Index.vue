@@ -140,8 +140,7 @@
 </template>
 
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
 import Layout from '@/Layouts/Layout.vue';
 
 defineProps({
@@ -180,7 +179,7 @@ const assignRole = async (user, roleName) => {
     router.reload();
   } catch (error) {
     console.error('Error assigning role:', error);
-    alert('Error assigning role. Please try again.');
+    window.alert('Error assigning role. Please try again.');
   }
 };
 </script>

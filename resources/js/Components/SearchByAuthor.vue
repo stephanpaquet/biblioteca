@@ -1,7 +1,5 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
-import AddToLibraryButton from './AddToLibraryButton.vue';
-import BookPlaceholder from './BookPlaceholder.vue';
 
 defineProps({
   authors: {
@@ -28,7 +26,6 @@ function searchByAuthor(author) {
         class="text-primary-600 hover:text-primary-800 hover:underline transition-colors cursor-pointer"
         @click="searchByAuthor(author)"
       >
-        >
         {{ author }}
       </button>
       <span v-if="index < authors.length - 1" class="text-gray-600">, </span>

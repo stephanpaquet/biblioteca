@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import vue from 'eslint-plugin-vue';
 import prettier from '@vue/eslint-config-prettier';
+import { route } from 'ziggy-js';
 
 export default [
   // Apply recommended rules to all files
@@ -31,6 +32,9 @@ export default [
         require: 'readonly',
         exports: 'readonly',
         global: 'readonly',
+        route: 'readonly', // Ziggy route helper
+        fetch: 'readonly', // For fetch API in browser
+        axios: 'readonly', // For axios usage in Vue components
       },
     },
 

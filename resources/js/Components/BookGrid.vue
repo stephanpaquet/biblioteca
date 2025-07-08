@@ -1,7 +1,6 @@
 <script setup>
 import { router } from '@inertiajs/vue3';
 import AddToLibraryButton from './AddToLibraryButton.vue';
-import BookPlaceholder from './BookPlaceholder.vue';
 import SearchByAuthor from './SearchByAuthor.vue';
 import SearchBySubject from './SearchBySubject.vue';
 import Button from './Button.vue';
@@ -45,8 +44,6 @@ defineProps({
 
 // Translation helper
 function t(key, replacements = {}) {
-  // Get from translations store with fallback path
-  const path = `bookgrid.${key}`;
   let translation = translationsStore.translations?.texts?.bookgrid?.[key];
 
   // If translation not found, return key itself as fallback
@@ -64,13 +61,6 @@ function t(key, replacements = {}) {
 
 function truncateTitle(title) {
   return title.length > 25 ? title.substring(0, 25) + '...' : title;
-}
-
-function handleImageError(event) {
-  event.target.style.display = 'none';
-  if (event.target.nextElementSibling) {
-    event.target.nextElementSibling.style.display = 'flex';
-  }
 }
 
 function searchByISBN(isbn) {
@@ -189,11 +179,9 @@ function searchByPublisher(publisher) {
           :current-page="pagination.currentPage"
         />
 
-        <p
-          v-if="book.volumeInfo.description"
-          class="text-gray-600 text-sm mb-4 line-clamp-3"
-          v-html="book.volumeInfo.description"
-        />
+        <p v-if="book.volumeInfo.description" class="text-gray-600 text-sm mb-4 line-clamp-3">
+          {{ book.volumeInfo.description }}
+        </p>
 
         <div class="mt-auto pt-4 border-t border-gray-200">
           <div class="flex flex-col space-y-3">

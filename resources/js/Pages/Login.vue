@@ -11,9 +11,6 @@ const email = ref('');
 const password = ref('');
 const processing = ref(false);
 
-// Get errors from Inertia's error bag
-const errors = ref(page.props.errors || {});
-
 function login() {
   processing.value = true;
 
@@ -52,11 +49,11 @@ function login() {
             v-model="email"
             type="email"
             class="border rounded w-full p-2"
-            :class="{ 'border-red-500': $page.props.errors?.email }"
+            :class="{ 'border-red-500': page.props.errors?.email }"
             required
           />
-          <div v-if="$page.props.errors?.email" class="text-red-600 text-sm mt-1">
-            {{ $page.props.errors.email }}
+          <div v-if="page.props.errors?.email" class="text-red-600 text-sm mt-1">
+            {{ page.props.errors.email }}
           </div>
         </div>
         <div class="mb-4">
@@ -65,17 +62,17 @@ function login() {
             v-model="password"
             type="password"
             class="border rounded w-full p-2"
-            :class="{ 'border-red-500': $page.props.errors?.password }"
+            :class="{ 'border-red-500': page.props.errors?.password }"
             required
           />
-          <div v-if="$page.props.errors?.password" class="text-red-600 text-sm mt-1">
-            {{ $page.props.errors.password }}
+          <div v-if="page.props.errors?.password" class="text-red-600 text-sm mt-1">
+            {{ page.props.errors.password }}
           </div>
         </div>
 
         <!-- General error messages -->
-        <div v-if="$page.props.errors?.email" class="text-red-600 mb-2 text-sm">
-          {{ $page.props.errors.email }}
+        <div v-if="page.props.errors?.email" class="text-red-600 mb-2 text-sm">
+          {{ page.props.errors.email }}
         </div>
 
         <button

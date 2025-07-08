@@ -164,7 +164,6 @@ const legacyIconMap = {
   bookmark_border: 'bookmark_border',
   auto_stories: 'auto_stories',
   task_alt: 'task_alt',
-  expand_more: 'expand_more',
   chevron_right: 'chevron_right',
   first_page: 'first_page',
   last_page: 'last_page',

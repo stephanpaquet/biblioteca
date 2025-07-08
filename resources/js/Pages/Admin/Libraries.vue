@@ -174,11 +174,11 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 import Layout from '@/Layouts/Layout.vue';
 import { useTranslationsStore } from '@/stores/translations';
 
-const props = defineProps({
+defineProps({
   users: Object,
 });
 

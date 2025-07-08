@@ -4,7 +4,7 @@ import SearchForm from '../../Components/SearchForm.vue';
 import BookGrid from '../../Components/BookGrid.vue';
 import Paginator from '../../Components/Paginator.vue';
 
-const props = defineProps({
+defineProps({
   query: {
     type: String,
     required: true,

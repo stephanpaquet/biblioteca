@@ -34,8 +34,8 @@ const fetchBook = async () => {
     if (!response.ok) throw new Error('API error');
     const data = await response.json();
     book.value = data.data || null;
-  } catch (e) {
-    error.value = 'An error occurred while fetching the book.';
+  } catch (err) {
+    error.value = 'An error occurred while fetching the book: ' + err.message;
   } finally {
     loading.value = false;
   }
@@ -118,6 +118,7 @@ onMounted(() => {
             >
           </div>
         </div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="text-gray-800 mb-4" v-html="book.description" />
         <div v-if="book.categories?.length" class="mb-2">
           <span class="font-semibold">Categories:</span> {{ book.categories.join(', ') }}

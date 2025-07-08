@@ -3,7 +3,7 @@ import Layout from '../Layouts/Layout.vue';
 import SearchForm from '../Components/SearchForm.vue';
 import BookGrid from '../Components/BookGrid.vue';
 
-const props = defineProps({
+defineProps({
   books: Object,
   query: String,
   userBooks: {

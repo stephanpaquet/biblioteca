@@ -4,6 +4,7 @@ import { router, usePage } from '@inertiajs/vue3';
 import Layout from '../Layouts/Layout.vue';
 
 const page = usePage();
+console.info('Register page loaded', { page: page.props });
 const name = ref('');
 const email = ref('');
 const password = ref('');
@@ -48,11 +49,11 @@ function register() {
             v-model="name"
             type="text"
             class="border rounded w-full p-2"
-            :class="{ 'border-red-500': $page.props.errors?.name }"
+            :class="{ 'border-red-500': page.props.errors?.name }"
             required
           />
-          <div v-if="$page.props.errors?.name" class="text-red-600 text-sm mt-1">
-            {{ $page.props.errors.name }}
+          <div v-if="page.props.errors?.name" class="text-red-600 text-sm mt-1">
+            {{ page.props.errors.name }}
           </div>
         </div>
         <div class="mb-4">
@@ -61,11 +62,11 @@ function register() {
             v-model="email"
             type="email"
             class="border rounded w-full p-2"
-            :class="{ 'border-red-500': $page.props.errors?.email }"
+            :class="{ 'border-red-500': page.props.errors?.email }"
             required
           />
-          <div v-if="$page.props.errors?.email" class="text-red-600 text-sm mt-1">
-            {{ $page.props.errors.email }}
+          <div v-if="page.props.errors?.email" class="text-red-600 text-sm mt-1">
+            {{ page.props.errors.email }}
           </div>
         </div>
         <div class="mb-4">
@@ -74,11 +75,11 @@ function register() {
             v-model="password"
             type="password"
             class="border rounded w-full p-2"
-            :class="{ 'border-red-500': $page.props.errors?.password }"
+            :class="{ 'border-red-500': page.props.errors?.password }"
             required
           />
-          <div v-if="$page.props.errors?.password" class="text-red-600 text-sm mt-1">
-            {{ $page.props.errors.password }}
+          <div v-if="page.props.errors?.password" class="text-red-600 text-sm mt-1">
+            {{ page.props.errors.password }}
           </div>
         </div>
         <div class="mb-4">

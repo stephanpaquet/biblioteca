@@ -4,7 +4,6 @@ import { router } from '@inertiajs/vue3';
 const props = defineProps({
   pagination: {
     type: Object,
-    required: true,
     default: () => ({
       currentPage: 1,
       totalPages: 1,
@@ -35,15 +34,14 @@ const props = defineProps({
 });
 
 function goToPage(page) {
-  console.log('goToPage called with page:', page);
-  delete props.filters['page']; // Ensure 'page' is not in filters
+  const filtersCopy = { ...props.filters };
+  delete filtersCopy['page']; // Ensure 'page' is not in filters
   const searchParams = {
     q: props.query,
     type: props.searchType,
     page,
-    ...props.filters,
+    ...filtersCopy,
   };
-  console.log('Navigating to page:', page, 'with params:', searchParams);
 
   // Remove empty filters
   Object.keys(searchParams).forEach((key) => {

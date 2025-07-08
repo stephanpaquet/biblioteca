@@ -31,40 +31,6 @@ function requestReset() {
       isLoading.value = false;
     });
 }
-
-async function addToLibrary(book, status = 'want_to_read') {
-  try {
-    const response = await fetch('/api/library', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      },
-      body: JSON.stringify({
-        google_book_id: book.id,
-        title: book.volumeInfo.title,
-        authors: book.volumeInfo.authors,
-        description: book.volumeInfo.description,
-        thumbnail: book.volumeInfo.imageLinks?.thumbnail,
-        published_date: book.volumeInfo.publishedDate,
-        page_count: book.volumeInfo.pageCount,
-        language: book.volumeInfo.language,
-        preview_link: book.volumeInfo.previewLink,
-        status: status,
-      }),
-    });
-
-    if (response.ok) {
-      message.value = 'Book added to library!';
-    } else {
-      const errorData = await response.json();
-      error.value = errorData.message || 'Failed to add book to library';
-    }
-  } catch (err) {
-    error.value = 'Failed to add book to library';
-  }
-}
 </script>
 
 <template>
