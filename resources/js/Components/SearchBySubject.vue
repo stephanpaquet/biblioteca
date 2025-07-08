@@ -7,8 +7,8 @@ defineProps({
     default: () => [],
   },
   currentPage: {
-    type: String,
-    default: '1',
+    type: Number,
+    default: 1,
   },
 });
 

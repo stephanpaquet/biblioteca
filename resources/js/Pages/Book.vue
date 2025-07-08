@@ -70,7 +70,7 @@ onMounted(() => {
       </button>
       <div v-if="loading" class="text-center">Loading...</div>
       <div v-else-if="error" class="text-red-600 text-center">{{ error }}</div>
-      <div v-else-if="book" class="max-w-2xl mx-auto bg-white rounded shadow p-6">
+      <div v-else-if="book" class="max-w-[1000px] mx-auto bg-white rounded shadow p-6">
         <div class="flex mb-4">
           <div
             class="w-full h-48 mr-6 rounded overflow-hidden bg-gray-100 flex items-center justify-center"
