@@ -10,4 +10,12 @@ return [
     'isbn' => 'ISBN',
     'isbn_13' => 'ISBN_13',
     'other' => 'Other',
+    'book' => 'book',
+    'books' => 'books',
+    'no_books_user' => 'This user hasn\'t added any books yet.',
+    'statuses' => [
+        'want_to_read' => 'Want to Read',
+        'reading' => 'Reading',
+        'read' => 'Read',
+    ],
 ];

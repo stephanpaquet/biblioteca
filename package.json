@@ -16,7 +16,7 @@
         "vite": "^6.2.4"
     },
     "dependencies": {
-        "@inertiajs/vue3": "^1.0.0",
+        "@inertiajs/vue3": "^2.0.14",
         "pinia": "^2.1.7",
         "vue": "^3.5.17",
         "vue-toastification": "^2.0.0-rc.5",

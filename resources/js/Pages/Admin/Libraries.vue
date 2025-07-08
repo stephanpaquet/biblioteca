@@ -6,7 +6,7 @@
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 bg-white border-b border-gray-200">
                         <div class="flex justify-between items-center mb-6">
-                            <h1 class="text-2xl font-bold text-gray-900">User Libraries</h1>
+                            <h1 class="text-2xl font-bold text-gray-900">{{ t('libraries') }}</h1>
                             <nav class="flex space-x-4">
                                 <Link
                                     :href="route('admin.index')"
@@ -17,7 +17,7 @@
                                             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     ]"
                                 >
-                                    Users & Roles
+                                    {{ t('users_roles') }}
                                 </Link>
                                 <Link
                                     :href="route('admin.libraries')"
@@ -28,7 +28,7 @@
                                             : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                                     ]"
                                 >
-                                    Libraries
+                                    {{ t('libraries') }}
                                 </Link>
                             </nav>
                         </div>
@@ -58,7 +58,10 @@
                                         </div>
                                     </div>
                                     <div class="text-sm text-gray-500">
-                                        {{ user.books.length }} book{{ user.books.length !== 1 ? 's' : '' }}
+                                        {{ user.books.length }} 
+                                        {{ user.books.length === 1 
+                                            ? (translationsStore.translations?.texts?.bookgrid?.book || 'book') 
+                                            : (translationsStore.translations?.texts?.bookgrid?.books || 'books') }}
                                     </div>
                                 </div>
 
@@ -128,7 +131,7 @@
                                     <span class="material-symbols-outlined text-4xl mb-2 block">
                                         library_books
                                     </span>
-                                    <p class="text-sm">This user hasn't added any books yet.</p>
+                                    <p class="text-sm">{{ translationsStore.translations?.texts?.bookgrid?.no_books_user || 'This user hasn\'t added any books yet.' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +139,13 @@
                         <!-- Pagination -->
                         <div class="mt-6 flex justify-between items-center">
                             <div class="text-sm text-gray-700">
-                                Showing {{ users.from }} to {{ users.to }} of {{ users.total }} users
+                                {{ translationsStore.translations?.texts?.navigation?.showing || 'Showing' }} 
+                                {{ users.from }} 
+                                {{ translationsStore.translations?.texts?.navigation?.to || 'to' }} 
+                                {{ users.to }} 
+                                {{ translationsStore.translations?.texts?.navigation?.of || 'of' }} 
+                                {{ users.total }} 
+                                {{ translationsStore.translations?.texts?.navigation?.users || 'users' }}
                             </div>
                             <div class="flex space-x-2">
                                 <Link
@@ -144,14 +153,14 @@
                                     :href="users.prev_page_url"
                                     class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                                 >
-                                    Previous
+                                    {{ translationsStore.translations?.texts?.navigation?.previous || 'Previous' }}
                                 </Link>
                                 <Link
                                     v-if="users.next_page_url"
                                     :href="users.next_page_url"
                                     class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                                 >
-                                    Next
+                                    {{ translationsStore.translations?.texts?.navigation?.next || 'Next' }}
                                 </Link>
                             </div>
                         </div>
@@ -163,11 +172,43 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 import Layout from '@/Layouts/Layout.vue';
+import { useTranslationsStore } from '@/stores/translations';
 
-defineProps({
+const props = defineProps({
     users: Object,
 });
+
+// Initialize translation store
+const translationsStore = useTranslationsStore();
+
+onMounted(() => {
+    // Set translations from the global store (already loaded by middleware)
+    translationsStore.setTranslations({
+        texts: usePage().props.translations,
+        currentLocale: usePage().props.currentLocale,
+        supportedLocales: usePage().props.supportedLocales,
+    });
+});
+
+// Helper function to get translations
+function t(key) {
+    const adminTranslations = translationsStore.translations?.texts?.admin;
+    const bookgridTranslations = translationsStore.translations?.texts?.bookgrid;
+    
+    if (key.includes('.')) {
+        const [namespace, k] = key.split('.');
+        if (namespace === 'admin' && adminTranslations?.[k]) {
+            return adminTranslations[k];
+        } else if (namespace === 'bookgrid' && bookgridTranslations?.[k]) {
+            return bookgridTranslations[k];
+        }
+    }
+    
+    return adminTranslations?.[key] || key;
+}
 
 const getRoleColor = (roleName) => {
     const colors = {
@@ -197,7 +238,8 @@ const getStatusIcon = (status) => {
 };
 
 const formatStatus = (status) => {
-    const statuses = {
+    const bookgridTranslations = translationsStore.translations?.texts?.bookgrid;
+    const statuses = bookgridTranslations?.statuses || {
         want_to_read: 'Want to Read',
         reading: 'Reading',
         read: 'Read',
@@ -208,7 +250,7 @@ const formatStatus = (status) => {
 const formatDate = (dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(usePage().props.currentLocale || 'en-US', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
