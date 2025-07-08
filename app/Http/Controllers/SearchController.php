@@ -52,7 +52,7 @@ class SearchController extends Controller
 
             // Calculate pagination info
             $totalItems = $results['totalItems'] ?? 0;
-            $currentPage = $page;
+            $currentPage = (int) $page;
             $perPage = $maxResults;
             $totalPages = $totalItems > 0 ? ceil($totalItems / $perPage) : 1;
             $hasNextPage = $currentPage < $totalPages;
@@ -65,7 +65,7 @@ class SearchController extends Controller
                 'results' => $results,
                 'userBooks' => $userBooks->get(),
                 'pagination' => [
-                    'currentPage' => $currentPage,
+                    'currentPage' => (int) $currentPage,
                     'totalPages' => $totalPages,
                     'totalItems' => $totalItems,
                     'perPage' => $perPage,
@@ -84,7 +84,7 @@ class SearchController extends Controller
                 'userBooks' => $userBooks->get(),
                 'error' => 'Search failed. Please try again.',
                 'pagination' => [
-                    'currentPage' => $currentPage,
+                    'currentPage' => (int) $currentPage,
                     'totalPages' => 1,
                     'totalItems' => 0,
                     'perPage' => $perPage,
