@@ -40,9 +40,6 @@ class HomeController extends Controller
             'query' => $query,
             'userBooks' => $this->userBooks->get(),
             'featured' => $books,
-            // No need to pass translations anymore - they're global!
-            // But if you need additional page-specific translations:
-            // 'additionalTranslations' => $this->getPageTranslations('home-specific'),
         ]);
     }
 }
