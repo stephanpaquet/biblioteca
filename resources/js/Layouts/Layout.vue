@@ -4,11 +4,13 @@ import { computed, getCurrentInstance } from 'vue';
 import LanguageSwitcher from '../Components/LanguageSwitcher.vue';
 import { useAuthStore } from '../stores/auth';
 import { useTranslationsStore } from '../stores/translations';
+import { useLibraryStore } from '../stores/library';
 
 const page = usePage();
 
 const authStore = useAuthStore();
 const translationsStore = useTranslationsStore();
+const libraryStore = useLibraryStore();
 
 // Get route function from global properties or window
 const route = getCurrentInstance()?.appContext.config.globalProperties.route || window.route;
@@ -51,7 +53,9 @@ function logout() {
               :class="{ 'font-bold underline': page.url === '/library' }"
               :aria-current="page.url === '/library' ? 'page' : null"
             >
-              {{ translations?.layout?.nav?.library || 'My Library' }}
+              {{ translations?.layout?.nav?.library || 'My Library' }} ({{
+                libraryStore.bookCount
+              }})
             </Link>
             <Link
               :href="route('dashboard')"
