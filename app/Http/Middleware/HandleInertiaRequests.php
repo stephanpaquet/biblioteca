@@ -78,8 +78,9 @@ class HandleInertiaRequests extends Middleware
             'home',
             'library',
             'bookgrid',
-            'admin', // Added admin translations
-            // Add more as needed
+            'admin',
+            'addtolibrary',
+            'searchform',
         ];
 
         $translations = [];

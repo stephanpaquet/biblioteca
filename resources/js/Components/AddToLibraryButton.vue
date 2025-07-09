@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useLibraryStore } from '../stores/library';
 import { useToast } from '../composables/useToast';
+import { useTranslationsStore } from '../stores/translations';
 import Button from './Button.vue';
 import Icon from './Icon.vue';
 
@@ -22,6 +23,7 @@ const props = defineProps({
 
 const libraryStore = useLibraryStore();
 const toast = useToast();
+const { t } = useTranslationsStore();
 const currentStatus = ref('want_to_read');
 const showDropdown = ref(false);
 
@@ -36,14 +38,27 @@ const initializeStatus = () => {
 // Watch for changes in library books to update status
 watch(() => libraryStore.books, initializeStatus, { immediate: true });
 
-const statusOptions = [
-  { value: 'want_to_read', label: 'Want to Read', icon: 'bookmark_border', color: 'text-blue-600' },
-  { value: 'reading', label: 'Reading', icon: 'auto_stories', color: 'text-orange-600' },
-  { value: 'read', label: 'Read', icon: 'task_alt', color: 'text-green-600' },
-];
+const statusOptions = computed(() => [
+  {
+    value: 'want_to_read',
+    label: t('addtolibrary.want_to_read'),
+    icon: 'bookmark_border',
+    color: 'text-blue-600',
+  },
+  {
+    value: 'reading',
+    label: t('addtolibrary.reading'),
+    icon: 'auto_stories',
+    color: 'text-orange-600',
+  },
+  { value: 'read', label: t('addtolibrary.read'), icon: 'task_alt', color: 'text-green-600' },
+]);
 
 const currentStatusOption = computed(() => {
-  return statusOptions.find((option) => option.value === currentStatus.value) || statusOptions[0];
+  return (
+    statusOptions.value.find((option) => option.value === currentStatus.value) ||
+    statusOptions.value[0]
+  );
 });
 
 const isInLibrary = computed(() => {
@@ -75,9 +90,9 @@ async function updateStatus() {
   const result = await libraryStore.updateBookStatus(props.book.id, currentStatus.value);
 
   if (result.success) {
-    toast.success('Status updated!');
+    toast.success(t('addtolibrary.status_updated'));
   } else {
-    toast.error(result.error || 'Failed to update status');
+    toast.error(result.error || t('addtolibrary.status_update_failed'));
     // Revert the dropdown to the previous state if the API call failed
     // We'll need to track the previous status for this
   }
@@ -112,20 +127,13 @@ onUnmounted(() => {
 });
 
 async function removeFromLibrary() {
-  if (window.confirm('Are you sure you want to remove this book from your library?')) {
-    console.log(`Removing book with ID: `);
-    console.log(props.book);
-
+  if (window.confirm(t('addtolibrary.remove_confirmation'))) {
     await libraryStore.removeFromLibrary(props.book.id);
   }
 }
 
 async function syncBook() {
-  if (
-    window.confirm(
-      'This will update the book information with the latest data from Google Books. Continue?'
-    )
-  ) {
+  if (window.confirm(t('addtolibrary.sync_confirmation'))) {
     await libraryStore.syncBookWithGoogleApi(props.book.id);
   }
 }
@@ -143,14 +151,14 @@ async function syncBook() {
       left-icon="add"
       @click="addToLibrary"
     >
-      {{ libraryStore.isLoading ? 'Adding...' : 'Add to Library' }}
+      {{ libraryStore.isLoading ? t('addtolibrary.adding') : t('addtolibrary.add_to_library') }}
     </Button>
 
     <div v-else class="w-full">
       <div class="flex items-center justify-center space-x-2 mb-2">
         <span class="text-success-600 text-sm font-medium flex items-center">
           <Icon name="check_circle" class="w-4 h-4 mr-1" />
-          In Library
+          {{ t('addtolibrary.in_library') }}
         </span>
       </div>
 
@@ -209,10 +217,10 @@ async function syncBook() {
           size="sm"
           class="flex-1"
           left-icon="sync"
-          title="Sync with Google Books"
+          :title="t('addtolibrary.sync_tooltip')"
           @click="syncBook"
         >
-          {{ libraryStore.isLoading ? 'Syncing...' : 'Sync' }}
+          {{ libraryStore.isLoading ? t('addtolibrary.syncing') : t('addtolibrary.sync') }}
         </Button>
 
         <Button
@@ -221,10 +229,10 @@ async function syncBook() {
           size="sm"
           class="flex-1"
           left-icon="delete"
-          title="Remove from Library"
+          :title="t('addtolibrary.remove_tooltip')"
           @click="removeFromLibrary"
         >
-          Remove
+          {{ t('addtolibrary.remove') }}
         </Button>
       </div>
     </div>

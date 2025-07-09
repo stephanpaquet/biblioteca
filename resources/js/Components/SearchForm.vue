@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
+import { useTranslationsStore } from '../stores/translations';
 import Button from './Button.vue';
 
 const props = defineProps({
@@ -14,6 +15,7 @@ const props = defineProps({
   },
 });
 
+const translationsStore = useTranslationsStore();
 const searchQuery = ref(props.initialQuery || '');
 const searchType = ref(props.initialType || 'general');
 const isLoading = ref(false);
@@ -28,19 +30,83 @@ const filters = ref({
   maxResults: '20',
 });
 
-const searchTypes = [
-  { value: 'general', label: 'General', placeholder: 'Search for books, authors, or topics...' },
-  { value: 'isbn', label: 'ISBN', placeholder: 'Enter ISBN (e.g., 9780123456789)' },
-  { value: 'title', label: 'Title', placeholder: 'Enter book title...' },
-  { value: 'author', label: 'Author', placeholder: 'Enter author name...' },
-  { value: 'publisher', label: 'Publisher', placeholder: 'Enter publisher name...' },
-  { value: 'subject', label: 'Subject', placeholder: 'Enter subject or category...' },
-  { value: 'description', label: 'Description', placeholder: 'Search in book descriptions...' },
+// Translation helper function
+function t(key) {
+  return translationsStore.t(key);
+}
+
+const searchTypes = computed(() => [
+  {
+    value: 'general',
+    label: t('searchform.general'),
+    placeholder: t('searchform.placeholder_general'),
+  },
+  {
+    value: 'isbn',
+    label: t('searchform.isbn'),
+    placeholder: t('searchform.placeholder_isbn'),
+  },
+  {
+    value: 'title',
+    label: t('searchform.title'),
+    placeholder: t('searchform.placeholder_title'),
+  },
+  {
+    value: 'author',
+    label: t('searchform.author'),
+    placeholder: t('searchform.placeholder_author'),
+  },
+  {
+    value: 'publisher',
+    label: t('searchform.publisher'),
+    placeholder: t('searchform.placeholder_publisher'),
+  },
+  {
+    value: 'subject',
+    label: t('searchform.subject'),
+    placeholder: t('searchform.placeholder_subject'),
+  },
+  {
+    value: 'description',
+    label: t('searchform.description'),
+    placeholder: t('searchform.placeholder_description'),
+  },
+]);
+
+const languageOptions = computed(() => [
+  { value: '', label: t('searchform.any_language') },
+  { value: 'en', label: t('searchform.english') },
+  { value: 'fr', label: t('searchform.french') },
+  { value: 'es', label: t('searchform.spanish') },
+  { value: 'de', label: t('searchform.german') },
+  { value: 'it', label: t('searchform.italian') },
+  { value: 'pt', label: t('searchform.portuguese') },
+  { value: 'ru', label: t('searchform.russian') },
+  { value: 'ja', label: t('searchform.japanese') },
+  { value: 'zh', label: t('searchform.chinese') },
+]);
+
+const printTypeOptions = computed(() => [
+  { value: '', label: t('searchform.all_print_types') },
+  { value: 'books', label: t('searchform.books') },
+  { value: 'magazines', label: t('searchform.magazines') },
+]);
+
+const orderByOptions = computed(() => [
+  { value: 'relevance', label: t('searchform.relevance') },
+  { value: 'newest', label: t('searchform.newest') },
+  { value: 'oldest', label: t('searchform.oldest') },
+]);
+
+const maxResultsOptions = [
+  { value: '10', label: '10' },
+  { value: '20', label: '20' },
+  { value: '40', label: '40' },
 ];
 
 const currentPlaceholder = computed(() => {
-  const type = searchTypes.find((t) => t.value === searchType.value);
-  return type ? type.placeholder : 'Search for books...';
+  const type = searchTypes.value.find((t) => t.value === searchType.value);
+  return type ? type.placeholder : t('searchform.placeholder_default');
 });
 
 function handleSearch() {
@@ -131,14 +197,14 @@ function clearFilters() {
         variant="primary"
         class="absolute inset-y-0 right-0 rounded-l-none"
       >
-        {{ isLoading ? 'Searching...' : 'Search' }}
+        {{ isLoading ? t('searchform.searching') : t('searchform.search') }}
       </Button>
     </div>
 
     <!-- Advanced Search Options (collapsible) -->
     <div class="text-center">
       <Button type="button" variant="link" size="sm" @click="showAdvanced = !showAdvanced">
-        {{ showAdvanced ? 'Hide Advanced Options' : 'Show Advanced Options' }}
+        {{ showAdvanced ? t('searchform.hide_advanced') : t('searchform.show_advanced') }}
       </Button>
     </div>
 
@@ -146,88 +212,93 @@ function clearFilters() {
     <div v-if="showAdvanced" class="mt-4 p-4 bg-gray-50 rounded-lg">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Language</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.language')
+          }}</label>
           <select
             v-model="filters.language"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Any Language</option>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="es">Spanish</option>
-            <option value="de">German</option>
-            <option value="it">Italian</option>
-            <option value="pt">Portuguese</option>
-            <option value="ru">Russian</option>
-            <option value="ja">Japanese</option>
-            <option value="zh">Chinese</option>
+            <option v-for="option in languageOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Published After</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.published_after')
+          }}</label>
           <input
             v-model="filters.publishedAfter"
             type="number"
             min="1000"
             max="2024"
-            placeholder="e.g., 2000"
+            :placeholder="t('searchform.year_placeholder_after')"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Published Before</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.published_before')
+          }}</label>
           <input
             v-model="filters.publishedBefore"
             type="number"
             min="1000"
             max="2024"
-            placeholder="e.g., 2023"
+            :placeholder="t('searchform.year_placeholder_before')"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Print Type</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.print_type')
+          }}</label>
           <select
             v-model="filters.printType"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">All</option>
-            <option value="books">Books</option>
-            <option value="magazines">Magazines</option>
+            <option v-for="option in printTypeOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Order By</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.order_by')
+          }}</label>
           <select
             v-model="filters.orderBy"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="relevance">Relevance</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
+            <option v-for="option in orderByOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Max Results</label>
+          <label class="block text-sm font-medium text-gray-700 mb-1">{{
+            t('searchform.max_results')
+          }}</label>
           <select
             v-model="filters.maxResults"
             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="40">40</option>
+            <option v-for="option in maxResultsOptions" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </div>
       </div>
 
       <div class="mt-4 flex justify-center">
         <Button type="button" variant="neutral" size="sm" @click="clearFilters">
-          Clear Filters
+          {{ t('searchform.clear_filters') }}
         </Button>
       </div>
     </div>

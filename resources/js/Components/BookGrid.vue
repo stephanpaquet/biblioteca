@@ -7,7 +7,7 @@ import Button from './Button.vue';
 import Icon from './Icon.vue';
 import { useTranslationsStore } from '../stores/translations';
 
-const translationsStore = useTranslationsStore();
+const { t } = useTranslationsStore();
 
 defineProps({
   books: {
@@ -41,23 +41,6 @@ defineProps({
     default: false,
   },
 });
-
-// Translation helper
-function t(key, replacements = {}) {
-  let translation = translationsStore.translations?.texts?.bookgrid?.[key];
-
-  // If translation not found, return key itself as fallback
-  if (!translation) return key;
-
-  // Handle replacements if any
-  if (Object.keys(replacements).length > 0) {
-    Object.entries(replacements).forEach(([key, value]) => {
-      translation = translation.replace(`:${key}`, value);
-    });
-  }
-
-  return translation;
-}
 
 function truncateTitle(title) {
   return title.length > 25 ? title.substring(0, 25) + '...' : title;
@@ -159,7 +142,7 @@ function searchByPublisher(publisher) {
         </div>
 
         <div v-if="book.volumeInfo.publisher" class="text-gray-500 text-sm mb-2">
-          <span class="text-gray-400">{{ t('publisher') }}:</span>
+          <span class="text-gray-400">{{ t('bookgrid.publisher') }}:</span>
           <Button
             variant="link"
             :shadow="false"
@@ -194,7 +177,7 @@ function searchByPublisher(publisher) {
 
             <div class="flex justify-center space-x-3">
               <Button :href="`/books/${book.id}`" variant="primary" size="sm" left-icon="menu_book">
-                {{ t('details_button') }}
+                {{ t('bookgrid.details_button') }}
               </Button>
 
               <Button
@@ -205,7 +188,7 @@ function searchByPublisher(publisher) {
                 size="sm"
                 left-icon="visibility"
               >
-                {{ t('preview_button') }}
+                {{ t('bookgrid.preview_button') }}
               </Button>
             </div>
           </div>
@@ -215,7 +198,7 @@ function searchByPublisher(publisher) {
   </div>
 
   <div v-else-if="showNoResults" class="text-center py-12">
-    <div class="text-gray-500 text-lg">{{ t('no_results') }}</div>
-    <p class="text-gray-400 mt-2">{{ t('adjust_search') }}</p>
+    <div class="text-gray-500 text-lg">{{ t('bookgrid.no_results') }}</div>
+    <p class="text-gray-400 mt-2">{{ t('bookgrid.adjust_search') }}</p>
   </div>
 </template>

@@ -47,13 +47,13 @@ const authStore = useAuthStore();
 const translationsStore = useTranslationsStore();
 
 onMounted(() => {
-  // Initialize stores with props data
+  const page = usePage();
   libraryStore.setBooks(props.userBooks);
 
   translationsStore.setTranslations({
-    texts: usePage().props.translations,
-    currentLocale: props.currentLocale,
-    supportedLocales: props.supportedLocales,
+    texts: page.props.translations,
+    currentLocale: page.props.currentLocale,
+    supportedLocales: page.props.supportedLocales,
   });
 
   authStore.setUser(props.auth.user || null);
@@ -64,8 +64,7 @@ onMounted(() => {
 });
 
 function t(key) {
-  const translations = translationsStore.translations?.texts?.home;
-  return translations?.[key] || key;
+  return translationsStore.t(key);
 }
 </script>
 
@@ -75,10 +74,10 @@ function t(key) {
     <div class="bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
       <div class="container mx-auto px-4 text-center">
         <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-4">
-          {{ t('title') }}
+          {{ t('home.title') }}
         </h1>
         <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
-          {{ t('subtitle') }}
+          {{ t('home.subtitle') }}
         </p>
 
         <SearchForm :initial-query="query" />
@@ -90,14 +89,14 @@ function t(key) {
       <BookGrid
         :books="books"
         :user-books="userBooks"
-        :title="t('search_results').replace(':query', query)"
+        :title="t('home.search_results').replace(':query', query)"
         :show-no-results="true"
       />
     </div>
 
     <!-- Featured Books Section -->
     <div v-else class="container mx-auto px-4 py-12">
-      <BookGrid :books="featured" :user-books="userBooks" :title="t('featured_books')" />
+      <BookGrid :books="featured" :user-books="userBooks" :title="t('home.featured_books')" />
     </div>
   </Layout>
 </template>
