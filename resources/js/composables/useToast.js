@@ -36,28 +36,28 @@ export function useToast() {
     bookAdded: (bookTitle) => {
       toast.success(`"${bookTitle}" added to your library!`, {
         timeout: 3000,
-        icon: '📚',
+        icon: 'library_books',
       });
     },
 
     bookRemoved: (bookTitle) => {
       toast.info(`"${bookTitle}" removed from library`, {
         timeout: 2000,
-        icon: '🗑️',
+        icon: 'delete',
       });
     },
 
     loginSuccess: (userName) => {
       toast.success(`Welcome back, ${userName}!`, {
         timeout: 3000,
-        icon: '👋',
+        icon: 'waving_hand',
       });
     },
 
     loginError: () => {
       toast.error('Invalid credentials. Please try again.', {
         timeout: 4000,
-        icon: '❌',
+        icon: 'error',
       });
     },
   };
