@@ -49,7 +49,7 @@ function closeMobileMenu() {
           </div>
 
           <!-- Desktop Navigation Links -->
-          <div class="hidden lg:flex items-center space-x-6">
+          <div class="hidden md:flex items-center space-x-6">
             <Link
               :href="route('home')"
               class="text-gray-700 hover:text-blue-600 transition-colors"
