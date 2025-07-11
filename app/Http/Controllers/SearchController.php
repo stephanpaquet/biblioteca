@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UserBooks;
+use App\Actions\GetUserBooks;
 use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SearchController extends Controller
 {
-    public function index(Request $request, GoogleBooksService $googleBooksService, UserBooks $userBooks)
+    public function index(Request $request, GoogleBooksService $googleBooksService, GetUserBooks $getUserBooks)
     {
         $validated = $request->validate([
             'q' => 'required|string|max:255',
@@ -63,7 +63,7 @@ class SearchController extends Controller
                 'searchType' => $searchType,
                 'filters' => $validated,
                 'results' => $results,
-                'userBooks' => $userBooks->get(),
+                'userBooks' => $getUserBooks->handle(),
                 'pagination' => [
                     'currentPage' => (int) $currentPage,
                     'totalPages' => $totalPages,
@@ -81,7 +81,7 @@ class SearchController extends Controller
                 'searchType' => $searchType,
                 'filters' => $validated,
                 'results' => null,
-                'userBooks' => $userBooks->get(),
+                'userBooks' => $getUserBooks->handle(),
                 'error' => 'Search failed. Please try again.',
                 'pagination' => [
                     'currentPage' => (int) $currentPage,
@@ -102,8 +102,8 @@ class SearchController extends Controller
      *
      * @deprecated Use index() method instead
      */
-    public function search(Request $request, GoogleBooksService $googleBooksService, UserBooks $userBooks)
+    public function search(Request $request, GoogleBooksService $googleBooksService, GetUserBooks $getUserBooks)
     {
-        return $this->index($request, $googleBooksService, $userBooks);
+        return $this->index($request, $googleBooksService, $getUserBooks);
     }
 }

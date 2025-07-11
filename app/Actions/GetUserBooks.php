@@ -5,9 +5,9 @@ namespace App\Actions;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-class UserBooks
+class GetUserBooks
 {
-    public function get(array $params = []): array
+    public function handle(array $params = []): array
     {
         if (Auth::check()) {
             /** @var User $user */

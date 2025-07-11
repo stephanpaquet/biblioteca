@@ -128,7 +128,7 @@ onUnmounted(() => {
 
 async function removeFromLibrary() {
   if (window.confirm(t('addtolibrary.remove_confirmation'))) {
-    await libraryStore.removeFromLibrary(props.book.id);
+    await libraryStore.removeFromLibrary(props.book.id)
   }
 }
 

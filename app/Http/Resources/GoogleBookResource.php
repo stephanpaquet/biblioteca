@@ -22,7 +22,7 @@ class GoogleBookResource extends JsonResource
             'authors' => $info['authors'] ?? [],
             'publisher' => $info['publisher'] ?? null,
             'publishedDate' => $info['publishedDate'] ?? null,
-            'description' => $info['description'] ?? null,
+            'description' => $info['description'] ? strip_tags($info['description']) : null,
             'pageCount' => $info['pageCount'] ?? null,
             'categories' => $info['categories'] ?? [],
             'thumbnail' => $info['imageLinks']['thumbnail'] ?? null,

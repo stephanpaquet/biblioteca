@@ -28,7 +28,7 @@ export const useLibraryStore = defineStore('library', () => {
   }
 
   function removeBook(bookId) {
-    const index = books.value.findIndex((book) => book.id === bookId);
+    const index = books.value.findIndex((book) => book.google_book_id === bookId);
     if (index > -1) {
       books.value.splice(index, 1);
     }

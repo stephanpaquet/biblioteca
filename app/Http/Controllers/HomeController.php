@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UserBooks;
+use App\Actions\GetUserBooks;
 use App\Services\GoogleBooksService;
 use App\Traits\HasTranslations;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class HomeController extends Controller
 
     public function __construct(
         private GoogleBooksService $googleBooksService,
-        private UserBooks $userBooks
+        private GetUserBooks $getUserBooks
     ) {}
 
     public function __invoke(Request $request)
@@ -38,7 +38,7 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'books' => $books,
             'query' => $query,
-            'userBooks' => $this->userBooks->get(),
+            'userBooks' => $this->getUserBooks->handle(),
             'featured' => $books,
         ]);
     }

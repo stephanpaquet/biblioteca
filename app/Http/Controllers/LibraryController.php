@@ -82,14 +82,9 @@ class LibraryController extends Controller
         return response()->json(['message' => 'Book added to library']);
     }
 
-    public function destroy(Request $request, $bookId)
+    public function destroy(Request $request, $googleBookId)
     {
-        // // Check if user has permission to remove books
-        // if (!$request->user()->can('remove books')) {
-        //     return response()->json(['message' => 'You do not have permission to remove books.'], 403);
-        // }
-
-        dd($bookId);
+        $bookId = Book::where('google_book_id', $googleBookId)->value('id');
         $request->user()->books()->detach($bookId);
 
         return response()->json(['message' => 'Book removed from library']);

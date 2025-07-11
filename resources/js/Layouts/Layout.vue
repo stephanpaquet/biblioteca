@@ -53,9 +53,8 @@ function logout() {
               :class="{ 'font-bold underline': page.url === '/library' }"
               :aria-current="page.url === '/library' ? 'page' : null"
             >
-              {{ translations?.layout?.nav?.library || 'My Library' }} ({{
-                libraryStore.bookCount
-              }})
+              {{ translations?.layout?.nav?.library || 'My Library' }}
+              <span v-if="user">({{ libraryStore.bookCount }})</span>
             </Link>
             <Link
               :href="route('dashboard')"
