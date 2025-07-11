@@ -7,8 +7,6 @@ const translationsStore = useTranslationsStore();
 const languageNames = {
   en: 'English',
   fr: 'Français',
-  es: 'Español',
-  de: 'Deutsch',
 };
 
 function getLanguageName(locale) {

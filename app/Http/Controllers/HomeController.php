@@ -23,7 +23,7 @@ class HomeController extends Controller
         // Handle locale switching
         $locale = $request->get('locale', app()->getLocale());
 
-        if (in_array($locale, ['en', 'fr', 'es', 'de'])) {
+        if (in_array($locale, ['en', 'fr'])) {
             app()->setLocale($locale);
             Session::put('locale', $locale);
         }
